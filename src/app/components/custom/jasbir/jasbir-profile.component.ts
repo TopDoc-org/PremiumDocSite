@@ -25,7 +25,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   openBookByDefault = false;
   unregForm!: FormGroup;
   showAllOffers = false;
-  animationsEnabled = false;
+  animationsEnabled = true;
   activeSlide = 0;
   referredBy: string | null = null;
   sessionIdSelected = '';

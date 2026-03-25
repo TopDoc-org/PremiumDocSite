@@ -26,7 +26,7 @@
       <button class="header-book-btn" (click)="openTemplateSheetMenu()">Book</button>
     </nav>
 
-    <!-- Animation Toggle -->
+    <!-- Animation Toggle (hidden — animations enabled by default)
     <div class="animation-toggle-bar">
       <button class="animation-toggle-btn" (click)="toggleAnimations()"
               [attr.title]="'Animations: ' + (animationsEnabled ? 'ON' : 'OFF')">
@@ -34,6 +34,7 @@
         <span class="toggle-label">Animations: {{ animationsEnabled ? 'ON' : 'OFF' }}</span>
       </button>
     </div>
+    -->
 
     <!-- SECTION 1: HERO -->
     <section class="hero-landing">
@@ -87,12 +88,6 @@
             <button class="btn-primary" (click)="openTemplateSheetMenu()">
               <mat-icon class="!text-xl">calendar_today</mat-icon>
               Book Appointment
-            </button>
-            <button class="btn-outline" (click)="openTemplateSheetMenu()">
-              <span class="play-icon">
-                <mat-icon class="!text-base">call</mat-icon>
-              </span>
-              Contact Clinic
             </button>
           </div>
 
@@ -1133,20 +1128,24 @@
 
     <!-- POWERED BY KNOCDOC -->
     <div class="powered-by-knocdoc">
-      <div class="powered-by-row">
-        <span>Powered by</span>
+      <div class="powered-by-card">
         <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="powered-by-logo">
+        <div class="powered-by-text">
+          <p class="powered-by-headline">Want a site like this for your practice?</p>
+          <p class="powered-by-sub">Built by <strong>KnocDoc</strong> — premium websites for doctors</p>
+        </div>
+        <div class="powered-by-actions">
+          <a href="https://wa.me/916370020832?text=Hi%2C%20I%20want%20to%20create%20a%20doctor%20website%20with%20KnocDoc" target="_blank" rel="noopener" class="powered-by-btn powered-by-btn--wa">
+            <i class="fab fa-whatsapp"></i>
+            Chat with us
+          </a>
+          <a href="tel:+916370020832" class="powered-by-btn powered-by-btn--call">
+            <i class="fas fa-phone-alt"></i>
+            Call Us
+          </a>
+        </div>
       </div>
-      <div class="powered-by-contacts">
-        <a href="https://wa.me/916370020832" target="_blank" rel="noopener" class="powered-by-contact whatsapp">
-          <i class="fab fa-whatsapp"></i>
-          <span>WhatsApp</span>
-        </a>
-        <a href="tel:+916370020832" class="powered-by-contact call">
-          <i class="fas fa-phone-alt"></i>
-          <span>Call Us</span>
-        </a>
-      </div>
+      <p class="powered-by-footer">Powered by <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc"> <strong>KnocDoc</strong></p>
     </div>
 
     <!-- MOBILE FIXED BOTTOM CTA -->
