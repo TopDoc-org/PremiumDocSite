@@ -1,6 +1,6 @@
 
 <!-- MAIN PROFILE LANDING PAGE -->
-<div class="profile-landing" [class.animations-on]="animationsEnabled">
+<div class="profile-landing" [class.animations-on]="animationsEnabled" [class.dark-mode]="darkMode">
 
   <!-- Loading State -->
   <div *ngIf="timelineFetchStatus === 'fetching'" class="loading-container">
@@ -26,15 +26,10 @@
       <button class="header-book-btn" (click)="openTemplateSheetMenu()">Book</button>
     </nav>
 
-    <!-- Animation Toggle (hidden — animations enabled by default)
-    <div class="animation-toggle-bar">
-      <button class="animation-toggle-btn" (click)="toggleAnimations()"
-              [attr.title]="'Animations: ' + (animationsEnabled ? 'ON' : 'OFF')">
-        <mat-icon class="!text-lg">{{ animationsEnabled ? 'motion_photos_on' : 'motion_photos_off' }}</mat-icon>
-        <span class="toggle-label">Animations: {{ animationsEnabled ? 'ON' : 'OFF' }}</span>
-      </button>
-    </div>
-    -->
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" (click)="toggleDarkMode()" [attr.title]="darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+      <mat-icon class="!text-xl">{{ darkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
 
     <!-- SECTION 1: HERO -->
     <section class="hero-landing">
@@ -1090,31 +1085,27 @@
             </button>
           </div>
         </div>
-      </div>
-    </section>
 
-
-    <!-- POWERED BY KNOCDOC -->
-    <div class="powered-by-knocdoc">
-      <div class="powered-by-card">
-        <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="powered-by-logo">
-        <div class="powered-by-text">
-          <p class="powered-by-headline">Want a site like this for your practice?</p>
-          <p class="powered-by-sub">Built by <strong>KnocDoc</strong> — premium websites for doctors</p>
-        </div>
-        <div class="powered-by-actions">
-          <a href="https://wa.me/919437975834?text=Hi%2C%20I%20want%20to%20create%20a%20doctor%20website%20with%20KnocDoc" target="_blank" rel="noopener" class="powered-by-btn powered-by-btn--wa">
+        <!-- KnocDoc Promo — inline within CTA -->
+        <div class="final-cta-divider"></div>
+        <p class="final-cta-knocdoc-powered">Powered by</p>
+        <p class="final-cta-knocdoc-powered"><img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="final-cta-knocdoc-logo"><strong>KnocDoc</strong></p>
+        <p class="final-cta-knocdoc-headline">
+          <span class="knocdoc-typewriter-text">{{ knocdocTypewriterText }}</span><span class="knocdoc-typewriter-cursor"></span>
+        </p>
+        <p class="final-cta-knocdoc-sub">Built by <strong>KnocDoc</strong> &mdash; premium websites for doctors</p>
+        <div class="final-cta-knocdoc-actions">
+          <a href="https://wa.me/919437975834?text=Hi%2C%20I%20want%20to%20create%20a%20doctor%20website%20with%20KnocDoc" target="_blank" rel="noopener" class="final-cta-knocdoc-btn final-cta-knocdoc-btn--wa">
             <i class="fab fa-whatsapp"></i>
             Chat with us
           </a>
-          <a href="tel:+919437975834" class="powered-by-btn powered-by-btn--call">
+          <a href="tel:+919437975834" class="final-cta-knocdoc-btn final-cta-knocdoc-btn--call">
             <i class="fas fa-phone-alt"></i>
             Call Us
           </a>
         </div>
       </div>
-      <p class="powered-by-footer">Powered by <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc"> <strong>KnocDoc</strong></p>
-    </div>
+    </section>
 
     <!-- MOBILE FIXED BOTTOM CTA -->
     <div class="mobile-bottom-cta" *ngIf="isMobileOrTabView">

@@ -26,6 +26,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   unregForm!: FormGroup;
   showAllOffers = false;
   animationsEnabled = true;
+  darkMode = false;
   activeSlide = 0;
   referredBy: string | null = null;
   sessionIdSelected = '';
@@ -35,13 +36,27 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   selectedService: any = null;
   bookingConfirmation: any = null;
 
+  // KnocDoc typewriter
+  knocdocPhrases = [
+    'Want a site like this for your practice?',
+    'Premium websites built for doctors',
+    'Online booking & patient management',
+    'Complete digital solution for clinics',
+    'Grow your practice with KnocDoc',
+    'SEO-optimized doctor profiles',
+    'Built to get you more patients'
+  ];
+  knocdocTypewriterText = '';
+  private knocdocTypewriterInterval: any;
+  private knocdocPhraseIndex = 0;
+
   @ViewChild('confirmationSheet') ConfirmationSheet!: TemplateRef<any>;
   @ViewChild('knocdocPromoSheet') KnocdocPromoSheet!: TemplateRef<any>;
 
   services = [
     { name: 'Root Canal Treatment (RCT)', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/RCT.gif', description: 'Painless, modern root canal therapy to save your natural teeth and eliminate infection completely.', details: 'Root canal treatment removes infected pulp from inside your tooth, cleans and disinfects the canal, then fills and seals it. This saves your natural tooth and prevents the need for extraction. At our clinic, we use advanced rotary instruments and apex locators for precise, painless treatment with high success rates.' },
     { name: 'Dental Crowns', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Crowns.gif', description: 'Custom-made crowns to restore damaged teeth for a natural, complete smile.', details: 'Dental crowns are tooth-shaped caps placed over damaged or weakened teeth to restore their shape, size, strength, and appearance. We offer metal-free ceramic crowns, zirconia crowns, and porcelain-fused-to-metal options customized to match your natural teeth perfectly.' },
-    { name: 'Laser Dentistry', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2022/09/Laser-Treatment-1.gif', description: 'Cutting-edge laser treatments for gum disease and soft tissue procedures with minimal discomfort.', details: 'Our advanced diode laser technology enables minimally invasive treatments for gum disease, cavity preparation, teeth whitening, and soft tissue procedures. Laser dentistry means less pain, reduced bleeding, faster healing, and often no need for anesthesia.' },
+   
     { name: 'Clear Aligners / Invisible Braces', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2025/06/Invisible-Braces-1.gif', description: 'Virtually invisible aligners that straighten your teeth without the look of traditional braces.', details: 'Clear aligners are custom-made, removable transparent trays that gradually move your teeth into the desired position. They are virtually invisible, comfortable, and allow you to eat and brush normally. We provide Invisalign and other premium aligner systems with 3D treatment planning.' },
     { name: 'Dental Fillings / Teeth Fillings', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dental-Fillings-1-1.gif', description: 'Natural-looking composite fillings that blend seamlessly with your teeth for invisible restoration.', details: 'We use tooth-colored composite resin fillings that bond directly to your tooth structure, providing a strong, natural-looking restoration. These mercury-free fillings are safe, durable, and virtually invisible, replacing old silver amalgam fillings.' },
     { name: 'Wisdom Teeth Removal', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Wisdom-Tooth-1.gif', description: 'Safe and efficient extraction of wisdom teeth to prevent crowding and infection.', details: 'Wisdom teeth often cause problems like impaction, crowding, infection, or cyst formation. Our oral surgeons perform safe, minimally invasive extractions using advanced techniques. We ensure proper anesthesia, clear post-operative instructions, and follow-up care for quick recovery.' },
@@ -50,7 +65,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     { name: 'Dentures', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dentures.gif', description: 'Custom-fitted partial and complete dentures for a comfortable, natural-looking replacement.', details: 'Our custom dentures are crafted for a precise, comfortable fit. We offer complete dentures for full arch replacement, partial dentures for multiple missing teeth, flexible dentures for enhanced comfort, and implant-supported dentures for maximum stability.' },
     { name: 'Kids Dentistry', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Kids-Dentistery.gif', description: 'Gentle orthodontic care to guide your child\'s dental development the right way.', details: 'Our child-friendly environment makes dental visits fun and stress-free. We provide preventive care including fluoride treatments and sealants, early orthodontic intervention, habit-breaking appliances, and gentle cavity treatments. Our team is specially trained to handle pediatric patients with care and patience.' },
     { name: 'Mouth Ulcers', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Mouth-ulcers-1-2.gif', description: 'Expert diagnosis and treatment of oral ulcers for fast relief and healing.', details: 'Mouth ulcers can be painful and recurring. We provide thorough diagnosis to identify the cause — whether nutritional deficiency, stress, or underlying conditions — and offer effective treatments including medicated gels, laser therapy for instant pain relief, and preventive guidance.' },
-    { name: 'Advanced Gum Treatment', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2017/05/Gum-Treatment.gif', description: 'Expert periodontal care including deep cleaning, scaling, and advanced treatments.', details: 'Gum disease affects the tissues supporting your teeth and can lead to tooth loss if untreated. We offer scaling and root planing (deep cleaning), flap surgery, gum grafting, and laser-assisted gum treatment. Early treatment preserves your natural teeth and prevents bone loss.' }
+    { name: 'Advanced Gum Treatment', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2017/05/Gum-Treatment.gif', description: 'Expert periodontal care including deep cleaning, scaling, and advanced treatments.', details: 'Gum disease affects the tissues supporting your teeth and can lead to tooth loss if untreated. We offer scaling and root planing (deep cleaning), flap surgery, gum grafting, and laser-assisted gum treatment. Early treatment preserves your natural teeth and prevents bone loss.' },
+     { name: 'Laser Dentistry', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2022/09/Laser-Treatment-1.gif', description: 'Cutting-edge laser treatments for gum disease and soft tissue procedures with minimal discomfort.', details: 'Our advanced diode laser technology enables minimally invasive treatments for gum disease, cavity preparation, teeth whitening, and soft tissue procedures. Laser dentistry means less pain, reduced bleeding, faster healing, and often no need for anesthesia.' },
   ];
 
   @ViewChild('templateBottomSheet') TemplateBottomSheet!: TemplateRef<any>;
@@ -101,6 +117,10 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       reasonForVisit: ['']
     });
 
+    // Restore dark mode preference
+    const savedDark = localStorage.getItem('jasbirDarkMode');
+    this.darkMode = savedDark === 'true';
+
     // Responsive detection
     this.mediaQuery = window.matchMedia('(max-width: 1024px)');
     this.mobileQuery = window.matchMedia('(max-width: 600px)');
@@ -135,6 +155,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.offersObserver) this.offersObserver.disconnect();
     this.stopConfetti();
     if (this.carouselInterval) clearInterval(this.carouselInterval);
+    this.stopKnocdocTypewriter();
   }
 
   private fetchProfileData(): void {
@@ -154,6 +175,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         this.initCounterAnimations();
         setTimeout(() => this.setupOffersConfettiObserver(), 300);
         this.startCarouselAutoplay();
+        this.startKnocdocTypewriter();
         this.fetchClinicDetails();
         this.getSchedule();
       },
@@ -166,6 +188,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         this.initCounterAnimations();
         setTimeout(() => this.setupOffersConfettiObserver(), 300);
         this.startCarouselAutoplay();
+        this.startKnocdocTypewriter();
         this.getSchedule();
       }
     );
@@ -240,6 +263,11 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       },
       () => {}
     );
+  }
+
+  toggleDarkMode(): void {
+    this.darkMode = !this.darkMode;
+    localStorage.setItem('jasbirDarkMode', String(this.darkMode));
   }
 
   toggleAnimations(): void {
@@ -338,6 +366,55 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   private resetCarouselAutoplay(): void {
     if (this.carouselInterval) clearInterval(this.carouselInterval);
     this.startCarouselAutoplay();
+  }
+
+  startKnocdocTypewriter(): void {
+    this.knocdocPhraseIndex = 0;
+    this.typePhrase();
+  }
+
+  private typePhrase(): void {
+    const phrase = this.knocdocPhrases[this.knocdocPhraseIndex];
+    let charIndex = 0;
+    this.knocdocTypewriterText = '';
+
+    // Type in
+    this.knocdocTypewriterInterval = setInterval(() => {
+      if (charIndex < phrase.length) {
+        this.knocdocTypewriterText = phrase.substring(0, charIndex + 1);
+        charIndex++;
+      } else {
+        clearInterval(this.knocdocTypewriterInterval);
+        // Pause, then erase
+        this.knocdocTypewriterInterval = setTimeout(() => {
+          this.erasePhrase(phrase);
+        }, 2000);
+      }
+    }, 50);
+  }
+
+  private erasePhrase(phrase: string): void {
+    let charIndex = phrase.length;
+    this.knocdocTypewriterInterval = setInterval(() => {
+      if (charIndex > 0) {
+        charIndex--;
+        this.knocdocTypewriterText = phrase.substring(0, charIndex);
+      } else {
+        clearInterval(this.knocdocTypewriterInterval);
+        this.knocdocPhraseIndex = (this.knocdocPhraseIndex + 1) % this.knocdocPhrases.length;
+        // Small pause before next phrase
+        this.knocdocTypewriterInterval = setTimeout(() => {
+          this.typePhrase();
+        }, 400);
+      }
+    }, 30);
+  }
+
+  private stopKnocdocTypewriter(): void {
+    if (this.knocdocTypewriterInterval) {
+      clearInterval(this.knocdocTypewriterInterval);
+      clearTimeout(this.knocdocTypewriterInterval);
+    }
   }
 
   private setupOffersConfettiObserver(): void {

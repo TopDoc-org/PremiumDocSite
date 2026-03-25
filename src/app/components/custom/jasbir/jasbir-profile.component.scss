@@ -3092,7 +3092,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   text-align: center;
 
   @media (max-width: 767px) {
-    padding: 56px 20px;
+    padding: 56px 20px 100px;
   }
 
   .final-cta-glow {
@@ -3113,6 +3113,9 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     z-index: 2;
     max-width: 600px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .final-cta-logo-wrap {
@@ -4835,7 +4838,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  margin-top: 32px;
+  margin-top: 24px;
 }
 
 .final-cta-social-label {
@@ -4901,7 +4904,116 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   }
 }
 
-// Powered by KnocDoc
+// KnocDoc promo — inline within Final CTA
+.final-cta-divider {
+  width: 60px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 24px 0 20px;
+}
+
+
+.final-cta-knocdoc-headline {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 6px;
+  line-height: 1.4;
+  min-height: 1.5em;
+}
+
+.knocdoc-typewriter-text {
+  display: inline;
+}
+
+.knocdoc-typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: rgba(255, 255, 255, 0.7);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: typewriter-blink 0.8s step-end infinite;
+}
+
+.final-cta-knocdoc-sub {
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 24px;
+  line-height: 1.5;
+
+  strong { color: rgba(255, 255, 255, 0.7); }
+}
+
+.final-cta-knocdoc-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.final-cta-knocdoc-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  i { font-size: 17px; flex-shrink: 0; }
+
+  &--wa {
+    background: #25D366;
+    color: #fff;
+    &:hover { background: #1fb855; box-shadow: 0 4px 16px rgba(37, 211, 102, 0.25); }
+  }
+
+  &--call {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    &:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+  }
+}
+
+.final-cta-knocdoc-powered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0 0 20px;
+  font-family: var(--font-body), sans-serif;
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.5);
+
+  .final-cta-knocdoc-logo {
+    height: 32px;
+    width: 32px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 7px;
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    margin: 0 2px;
+  }
+
+  strong {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.15rem;
+  }
+}
+
+// Powered by KnocDoc (legacy — now empty section removed from HTML)
 .powered-by-knocdoc {
   padding: 24px 20px 32px;
   margin-bottom: 80px;
@@ -5767,4 +5879,555 @@ $bk-font: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   border-radius: $bk-radius-md;
   border: 1px dashed $bk-dark-200;
   margin: 12px 0;
+}
+
+
+// ===============================================
+//  DARK MODE TOGGLE BUTTON
+// ===============================================
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9999;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid $slate-200;
+  background: #fff;
+  color: $slate-700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.15);
+  }
+
+  .dark-mode & {
+    background: $slate-800;
+    color: #f0c060;
+    border-color: $slate-700;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (max-width: 1024px) {
+    bottom: 80px; // above mobile bottom CTA
+  }
+}
+
+
+// ===============================================
+//  DARK MODE OVERRIDES
+// ===============================================
+$dark-bg: #0f1219;
+$dark-surface: #181d27;
+$dark-card: #1e2433;
+$dark-card-hover: #252b3a;
+$dark-border: #2a3040;
+$dark-text: #e8ecf2;
+$dark-text-secondary: #9ba4b5;
+$dark-text-muted: #6b7790;
+
+.profile-landing.dark-mode {
+  background: $dark-bg;
+  color: $dark-text;
+
+  // ---- Hero ----
+  .hero-landing {
+    .hero-bg-image::after {
+      background: linear-gradient(135deg, rgba($dark-bg, 0.92) 0%, rgba($dark-bg, 0.75) 50%, rgba($dark-bg, 0.6) 100%);
+    }
+    .hero-content h1 { color: #fff; }
+    .hero-subtitle { color: $dark-text-secondary; }
+    .hero-clinic-name { color: #fff; }
+    .hero-clinic-tagline { color: $dark-text-secondary; }
+    .hero-badge {
+      background: rgba($dark-card, 0.85);
+      border-color: $dark-border;
+      color: $dark-text;
+    }
+    .trust-badge {
+      background: rgba($dark-card, 0.6);
+      border-color: $dark-border;
+      color: $dark-text-secondary;
+    }
+  }
+
+  // ---- Mobile Header ----
+  .custom-header-nav {
+    background: $dark-surface;
+    border-color: $dark-border;
+    .header-title { color: $dark-text; }
+  }
+
+  // ---- Appointment Bar ----
+  .appointment-bar {
+    background: $dark-surface !important;
+    border-color: $dark-border;
+    .bar-inner {
+      background: $dark-card;
+      border-color: $dark-border;
+    }
+    .bar-field label { color: $dark-text-muted; }
+    .field-value { color: $dark-text; }
+    .bar-divider { background: $dark-border; }
+  }
+
+  // ---- Section headings & labels ----
+  .section-label { color: $teal-400; }
+  .section-heading { color: #fff; }
+  .services-label { color: $teal-400; }
+
+  // ---- About Section ----
+  .about-section {
+    .about-content {
+      h2 { color: #fff; }
+      p { color: $dark-text-secondary; }
+      .highlight { color: $teal-400; }
+    }
+    .about-checks li span { color: $dark-text-secondary; }
+    .about-brand-row .about-label { color: $teal-400; }
+    .stat-number { color: #fff; }
+    .stat-label { color: $dark-text-muted; }
+    .about-stats {
+      background: $dark-card;
+      border-color: $dark-border;
+    }
+    .about-image::after {
+      background: linear-gradient(180deg, transparent 60%, rgba($dark-bg, 0.3) 100%);
+    }
+  }
+
+  // ---- Languages Strip ----
+  .languages-strip {
+    background: $dark-surface;
+    border-color: $dark-border;
+    .languages-strip-title { color: $dark-text; }
+    .lang-chip-light {
+      background: $dark-card;
+      color: $dark-text-secondary;
+      border-color: $dark-border;
+    }
+  }
+
+  // ---- Offers Section ----
+  .offers-section {
+    background: $dark-bg;
+
+    .offer-hero {
+      .offer-hero-bg {
+        background: linear-gradient(135deg, #1a2744 0%, #0f1d2f 100%);
+      }
+      .offer-hero-title { color: #fff; }
+      .offer-hero-desc { color: $dark-text-secondary; }
+    }
+
+    .offer-card {
+      background: $dark-card;
+      border-color: $dark-border;
+      h3 { color: #fff; }
+      p { color: $dark-text-secondary; }
+      .offer-tag { color: $dark-text-muted; }
+    }
+
+    .btn-view-more {
+      color: $dark-text-secondary;
+      border-color: $dark-border;
+      &:hover { background: $dark-card; }
+    }
+    .offers-count { color: $dark-text-muted; }
+  }
+
+  // ---- Gallery Section ----
+  .gallery-section {
+    background: $dark-surface;
+    .gallery-carousel-btn {
+      background: $dark-card;
+      color: $dark-text;
+      border-color: $dark-border;
+    }
+  }
+
+  // ---- Marquee ----
+  .marquee-section {
+    background: $dark-surface;
+    border-color: $dark-border;
+    .marquee-item { color: $dark-text-secondary; }
+
+    &.dark {
+      background: $dark-bg;
+      .marquee-item { color: $dark-text-muted; }
+    }
+  }
+
+  // ---- Services Section ----
+  .services-section {
+    background: $dark-bg;
+    h2 { color: #fff; }
+
+    .service-icon-card {
+      background: $dark-card;
+      border-color: $dark-border;
+      h3 { color: #fff; }
+      p { color: $dark-text-secondary; }
+      .check-details-link { color: $teal-400; }
+
+      &:hover {
+        background: $dark-card-hover;
+        border-color: $teal-600;
+      }
+    }
+  }
+
+  // ---- Big Numbers ----
+  .big-numbers-section {
+    background: linear-gradient(135deg, $dark-surface 0%, $dark-bg 100%);
+    .big-num { color: #fff; }
+    .big-num-label { color: $dark-text-muted; }
+    .big-number-divider { background: $dark-border; }
+  }
+
+  // ---- Video Tour ----
+  .video-tour-section {
+    background: $dark-surface;
+    .video-tour-text {
+      h2 { color: #fff; }
+      p, .video-tour-desc { color: $dark-text-secondary; }
+      li span { color: $dark-text-secondary; }
+    }
+    .video-caption { color: $dark-text-muted; }
+  }
+
+  // ---- Team Section ----
+  .team-section {
+    background: $dark-bg;
+    .team-heading { color: #fff; }
+    .team-label { color: $teal-400; }
+    .team-subtitle { color: $dark-text-secondary; }
+  }
+
+  // ---- Testimonials ----
+  .testimonials-section {
+    background: $dark-surface;
+    .testimonials-subtitle { color: $dark-text-secondary; }
+
+    .testimonial-card {
+      background: $dark-card;
+      border-color: $dark-border;
+      .testimonial-text { color: $dark-text-secondary; }
+      .testimonial-name { color: $dark-text; }
+      .testimonial-meta { color: $dark-text-muted; }
+      .testimonial-quote-icon { color: rgba($teal-400, 0.3); }
+      .testimonial-verified { color: $teal-400; }
+
+      &.featured {
+        background: $dark-card;
+        border-color: $teal-600;
+      }
+    }
+  }
+
+  // ---- Practices / Clinics ----
+  .practices-section {
+    .clinic-card {
+      background: $dark-card;
+      border-color: $dark-border;
+      .clinic-card-name { color: #fff; }
+      .clinic-card-address { color: $dark-text-secondary; }
+      .chip { background: $dark-card-hover; color: $dark-text-secondary; border-color: $dark-border; }
+    }
+  }
+
+  // ---- Map Section ----
+  .map-section {
+    background: $dark-bg;
+    .map-info {
+      h2 { color: #fff; }
+      .map-address-card {
+        background: $dark-card;
+        border-color: $dark-border;
+      }
+      .map-address-title { color: #fff; }
+      .map-address-text { color: $dark-text-secondary; }
+      .map-detail-label { color: $dark-text-muted; }
+      .map-detail-value { color: $dark-text-secondary; }
+    }
+    .map-embed iframe {
+      filter: invert(0.9) hue-rotate(180deg);
+      border-radius: 20px;
+    }
+  }
+
+  // ---- Why Choose Section ----
+  .why-choose-section {
+    background: $dark-surface;
+    h2 { color: #fff; }
+    p { color: $dark-text-secondary; }
+    .benefit-list li span { color: $dark-text-secondary; }
+
+    .about-image::after {
+      background: linear-gradient(180deg, transparent 60%, rgba($dark-bg, 0.3) 100%);
+    }
+
+    // Stats floating card
+    .absolute {
+      background: $dark-card !important;
+      border-color: $dark-border !important;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+    }
+  }
+
+  // ---- Detail Sections (Education, Experience, Awards) ----
+  .detail-section {
+    background: $dark-bg;
+    &.alt-bg { background: $dark-surface; }
+
+    .edu-card {
+      background: $dark-card;
+      border-color: $dark-border;
+      .edu-card-degree { color: #fff; }
+      .edu-card-institution { color: $dark-text-secondary; }
+      .edu-card-year { color: $dark-text-muted; }
+      .edu-card-desc { color: $dark-text-secondary; }
+      .edu-card-icon { background: rgba($teal-500, 0.15); color: $teal-400; }
+    }
+
+    .exp-card {
+      background: $dark-card;
+      border-color: $dark-border;
+      .exp-card-title { color: #fff; }
+      .exp-card-date { color: $dark-text-muted; }
+      .exp-card-company { color: $teal-400; }
+      .exp-card-desc { color: $dark-text-secondary; }
+    }
+    .exp-dot { background: $teal-500; }
+    .exp-line { background: $dark-border; }
+
+    .award-tile {
+      background: $dark-card;
+      border-color: $dark-border;
+      .award-tile-name { color: #fff; }
+      .award-tile-place { color: $dark-text-secondary; }
+      .award-tile-date { color: $dark-text-muted; }
+    }
+  }
+
+  // ---- Final CTA ----
+  .final-cta-section {
+    background: linear-gradient(180deg, $dark-surface 0%, darken($dark-bg, 3%) 100%);
+    h2 { color: #fff; }
+    p { color: $dark-text-secondary; }
+    .final-cta-badge { color: $dark-text-secondary; }
+    .final-cta-social-label { color: $dark-text-muted; }
+    .cta-social-icon {
+      background: $dark-card;
+      border-color: $dark-border;
+      color: $dark-text-secondary;
+    }
+    .final-cta-guarantee span { color: $dark-text-muted; }
+  }
+
+  // ---- Powered by KnocDoc ----
+  .powered-by-knocdoc {
+    background: $dark-bg;
+    .powered-by-card {
+      background: $dark-card;
+      border-color: $dark-border;
+      .powered-by-headline { color: #fff; }
+      .powered-by-sub { color: $dark-text-secondary; }
+    }
+    .powered-by-footer { color: $dark-text-muted; }
+  }
+
+  // ---- Mobile Bottom CTA ----
+  .mobile-bottom-cta {
+    background: $dark-surface;
+    border-color: $dark-border;
+  }
+
+  // ---- Insurance / Generic Cards ----
+  .mc-insurance-card {
+    background: $dark-card;
+    border-color: $dark-border;
+    color: $dark-text-secondary;
+  }
+
+  // ---- Profile main content white fallback areas ----
+  .profile-main-content {
+    background: $dark-bg;
+  }
+
+  // ---- Generic text color overrides ----
+  .text-gray-900, .text-gray-800, .text-gray-700 { color: $dark-text !important; }
+  .text-gray-600, .text-gray-500 { color: $dark-text-secondary !important; }
+  .text-gray-400, .text-gray-300 { color: $dark-text-muted !important; }
+  .bg-white { background-color: $dark-card !important; }
+  .border-gray-100, .border-gray-200, .border-gray-300 { border-color: $dark-border !important; }
+
+  // ---- Clinic logo wrap in practices ----
+  .practices-section {
+    .clinic-logo-wrap {
+      background: $dark-card !important;
+      border-color: $dark-border;
+    }
+  }
+
+  // ---- Video tour label fix ----
+  .video-tour-section {
+    .section-brand-label .section-label { color: $teal-400; }
+  }
+
+  // ---- Why Choose floating stats card (uses Tailwind bg-white) ----
+  .why-choose-section {
+    .stat-number { color: $teal-400 !important; }
+    .stat-label { color: $dark-text-muted !important; }
+
+    // Floating overlay stats card
+    > div > .relative > .absolute,
+    .bg-white.rounded-2xl {
+      background: $dark-card !important;
+      border-color: $dark-border !important;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
+    }
+  }
+
+  // ---- Inline booking override ----
+  ::ng-deep app-inline-booking {
+    .ib-section {
+      background: $dark-surface;
+    }
+
+    .ib-section-heading {
+      color: $dark-text;
+    }
+
+    .ib-section-label {
+      color: $teal-400;
+    }
+
+    .ib-form-card {
+      background: $dark-card;
+      border-color: $dark-border;
+    }
+
+    .ib-form-header {
+      border-color: $dark-border;
+      h4 { color: #fff; }
+      p { color: $dark-text-muted; }
+    }
+
+    .ib-field label {
+      color: $dark-text-muted;
+    }
+
+    .ib-input {
+      background: $dark-bg;
+      border-color: $dark-border;
+      color: $dark-text;
+      &::placeholder { color: $dark-text-muted; }
+      &:focus {
+        border-color: $teal-500;
+        box-shadow: 0 0 0 3px rgba(53, 137, 214, 0.15);
+      }
+    }
+
+    select.ib-input {
+      background-color: $dark-bg;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%236b7790'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    }
+
+    .ib-slots-panel {
+      background: $dark-card;
+      border-color: $dark-border;
+    }
+
+    .ib-disabled-hint {
+      background: rgba($dark-card-hover, 0.8);
+      color: $dark-text-muted;
+    }
+
+    .ib-session-header {
+      background: $dark-bg;
+    }
+
+    .ib-session-clinic {
+      color: $dark-text;
+    }
+
+    .ib-session-time {
+      color: $dark-text-muted;
+    }
+
+    .ib-slot-chip {
+      background: $dark-card-hover;
+      border-color: $dark-border;
+      color: $dark-text;
+
+      &:hover:not(:disabled) {
+        border-color: $teal-500;
+        background: rgba($teal-500, 0.1);
+      }
+
+      &:disabled {
+        background: $dark-bg;
+        color: $dark-text-muted;
+        border-color: transparent;
+      }
+
+      &--selected {
+        background: rgba($teal-500, 0.2) !important;
+        border-color: $teal-500 !important;
+        color: $teal-400 !important;
+      }
+
+      &--booked {
+        background: $dark-bg !important;
+        color: $dark-text-muted !important;
+        border-color: transparent !important;
+      }
+    }
+
+    .ib-empty-msg {
+      color: $dark-text-muted;
+    }
+
+    // Tab overrides
+    .ib-tab-group ::ng-deep {
+      .mat-tab-label {
+        background: $dark-card-hover;
+        border-color: $dark-border;
+
+        &:hover {
+          background: rgba($teal-500, 0.08);
+          border-color: $teal-500;
+        }
+
+        &.mat-tab-label-active {
+          background: rgba($teal-500, 0.12);
+          border-color: $teal-500;
+        }
+      }
+    }
+
+    .ib-tab-day {
+      color: $dark-text-secondary;
+      .mat-tab-label-active & { color: $teal-400; }
+    }
+
+    .ib-tab-date {
+      color: $dark-text-muted;
+      .mat-tab-label-active & { color: $teal-400; }
+    }
+
+    .ib-book-btn {
+      &--disabled {
+        opacity: 0.6;
+      }
+    }
+  }
 }
