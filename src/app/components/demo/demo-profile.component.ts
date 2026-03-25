@@ -2,6 +2,13 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as AOS from 'aos';
 
+interface FontPair {
+  name: string;
+  heading: string;
+  body: string;
+  url: string;
+}
+
 interface DemoConfig {
   doctorName: string;
   degree: string;
@@ -16,6 +23,7 @@ interface DemoConfig {
   phone: string;
   profileImage: string;
   primaryColor: string;
+  fontPair: string;
 }
 
 interface MockSlot {
@@ -63,8 +71,20 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
     tagline: 'Your smile is our priority.',
     phone: '9876543210',
     profileImage: '',
-    primaryColor: '#2563eb'
+    primaryColor: '#2563eb',
+    fontPair: 'outfit-dm'
   };
+
+  fontPairs: FontPair[] = [
+    { name: 'Outfit + DM Sans', heading: "'Outfit'", body: "'DM Sans'", url: 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap' },
+    { name: 'Playfair + DM Sans', heading: "'Playfair Display'", body: "'DM Sans'", url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Sans:wght@400;500;600;700&display=swap' },
+    { name: 'Poppins + Inter', heading: "'Poppins'", body: "'Inter'", url: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap' },
+    { name: 'Sora + Source Sans 3', heading: "'Sora'", body: "'Source Sans 3'", url: 'https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap' },
+    { name: 'Libre Baskerville + Karla', heading: "'Libre Baskerville'", body: "'Karla'", url: 'https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Karla:wght@400;500;600;700&display=swap' },
+    { name: 'Space Grotesk + Work Sans', heading: "'Space Grotesk'", body: "'Work Sans'", url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap' },
+  ];
+
+  private loadedFontUrls = new Set<string>();
 
   colorPresets = [
     { name: 'Blue', color: '#2563eb' },
@@ -254,6 +274,11 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
       if (params.get('rating')) this.config.rating = params.get('rating')!;
       if (params.get('profileImg')) this.config.profileImage = params.get('profileImg')!;
       if (params.get('color')) this.config.primaryColor = '#' + params.get('color')!;
+      if (params.get('font')) {
+        this.config.fontPair = params.get('font')!;
+        const pair = this.fontPairs.find(f => f.name === this.config.fontPair);
+        if (pair) this.loadFont(pair.url);
+      }
     });
   }
 
@@ -288,6 +313,24 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
     }
   }
 
+  get activeFontPair(): FontPair {
+    return this.fontPairs.find(f => f.name === this.config.fontPair) || this.fontPairs[0];
+  }
+
+  selectFont(pair: FontPair): void {
+    this.config.fontPair = pair.name;
+    this.loadFont(pair.url);
+  }
+
+  private loadFont(url: string): void {
+    if (this.loadedFontUrls.has(url)) return;
+    this.loadedFontUrls.add(url);
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = url;
+    document.head.appendChild(link);
+  }
+
   copyShareLink(): void {
     const p = new URLSearchParams();
     p.set('name', this.config.doctorName);
@@ -305,6 +348,9 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
     }
     if (this.config.primaryColor !== '#2563eb') {
       p.set('color', this.config.primaryColor.replace('#', ''));
+    }
+    if (this.config.fontPair !== 'Outfit + DM Sans') {
+      p.set('font', this.config.fontPair);
     }
     const url = `${window.location.origin}/demo?${p.toString()}`;
     navigator.clipboard.writeText(url).then(() => {

@@ -63,6 +63,18 @@
       </div>
     </div>
     <div class="demo-field">
+      <label>Typography</label>
+      <div class="demo-font-presets">
+        <button *ngFor="let fp of fontPairs"
+          class="demo-font-btn"
+          [class.demo-font-btn--active]="config.fontPair === fp.name"
+          (click)="selectFont(fp)">
+          <span class="demo-font-preview" [style.fontFamily]="fp.heading">Aa</span>
+          <span class="demo-font-name">{{ fp.name }}</span>
+        </button>
+      </div>
+    </div>
+    <div class="demo-field">
       <label>Profile Photo</label>
       <input type="text" [(ngModel)]="config.profileImage" placeholder="Paste doctor photo URL...">
       <div style="margin-top:6px;display:flex;align-items:center;gap:8px;">
@@ -106,7 +118,10 @@
 <!-- ========================================= -->
 <!--    ACTUAL PROFILE (uses jasbir classes)    -->
 <!-- ========================================= -->
-<div class="profile-landing" [class.animations-on]="animationsEnabled" [style.--demo-primary]="config.primaryColor">
+<div class="profile-landing" [class.animations-on]="animationsEnabled"
+     [style.--demo-primary]="config.primaryColor"
+     [style.--font-heading]="activeFontPair.heading"
+     [style.--font-body]="activeFontPair.body">
 
   <!-- MOBILE HEADER -->
   <nav class="custom-header-nav">

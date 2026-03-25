@@ -119,6 +119,52 @@
   &:hover { border-color: #94a3b8; background: #f8fafc; }
 }
 
+// ─── FONT PICKER UI ──────────────────────────
+.demo-font-presets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.demo-font-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #94a3b8;
+    background: #f8fafc;
+  }
+
+  &--active {
+    border-color: #2563eb;
+    background: #eff6ff;
+    box-shadow: 0 0 0 1px #2563eb;
+  }
+}
+
+.demo-font-preview {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+  width: 32px;
+  text-align: center;
+  line-height: 1;
+}
+
+.demo-font-name {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: 0.01em;
+}
+
 // ─── ICON ALIGNMENT FIXES ──────────────────
 .section-brand-label {
   display: flex !important;
