@@ -1,0 +1,745 @@
+<!-- DEMO FLOATING TOOLBAR -->
+<div class="demo-toolbar">
+  <div class="demo-toolbar-row">
+    <div class="demo-badge">
+      <span class="demo-badge-dot"></span>
+      DEMO
+    </div>
+    <div class="demo-toolbar-actions">
+      <div class="demo-toggle" (click)="toggleAnimations()">
+        <span class="demo-toggle-label">Animations</span>
+        <div class="demo-switch" [class.demo-switch--on]="animationsEnabled">
+          <div class="demo-switch-knob"></div>
+        </div>
+      </div>
+      <button class="demo-btn demo-btn--edit" (click)="editPanelOpen = !editPanelOpen">
+        <mat-icon class="!text-base !w-4 !h-4">{{ editPanelOpen ? 'close' : 'edit' }}</mat-icon>
+        {{ editPanelOpen ? 'Close' : 'Personalize' }}
+      </button>
+      <button class="demo-btn demo-btn--features" (click)="featuresOpen = !featuresOpen">
+        <mat-icon class="!text-base !w-4 !h-4">{{ featuresOpen ? 'close' : 'auto_awesome' }}</mat-icon>
+        Features
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PANEL -->
+<div class="demo-edit-panel" [class.demo-edit-panel--open]="editPanelOpen">
+  <div class="demo-edit-header">
+    <h3>Personalize Demo</h3>
+    <button class="demo-edit-close" (click)="editPanelOpen = false"><mat-icon>close</mat-icon></button>
+  </div>
+  <div class="demo-edit-body">
+    <div class="demo-field"><label>Doctor Name</label><input type="text" [(ngModel)]="config.doctorName"></div>
+    <div class="demo-field"><label>Degree</label><input type="text" [(ngModel)]="config.degree"></div>
+    <div class="demo-field"><label>Specialization</label><input type="text" [(ngModel)]="config.specialization"></div>
+    <div class="demo-field"><label>Clinic Name</label><input type="text" [(ngModel)]="config.clinicName"></div>
+    <div class="demo-field"><label>Clinic Tagline</label><input type="text" [(ngModel)]="config.clinicTagline"></div>
+    <div class="demo-field-row">
+      <div class="demo-field"><label>City</label><input type="text" [(ngModel)]="config.city"></div>
+      <div class="demo-field"><label>State</label><input type="text" [(ngModel)]="config.state"></div>
+    </div>
+    <div class="demo-field-row">
+      <div class="demo-field"><label>Experience (yrs)</label><input type="text" [(ngModel)]="config.experience"></div>
+      <div class="demo-field"><label>Rating</label><input type="text" [(ngModel)]="config.rating"></div>
+    </div>
+    <div class="demo-field"><label>Phone Number</label><input type="tel" [(ngModel)]="config.phone"></div>
+    <div class="demo-field"><label>Hero Quote</label><input type="text" [(ngModel)]="config.tagline"></div>
+    <div class="demo-field">
+      <label>Color Theme</label>
+      <div class="demo-color-presets">
+        <button *ngFor="let preset of colorPresets"
+          class="demo-color-dot"
+          [style.background]="preset.color"
+          [class.demo-color-dot--active]="config.primaryColor === preset.color"
+          (click)="config.primaryColor = preset.color"
+          [title]="preset.name">
+        </button>
+        <label class="demo-color-custom" [title]="'Custom color'">
+          <input type="color" [(ngModel)]="config.primaryColor" style="opacity:0;width:0;height:0;position:absolute;">
+          <mat-icon class="!text-sm !w-4 !h-4" style="color:#64748b">palette</mat-icon>
+        </label>
+      </div>
+    </div>
+    <div class="demo-field">
+      <label>Profile Photo</label>
+      <input type="text" [(ngModel)]="config.profileImage" placeholder="Paste doctor photo URL...">
+      <div style="margin-top:6px;display:flex;align-items:center;gap:8px;">
+        <label class="demo-upload-btn">
+          <mat-icon class="!text-sm !w-4 !h-4">upload</mat-icon> Upload
+          <input type="file" accept="image/*" (change)="onProfileImageUpload($event)" style="display:none">
+        </label>
+        <span *ngIf="config.profileImage" style="font-size:0.7rem;color:#10b981;font-weight:600;">Photo set</span>
+      </div>
+    </div>
+    <button class="demo-share-btn" (click)="copyShareLink()">
+      <mat-icon class="!text-base !w-4 !h-4">link</mat-icon>
+      {{ shareTooltip || 'Copy Personalized Link' }}
+    </button>
+  </div>
+</div>
+
+<!-- FEATURES PANEL -->
+<div class="demo-features-panel" [class.demo-features-panel--open]="featuresOpen">
+  <div class="demo-edit-header">
+    <h3>What's Included</h3>
+    <button class="demo-edit-close" (click)="featuresOpen = false"><mat-icon>close</mat-icon></button>
+  </div>
+  <ul class="demo-features-list">
+    <li *ngFor="let f of features">
+      <mat-icon class="!text-sm !w-4 !h-4" style="color:#10b981">check_circle</mat-icon>
+      {{ f }}
+    </li>
+  </ul>
+  <div class="demo-features-cta">
+    <a href="https://wa.me/919437975834?text=Hi%2C%20I%20saw%20the%20demo%20and%20I%20want%20a%20premium%20doctor%20website" target="_blank" rel="noopener" class="demo-cta-wa">
+      <i class="fab fa-whatsapp"></i> Get Your Site — Chat Now
+    </a>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div class="demo-overlay" *ngIf="editPanelOpen || featuresOpen" (click)="editPanelOpen = false; featuresOpen = false"></div>
+
+
+<!-- ========================================= -->
+<!--    ACTUAL PROFILE (uses jasbir classes)    -->
+<!-- ========================================= -->
+<div class="profile-landing" [class.animations-on]="animationsEnabled" [style.--demo-primary]="config.primaryColor">
+
+  <!-- MOBILE HEADER -->
+  <nav class="custom-header-nav">
+    <h2 class="header-title">Dr. {{ config.doctorName }}</h2>
+    <button class="header-book-btn" (click)="openBooking()">Book</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-landing">
+    <div class="hero-bg-image">
+      <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=1200&q=80" alt="Dental Clinic Team" loading="eager">
+    </div>
+
+    <div class="hero-star star-1"><mat-icon>auto_awesome</mat-icon></div>
+    <div class="hero-star star-2"><mat-icon>auto_awesome</mat-icon></div>
+    <div class="hero-star star-3"><mat-icon>auto_awesome</mat-icon></div>
+
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-clinic-brand">
+          <div class="hero-logo-ring">
+            <mat-icon style="font-size:32px;width:32px;height:32px;color:#fff">local_hospital</mat-icon>
+          </div>
+          <div class="hero-brand-text">
+            <span class="hero-clinic-name">{{ config.clinicName }}</span>
+            <span class="hero-clinic-tagline">{{ config.clinicTagline }}, {{ config.city }}</span>
+          </div>
+        </div>
+
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          <span>Top-Rated Doctor in {{ config.city }}</span>
+        </div>
+
+        <h1>
+          &ldquo;{{ config.tagline }}&rdquo;
+        </h1>
+
+        <p class="hero-subtitle">{{ heroSubtitle }}</p>
+
+        <div class="hero-ctas">
+          <button class="btn-primary" (click)="openBooking()">
+            <mat-icon class="!text-xl">calendar_today</mat-icon>
+            Book Appointment
+          </button>
+        </div>
+
+        <div class="trust-badges">
+          <div class="trust-badge">
+            <mat-icon class="!text-lg trust-badge-icon">verified</mat-icon>
+            <span>Board Certified</span>
+          </div>
+          <div class="trust-badge">
+            <mat-icon class="!text-lg trust-badge-icon">star</mat-icon>
+            <span>{{ config.rating }} Rating</span>
+          </div>
+          <div class="trust-badge">
+            <mat-icon class="!text-lg trust-badge-icon">groups</mat-icon>
+            <span>10,000+ Patients</span>
+          </div>
+        </div>
+
+        <div class="hero-social-links">
+          <span class="social-icon-btn"><i class="fab fa-instagram"></i></span>
+          <span class="social-icon-btn"><i class="fab fa-facebook-f"></i></span>
+          <span class="social-icon-btn"><i class="fab fa-youtube"></i></span>
+          <span class="social-icon-btn share-btn"><i class="fas fa-share-nodes"></i></span>
+        </div>
+      </div>
+
+      <div class="hero-image-wrapper">
+        <div class="hero-accent-shape shape-1"></div>
+        <div class="hero-accent-shape shape-2"></div>
+        <div class="hero-image-container">
+          <img [src]="config.profileImage || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80'" alt="Dr. {{ config.doctorName }}" loading="eager">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="profile-main-content">
+
+    <!-- APPOINTMENT BAR -->
+    <div class="appointment-bar">
+      <div class="bar-inner">
+        <div class="bar-field">
+          <label><mat-icon class="!text-sm !w-4 !h-4 text-gray-400">person</mat-icon> Doctor</label>
+          <div class="field-value">Dr. {{ config.doctorName }}</div>
+        </div>
+        <div class="bar-divider"></div>
+        <div class="bar-field">
+          <label><mat-icon class="!text-sm !w-4 !h-4 text-gray-400">medical_services</mat-icon> Specialization</label>
+          <div class="field-value">{{ config.specialization }}</div>
+        </div>
+        <div class="bar-divider"></div>
+        <div class="bar-field">
+          <label><mat-icon class="!text-sm !w-4 !h-4 text-gray-400">location_on</mat-icon> Location</label>
+          <div class="field-value">{{ config.city }}, {{ config.state }}</div>
+        </div>
+        <div class="bar-divider"></div>
+        <div class="bar-field">
+          <label><mat-icon class="!text-sm !w-4 !h-4 text-gray-400">schedule</mat-icon> Experience</label>
+          <div class="field-value">{{ config.experience }}+ Years</div>
+        </div>
+        <button class="btn-primary-solid" (click)="openBooking()">
+          <mat-icon class="!text-lg">calendar_today</mat-icon>
+          Book Appointment
+        </button>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section class="about-section">
+      <div class="about-grid">
+        <div class="about-image">
+          <img [src]="config.profileImage || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80'" alt="Dr. {{ config.doctorName }}" loading="lazy"
+            style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
+        </div>
+        <div class="about-content">
+          <div class="about-brand-row">
+            <mat-icon class="about-clinic-logo" style="font-size:28px;width:28px;height:28px" [style.color]="config.primaryColor">local_hospital</mat-icon>
+            <p class="about-label">About the Doctor</p>
+          </div>
+          <h2>
+            {{ config.experience }}+ Years of Expertise
+            in <span class="highlight">{{ config.specialization }}</span>
+          </h2>
+          <p>
+            Dr. {{ config.doctorName }} ({{ config.degree }}) is a renowned {{ config.specialization }}
+            based in {{ config.city }}, {{ config.state }}. Founded {{ config.clinicName }}
+            to bring world-class dental care to the region.
+            With advanced training in orthodontics, laser dentistry, and cosmetic procedures,
+            Dr. {{ config.doctorName }} combines cutting-edge technology with a gentle, patient-first approach
+            to create beautiful, healthy smiles for patients of all ages.
+          </p>
+          <ul class="about-checks">
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>{{ config.degree }} qualified {{ config.specialization }}</span></li>
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>Specializing in Braces, Clear Aligners & Invisalign</span></li>
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>Advanced Laser Dentistry & Pain-Free Treatments</span></li>
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>Serving {{ config.city }} with {{ config.experience }}+ years of experience</span></li>
+          </ul>
+          <div class="about-stats">
+            <div class="stat-item">
+              <div class="stat-number">{{ config.experience }}+</div>
+              <div class="stat-label">Years Exp.</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">99%</div>
+              <div class="stat-label">Patient Satisfaction</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">10K+</div>
+              <div class="stat-label">Smiles Created</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services-section alt-bg">
+      <div class="section-brand-label">
+        <mat-icon class="section-brand-icon" style="font-size:24px;width:24px;height:24px" [style.color]="config.primaryColor">local_hospital</mat-icon>
+        <p class="section-label" style="margin-bottom: 0;">Our Services</p>
+      </div>
+      <h2 class="section-heading">Treatments at <span [style.color]="config.primaryColor">{{ config.clinicName }}</span></h2>
+      <div class="services-icon-grid">
+          <div *ngFor="let service of services; let i = index"
+            class="service-icon-card scroll-animate"
+            [attr.data-aos]="animationsEnabled ? 'fade-up' : null"
+            [attr.data-aos-delay]="animationsEnabled ? (i % 3) * 100 : null">
+            <div class="dental-icon">
+              <img loading="lazy" [src]="service.icon" [alt]="service.name">
+            </div>
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description }}</p>
+            <span class="check-details-link">Check details <mat-icon class="!text-sm !w-3.5 !h-3.5">arrow_forward</mat-icon></span>
+          </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="detail-section">
+      <div class="detail-inner" style="max-width: 1180px; margin: 0 auto;">
+        <div class="section-brand-label">
+          <mat-icon class="section-brand-icon" style="font-size:24px;width:24px;height:24px" [style.color]="config.primaryColor">local_hospital</mat-icon>
+          <p class="section-label" style="margin-bottom: 0;">Our Clinic</p>
+        </div>
+        <h2 class="section-heading">Inside <span [style.color]="config.primaryColor">{{ config.clinicName }}</span></h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+          <div style="border-radius: 16px; overflow: hidden; aspect-ratio: 4/3;">
+            <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&q=80&fit=crop" alt="Clinic Interior" loading="lazy"
+              style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="border-radius: 16px; overflow: hidden; aspect-ratio: 4/3;">
+            <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&q=80&fit=crop" alt="Dental Treatment" loading="lazy"
+              style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="border-radius: 16px; overflow: hidden; aspect-ratio: 4/3;">
+            <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80&fit=crop" alt="Doctor Portrait" loading="lazy"
+              style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="detail-section alt-bg">
+      <div class="detail-inner" style="max-width: 1180px; margin: 0 auto;">
+        <div class="section-brand-label">
+          <mat-icon class="section-brand-icon" style="font-size:24px;width:24px;height:24px" [style.color]="config.primaryColor">local_hospital</mat-icon>
+          <p class="section-label" style="margin-bottom: 0;">Patient Reviews</p>
+        </div>
+        <h2 class="section-heading">What Our <span [style.color]="config.primaryColor">Patients Say</span></h2>
+        <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+          <div *ngFor="let t of testimonials" class="testimonial-card"
+            [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+            <div class="testimonial-quote-icon small"><mat-icon class="!text-xl">format_quote</mat-icon></div>
+            <p class="testimonial-text">"{{ t.text }}"</p>
+            <div class="testimonial-stars">
+              <mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon>
+              <mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon>
+              <mat-icon class="star-filled">star</mat-icon>
+            </div>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" [style.background]="t.color"><span>{{ t.initials }}</span></div>
+              <div><div class="testimonial-name">{{ t.name }}</div><div class="testimonial-meta">{{ t.treatment }}</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="detail-section">
+      <div class="detail-inner">
+        <div class="section-brand-label">
+          <mat-icon class="section-brand-icon" style="font-size:24px;width:24px;height:24px" [style.color]="config.primaryColor">local_hospital</mat-icon>
+          <p class="section-label" style="margin-bottom: 0;">Academic Background</p>
+        </div>
+        <h3 class="section-heading" style="margin-bottom: 0;">Education</h3>
+        <div class="edu-cards-grid" style="margin-top: 24px;">
+          <div *ngFor="let qual of placeholderEducation" class="edu-card"
+            [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+            <div class="edu-card-icon"><mat-icon class="!text-2xl">school</mat-icon></div>
+            <div class="edu-card-content">
+              <h4 class="edu-card-degree">{{ qual.degree }} &mdash; {{ qual.studyField }}</h4>
+              <p class="edu-card-institution">{{ qual.institution }}</p>
+              <p class="edu-card-year">{{ qual.startDate }} &mdash; {{ qual.endDate }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="detail-section alt-bg">
+      <div class="detail-inner" style="max-width: 1180px; margin: 0 auto;">
+        <div class="section-brand-label">
+          <mat-icon class="section-brand-icon" style="font-size:24px;width:24px;height:24px" [style.color]="config.primaryColor">local_hospital</mat-icon>
+          <p class="section-label" style="margin-bottom: 0;">Career Journey</p>
+        </div>
+        <h3 class="section-heading" style="margin-bottom: 0;">Professional Experience</h3>
+        <div class="experience-timeline" style="margin-top: 24px;">
+          <div *ngFor="let exp of placeholderExperience; let last = last" class="exp-timeline-item"
+            [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+            <div class="exp-timeline-marker">
+              <div class="exp-dot"></div>
+              <div class="exp-line" *ngIf="!last"></div>
+            </div>
+            <div class="exp-card">
+              <div class="exp-card-header">
+                <h4 class="exp-card-title">{{ exp.title }}</h4>
+                <span class="exp-card-date">{{ exp.startDate }} &mdash; {{ exp.endDate || 'Present' }}</span>
+              </div>
+              <p class="exp-card-desc">{{ exp.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOOKING SHOWCASE (inline) -->
+    <section class="detail-section" data-aos="fade-up">
+      <div class="detail-inner" style="max-width: 1180px; margin: 0 auto;">
+        <div class="section-brand-label">
+          <mat-icon class="section-brand-icon" style="font-size:24px;width:24px;height:24px" [style.color]="config.primaryColor">local_hospital</mat-icon>
+          <p class="section-label" style="margin-bottom: 0;">Online Booking</p>
+        </div>
+        <h2 class="section-heading">Book an <span [style.color]="config.primaryColor">Appointment</span></h2>
+
+        <div class="booking-showcase">
+          <!-- Left: Form preview -->
+          <div class="booking-showcase-form">
+            <div class="showcase-form-header">
+              <mat-icon [style.color]="config.primaryColor">calendar_today</mat-icon>
+              <div>
+                <h4>Book Appointment</h4>
+                <p>Dr. {{ config.doctorName }} &mdash; {{ config.specialization }}</p>
+              </div>
+            </div>
+            <div class="showcase-form-fields">
+              <div class="showcase-field">
+                <label>Full Name</label>
+                <div class="showcase-input">Priya Sharma</div>
+              </div>
+              <div class="showcase-field">
+                <label>Mobile Number</label>
+                <div class="showcase-input">98765 43210</div>
+              </div>
+              <div class="showcase-field-row">
+                <div class="showcase-field">
+                  <label>Gender</label>
+                  <div class="showcase-input">Female</div>
+                </div>
+                <div class="showcase-field">
+                  <label>Procedure</label>
+                  <div class="showcase-input">Dental Braces</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Slots preview -->
+          <div class="booking-showcase-slots">
+            <div class="mock-date-tabs">
+              <button *ngFor="let day of mockDays; let i = index"
+                class="mock-date-tab" [class.mock-date-tab--active]="showcaseDayIndex === i"
+                (click)="showcaseDayIndex = i">
+                <span class="tab-text">{{ day.day }}</span>
+                <span class="tab-number">{{ day.date }}</span>
+              </button>
+            </div>
+
+            <div *ngFor="let session of mockDays[showcaseDayIndex].sessions">
+              <div class="session-header">
+                <div class="session-info">
+                  <span class="session-label" [style.color]="config.primaryColor" [style.background]="config.primaryColor + '1a'">{{ session.label }}</span>
+                  <span class="session-clinic">{{ session.clinic }}</span>
+                  <span class="session-time">{{ session.timeRange }}</span>
+                </div>
+              </div>
+              <div class="slot-grid">
+                <span *ngFor="let slot of session.slots" class="slot-cell">
+                  <button class="slot-chip"
+                    [class.slot-chip--selected]="slot.time === showcaseSelectedSlot && slot.status === 'available'"
+                    [class.slot-chip--booked]="slot.status === 'booked'"
+                    [disabled]="slot.status === 'booked'"
+                    (click)="showcaseSelectedSlot = slot.time">
+                    {{ slot.time }}
+                  </button>
+                </span>
+              </div>
+            </div>
+
+            <button class="showcase-book-btn" [style.background]="config.primaryColor"
+              [disabled]="!showcaseSelectedSlot" [class.showcase-book-btn--disabled]="!showcaseSelectedSlot"
+              (click)="openBooking()">
+              <mat-icon class="!text-lg">event_available</mat-icon>
+              {{ showcaseSelectedSlot ? 'Book ' + showcaseSelectedSlot + ' — Pay in Cash' : 'Select a slot to book' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section class="map-section">
+      <div class="map-inner">
+        <div class="map-info">
+          <p class="section-label">Find Us</p>
+          <h2 class="section-heading" style="margin-bottom: 16px;">Visit Our Clinic</h2>
+          <div class="map-address-card">
+            <div class="map-address-icon"><mat-icon class="!text-2xl text-blue-600">location_on</mat-icon></div>
+            <div>
+              <h4 class="map-address-title">{{ config.clinicName }}</h4>
+              <p class="map-address-text">{{ config.city }}, {{ config.state }}</p>
+            </div>
+          </div>
+          <div class="map-details-row">
+            <div class="map-detail">
+              <mat-icon class="!text-lg text-blue-500">schedule</mat-icon>
+              <div>
+                <span class="map-detail-label">Working Hours</span>
+                <span class="map-detail-value">Mon - Sat, 9:00 AM - 8:00 PM</span>
+              </div>
+            </div>
+            <div class="map-detail">
+              <mat-icon class="!text-lg text-blue-500">directions_car</mat-icon>
+              <div>
+                <span class="map-detail-label">Parking</span>
+                <span class="map-detail-value">Free parking available</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-primary" style="margin-top: 24px;" (click)="openBooking()">
+            <mat-icon class="!text-xl">calendar_today</mat-icon>
+            Book Appointment
+          </button>
+        </div>
+        <div class="map-embed">
+          <iframe
+            src="https://maps.google.com/maps?q=Bhubaneswar,+Odisha,+India&t=&z=14&ie=UTF8&iwloc=&output=embed"
+            width="100%" height="100%" style="border:0; border-radius: 20px;" allowfullscreen loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="final-cta-section">
+      <div class="final-cta-glow"></div>
+      <div class="final-cta-content">
+        <div class="final-cta-logo-wrap">
+          <div class="final-cta-logo-ring"></div>
+          <div class="final-cta-logo" style="display:flex;align-items:center;justify-content:center;">
+            <mat-icon style="font-size:48px;width:48px;height:48px" [style.color]="config.primaryColor">local_hospital</mat-icon>
+          </div>
+        </div>
+        <div class="final-cta-badge">
+          <mat-icon class="!text-sm">favorite</mat-icon>
+          <span>Your Smile Matters</span>
+        </div>
+        <h2>
+          Ready For Your<br>
+          <span class="typewriter-wrap">
+            <span class="typewriter-text cta-typewriter">Perfect Smile?</span>
+            <span class="typewriter-cursor"></span>
+          </span>
+        </h2>
+        <p>
+          Take the first step towards a healthier, brighter smile. Book a consultation at
+          {{ config.clinicName }}, {{ config.city }}. {{ config.degree }} qualified care.
+        </p>
+        <div class="final-cta-buttons">
+          <button class="btn-primary" (click)="openBooking()">
+            <mat-icon class="!text-xl">calendar_today</mat-icon>
+            Book Appointment Now
+          </button>
+          <div class="final-cta-guarantee">
+            <mat-icon class="!text-base text-blue-400">shield</mat-icon>
+            <span>Free cancellation up to 24 hours</span>
+          </div>
+        </div>
+        <div class="final-cta-social">
+          <p class="final-cta-social-label">CONNECT WITH US</p>
+          <div class="final-cta-social-links">
+            <span class="final-cta-social-icon"><i class="fab fa-instagram"></i></span>
+            <span class="final-cta-social-icon"><i class="fab fa-facebook-f"></i></span>
+            <span class="final-cta-social-icon"><i class="fab fa-youtube"></i></span>
+            <span class="final-cta-social-icon"><i class="fas fa-share-nodes"></i></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- POWERED BY -->
+    <div class="powered-by-knocdoc">
+      <div class="powered-by-card">
+        <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="powered-by-logo">
+        <div class="powered-by-text">
+          <p class="powered-by-headline">Want a site like this for your practice?</p>
+          <p class="powered-by-sub">Built by <strong>KnocDoc</strong> — premium websites for doctors</p>
+        </div>
+        <div class="powered-by-actions">
+          <a href="https://wa.me/919437975834?text=Hi%2C%20I%20want%20to%20create%20a%20doctor%20website%20with%20KnocDoc" target="_blank" rel="noopener" class="powered-by-btn powered-by-btn--wa">
+            <i class="fab fa-whatsapp"></i> Chat with us
+          </a>
+          <a href="tel:+919437975834" class="powered-by-btn powered-by-btn--call">
+            <i class="fas fa-phone-alt"></i> Call Us
+          </a>
+        </div>
+      </div>
+      <p class="powered-by-footer">Powered by <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc"> <strong>KnocDoc</strong></p>
+    </div>
+
+  </div><!-- /profile-main-content -->
+</div><!-- /profile-landing -->
+
+<!-- BOOKING BOTTOM SHEET OVERLAY -->
+<div class="booking-overlay" *ngIf="bookingOpen" (click)="closeBooking()"></div>
+<div class="booking-sheet" *ngIf="bookingOpen">
+  <div class="booking-sheet-handle" (click)="closeBooking()">
+    <div class="booking-handle-bar"></div>
+  </div>
+
+  <!-- STEP 1: FORM -->
+  <div class="booking-scroll-area" *ngIf="bookingStep === 'form'">
+    <p class="title-font" style="margin-bottom:12px;">Book An Appointment For Dr {{ config.doctorName }}</p>
+
+    <div style="margin-bottom:12px;">
+      <label class="center-block">Full Name *:
+        <input type="text" [(ngModel)]="mockPatient.name" placeholder="Full Name"
+          class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+      </label>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label class="center-block">Mobile Number *:
+        <input type="tel" [(ngModel)]="mockPatient.mobile" placeholder="10 digit mobile number"
+          class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+      </label>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label class="center-block">Gender *:</label>
+      <div class="flex gap-4 mt-1">
+        <label class="flex items-center gap-2 cursor-pointer text-sm">
+          <input type="radio" name="demoGender" [(ngModel)]="mockPatient.gender" value="male" class="accent-blue-600"> Male
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer text-sm">
+          <input type="radio" name="demoGender" [(ngModel)]="mockPatient.gender" value="female" class="accent-blue-600"> Female
+        </label>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label class="center-block">Reason for Visit:
+        <select [(ngModel)]="mockPatient.reason"
+          class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+          <option value="">Select procedure (optional)</option>
+          <option *ngFor="let svc of services" [value]="svc.name">{{ svc.name }}</option>
+          <option value="Other">Other</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <!-- STEP 2: SLOTS -->
+  <div class="booking-scroll-area" *ngIf="bookingStep === 'slots'">
+    <p class="title-font" style="margin-bottom:12px;">Select Date & Time</p>
+
+    <!-- Date tabs -->
+    <div class="mock-date-tabs">
+      <button *ngFor="let day of mockDays; let i = index"
+        class="mock-date-tab" [class.mock-date-tab--active]="selectedDayIndex === i"
+        (click)="selectedDayIndex = i">
+        <span class="tab-text">{{ day.day }}</span>
+        <span class="tab-number">{{ day.date }}</span>
+      </button>
+    </div>
+
+    <!-- Sessions for selected day -->
+    <div *ngFor="let session of mockDays[selectedDayIndex].sessions">
+      <div class="session-header">
+        <div class="session-info">
+          <span class="session-label">{{ session.label }}</span>
+          <span class="session-clinic">{{ session.clinic }}</span>
+          <span class="session-time">{{ session.timeRange }}</span>
+        </div>
+      </div>
+      <div class="slot-grid">
+        <span *ngFor="let slot of session.slots" class="slot-cell">
+          <button class="slot-chip"
+            [class.slot-chip--selected]="slot.time === selectedSlotTime && slot.status === 'available'"
+            [class.slot-chip--booked]="slot.status === 'booked'"
+            [disabled]="slot.status === 'booked'"
+            (click)="selectSlot(slot)">
+            {{ slot.time }}
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: CONFIRMATION -->
+  <div class="booking-scroll-area" *ngIf="bookingStep === 'confirmed'">
+    <div class="confirmation-card">
+      <div class="confirmation-check">
+        <div class="confirmation-check-circle">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+      <h2 class="confirmation-title">Appointment Confirmed!</h2>
+      <p class="confirmation-subtitle">Your appointment has been booked successfully</p>
+
+      <div class="confirmation-details">
+        <div class="confirmation-row">
+          <div class="confirmation-label"><mat-icon class="conf-icon">person</mat-icon> Patient</div>
+          <div class="confirmation-value">{{ bookingConfirmation?.patientName }}</div>
+        </div>
+        <div class="confirmation-row">
+          <div class="confirmation-label"><mat-icon class="conf-icon">phone</mat-icon> Mobile</div>
+          <div class="confirmation-value">{{ bookingConfirmation?.mobile }}</div>
+        </div>
+        <div class="confirmation-row">
+          <div class="confirmation-label"><mat-icon class="conf-icon">medical_services</mat-icon> Doctor</div>
+          <div class="confirmation-value">Dr. {{ bookingConfirmation?.doctorName }}</div>
+        </div>
+        <div class="confirmation-row">
+          <div class="confirmation-label"><mat-icon class="conf-icon">calendar_today</mat-icon> Date</div>
+          <div class="confirmation-value">{{ bookingConfirmation?.date }}</div>
+        </div>
+        <div class="confirmation-row">
+          <div class="confirmation-label"><mat-icon class="conf-icon">schedule</mat-icon> Slot Time</div>
+          <div class="confirmation-value">{{ bookingConfirmation?.time }}</div>
+        </div>
+        <div class="confirmation-row">
+          <div class="confirmation-label"><mat-icon class="conf-icon">local_hospital</mat-icon> Clinic</div>
+          <div class="confirmation-value">{{ bookingConfirmation?.clinic }}</div>
+        </div>
+        <div class="confirmation-row confirmation-row--highlight">
+          <div class="confirmation-label"><mat-icon class="conf-icon">lock</mat-icon> PIN</div>
+          <div class="confirmation-value confirmation-pin">{{ bookingConfirmation?.pin }}</div>
+        </div>
+      </div>
+
+      <div class="confirmation-footer-note">
+        <mat-icon class="!text-sm" style="color:#2872bf;flex-shrink:0">info</mat-icon>
+        <span>Show this confirmation at the clinic reception. Payment to be made in cash at the clinic.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="book-action-area">
+    <button *ngIf="bookingStep === 'form'" class="book-pay-btn"
+      [class.book-pay-btn--disabled]="!mockPatient.name || !mockPatient.mobile"
+      [disabled]="!mockPatient.name || !mockPatient.mobile"
+      (click)="proceedToSlots()">
+      <mat-icon class="!text-lg !mr-1">arrow_forward</mat-icon>
+      Continue — Select Slot
+    </button>
+    <button *ngIf="bookingStep === 'slots'" class="book-pay-btn"
+      [class.book-pay-btn--disabled]="!selectedSlotTime"
+      [disabled]="!selectedSlotTime"
+      (click)="confirmBooking()">
+      <mat-icon class="!text-lg !mr-1">event_available</mat-icon>
+      {{ selectedSlotTime ? 'Book & Pay in Cash' : 'Select a slot to continue' }}
+    </button>
+    <button *ngIf="bookingStep === 'confirmed'" class="book-pay-btn" (click)="closeBooking()">
+      <mat-icon class="!text-lg !mr-1">check_circle</mat-icon>
+      Done
+    </button>
+  </div>
+</div>

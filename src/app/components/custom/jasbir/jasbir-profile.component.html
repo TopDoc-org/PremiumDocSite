@@ -109,13 +109,13 @@
 
           <!-- Social Media Links -->
           <div class="hero-social-links">
-            <a href="https://www.instagram.com/dr.mehers_orthodontic_center/" target="_blank" rel="noopener" class="social-icon-btn" aria-label="Follow on Instagram">
+            <a href="https://www.instagram.com/drmeherdentalclinic?igsh=MWYyNmljbmtvc3EzbQ==" target="_blank" rel="noopener" class="social-icon-btn" aria-label="Follow on Instagram">
               <i class="fab fa-instagram"></i>
             </a>
-            <a href="https://www.facebook.com/drmeherorthodontic" target="_blank" rel="noopener" class="social-icon-btn" aria-label="Follow on Facebook">
+            <a href="https://www.facebook.com/drmehers" target="_blank" rel="noopener" class="social-icon-btn" aria-label="Follow on Facebook">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="https://www.youtube.com/@DrMehersOrthodonticCenter" target="_blank" rel="noopener" class="social-icon-btn" aria-label="Watch on YouTube">
+            <a href="https://youtube.com/@drmeherdentalclinic?si=DHKnQquGklUSH70R" target="_blank" rel="noopener" class="social-icon-btn" aria-label="Watch on YouTube">
               <i class="fab fa-youtube"></i>
             </a>
             <button class="social-icon-btn share-btn" (click)="shareProfile()" aria-label="Share Profile">
@@ -557,50 +557,18 @@
     </div>
 
 
-    <!-- SECTION 5: HOW IT WORKS -->
-    <section class="process-section">
-      <div class="process-inner">
-        <div class="section-brand-label" style="justify-content: center;">
-          <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
-          <p class="section-label" style="text-align: center; margin-bottom: 0;">Simple & Quick</p>
-        </div>
-        <h2 class="section-heading" style="text-align: center; margin-bottom: 56px;">
-          Book Your Dental Visit in 3 Steps
-        </h2>
-        <div class="process-grid">
-          <div class="process-step scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
-            <div class="process-number">01</div>
-            <div class="process-icon-wrap">
-              <mat-icon class="!text-3xl text-blue-600">search</mat-icon>
-            </div>
-            <h3>Pick Your Treatment</h3>
-            <p>Browse available services from teeth cleaning to cosmetic procedures and pick what you need.</p>
-          </div>
-          <div class="process-connector scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
-            <mat-icon class="!text-2xl text-blue-300">arrow_forward</mat-icon>
-          </div>
-          <div class="process-step scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
-            <div class="process-number">02</div>
-            <div class="process-icon-wrap">
-              <mat-icon class="!text-3xl text-blue-600">event_available</mat-icon>
-            </div>
-            <h3>Choose a Time Slot</h3>
-            <p>Select a convenient appointment slot. Get instant confirmation with zero hassle.</p>
-          </div>
-          <div class="process-connector scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
-            <mat-icon class="!text-2xl text-blue-300">arrow_forward</mat-icon>
-          </div>
-          <div class="process-step scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
-            <div class="process-number">03</div>
-            <div class="process-icon-wrap">
-              <mat-icon class="!text-3xl text-blue-600">health_and_safety</mat-icon>
-            </div>
-            <h3>Get Your Smile</h3>
-            <p>Visit Dr. Meher's Orthodontic Center for world-class dental care and walk out smiling.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- SECTION 5: INLINE BOOKING -->
+    <app-inline-booking
+      [doctorName]="profRes?.name || 'Jasbir Meher'"
+      [specialisation]="profRes?.specialisation || 'Orthodontist'"
+      [form]="unregForm"
+      [services]="services"
+      [scheduleDetails]="scheduleDetails"
+      [selectedSlotId]="selectedSlotId"
+      [accentColor]="'#2563eb'"
+      (slotSelected)="setSelectedSlot($event.slot, $event.session)"
+      (bookClicked)="onSpotFreeBook($event)">
+    </app-inline-booking>
 
 
     <!-- SECTION 8B: VIDEO TOUR -->
@@ -1108,13 +1076,13 @@
         <div class="final-cta-social">
           <span class="final-cta-social-label">Connect With Us</span>
           <div class="final-cta-social-icons">
-            <a href="https://www.instagram.com/dr.mehers_orthodontic_center/" target="_blank" rel="noopener" class="cta-social-icon" aria-label="Instagram">
+            <a href="https://www.instagram.com/drmeherdentalclinic?igsh=MWYyNmljbmtvc3EzbQ==" target="_blank" rel="noopener" class="cta-social-icon" aria-label="Instagram">
               <i class="fab fa-instagram"></i>
             </a>
-            <a href="https://www.facebook.com/drmeherorthodontic" target="_blank" rel="noopener" class="cta-social-icon" aria-label="Facebook">
+            <a href="https://www.facebook.com/drmehers" target="_blank" rel="noopener" class="cta-social-icon" aria-label="Facebook">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="https://www.youtube.com/@DrMehersOrthodonticCenter" target="_blank" rel="noopener" class="cta-social-icon" aria-label="YouTube">
+            <a href="https://youtube.com/@drmeherdentalclinic?si=DHKnQquGklUSH70R" target="_blank" rel="noopener" class="cta-social-icon" aria-label="YouTube">
               <i class="fab fa-youtube"></i>
             </a>
             <button class="cta-social-icon share-btn" (click)="shareProfile()" aria-label="Share Profile">

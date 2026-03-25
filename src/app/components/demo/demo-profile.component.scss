@@ -1,0 +1,818 @@
+// ==========================================
+//  Demo Profile — Toolbar & Panels Only
+//  Profile styles inherited from jasbir SCSS
+// ==========================================
+
+:host { display: block; }
+
+// Offset for demo toolbar
+.profile-landing { padding-top: 48px; }
+.custom-header-nav { top: 48px !important; }
+
+// ─── COLOR THEME OVERRIDE ──────────────────
+.profile-landing {
+  // Hero overlay tinted with primary color
+  .hero-bg-image::after {
+    background: linear-gradient(
+      155deg,
+      rgba(15, 23, 42, 0.88) 0%,
+      color-mix(in srgb, var(--demo-primary, #2563eb) 35%, rgba(15, 23, 42, 0.85)) 40%,
+      color-mix(in srgb, var(--demo-primary, #2563eb) 25%, rgba(15, 23, 42, 0.82)) 70%,
+      color-mix(in srgb, var(--demo-primary, #2563eb) 40%, rgba(15, 23, 42, 0.88)) 100%
+    ) !important;
+  }
+
+  // Buttons
+  .btn-primary,
+  .btn-primary-solid {
+    background: var(--demo-primary, #2563eb) !important;
+    border-color: var(--demo-primary, #2563eb) !important;
+  }
+
+  .header-book-btn {
+    background: var(--demo-primary, #2563eb) !important;
+  }
+
+  .hero-badge .badge-dot {
+    background: var(--demo-primary, #2563eb) !important;
+  }
+
+  .check-tick {
+    color: var(--demo-primary, #2563eb) !important;
+  }
+
+  .highlight {
+    color: var(--demo-primary, #2563eb) !important;
+  }
+
+  .about-stats .stat-number {
+    color: var(--demo-primary, #2563eb) !important;
+  }
+
+  .check-details-link {
+    color: var(--demo-primary, #2563eb) !important;
+  }
+
+  .hero-accent-shape {
+    &.shape-1 { background: var(--demo-primary, #2563eb) !important; }
+  }
+
+  .final-cta-section .btn-primary {
+    background: var(--demo-primary, #2563eb) !important;
+  }
+
+  .section-label {
+    color: var(--demo-primary, #2563eb) !important;
+  }
+
+  .edu-card-icon mat-icon {
+    color: var(--demo-primary, #2563eb) !important;
+  }
+
+  .exp-dot {
+    background: var(--demo-primary, #2563eb) !important;
+  }
+
+  .map-address-icon mat-icon {
+    color: var(--demo-primary, #2563eb) !important;
+  }
+}
+
+// ─── COLOR PICKER UI ───────────────────────
+.demo-color-presets {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.demo-color-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2.5px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+
+  &:hover { transform: scale(1.15); }
+
+  &--active {
+    border-color: #1e293b;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px currentColor;
+  }
+}
+
+.demo-color-custom {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px dashed #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+
+  &:hover { border-color: #94a3b8; background: #f8fafc; }
+}
+
+// ─── ICON ALIGNMENT FIXES ──────────────────
+.section-brand-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+
+  .section-brand-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+  }
+}
+
+.trust-badge {
+  mat-icon, .trust-badge-icon {
+    vertical-align: middle !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+}
+
+.about-checks li {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+
+  .check-tick {
+    flex-shrink: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+}
+
+.map-detail {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+
+  mat-icon {
+    flex-shrink: 0 !important;
+    margin-top: 2px;
+  }
+}
+
+.bar-field label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+
+  mat-icon {
+    vertical-align: middle !important;
+  }
+}
+
+.check-details-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+.testimonial-quote-icon {
+  mat-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+}
+
+// ─── TOOLBAR ─────────────────────────────
+.demo-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e8edf2;
+  padding: 10px 16px;
+}
+
+.demo-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.demo-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #2872bf;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.demo-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #25D366;
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+
+.demo-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.demo-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.demo-toggle-label {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 500;
+  @media (max-width: 420px) { display: none; }
+}
+
+.demo-switch {
+  width: 34px;
+  height: 18px;
+  border-radius: 10px;
+  background: #cbd5e1;
+  position: relative;
+  transition: background 0.25s;
+  &--on { background: #25D366; }
+}
+
+.demo-switch-knob {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.25s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  .demo-switch--on & { left: 18px; }
+}
+
+.demo-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover { background: #f1f5f9; }
+  &--edit { color: #2872bf; border-color: #dbeafe; }
+  &--features { color: #7c3aed; border-color: #ede9fe; }
+}
+
+// ─── OVERLAY ────────────────────────────
+.demo-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 1001;
+}
+
+// ─── SLIDE PANELS ───────────────────────
+.demo-edit-panel,
+.demo-features-panel {
+  position: fixed;
+  top: 0;
+  right: -360px;
+  width: 340px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #fff;
+  z-index: 1002;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.08);
+}
+
+.demo-edit-panel--open,
+.demo-features-panel--open { right: 0; }
+
+.demo-edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid #f1f5f9;
+
+  h3 {
+    font-family: var(--font-heading), sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+}
+
+.demo-edit-close {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  &:hover { background: #e2e8f0; }
+}
+
+.demo-edit-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.demo-field {
+  margin-bottom: 14px;
+
+  label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: #1e293b;
+    font-family: var(--font-body), sans-serif;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+    &:focus { outline: none; border-color: #93c5fd; box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
+    &::placeholder { color: #94a3b8; }
+  }
+}
+
+.demo-field-row {
+  display: flex;
+  gap: 12px;
+  .demo-field { flex: 1; }
+}
+
+.demo-share-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px;
+  border-radius: 10px;
+  border: 1.5px solid #dbeafe;
+  background: #eff6ff;
+  color: #2872bf;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+  &:hover { background: #dbeafe; }
+}
+
+// ─── FEATURES LIST ──────────────────────
+.demo-features-list {
+  flex: 1;
+  overflow-y: auto;
+  list-style: none;
+  padding: 20px;
+  margin: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    font-size: 0.85rem;
+    color: #334155;
+    border-bottom: 1px solid #f8fafc;
+  }
+}
+
+.demo-features-cta {
+  padding: 16px 20px 24px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.demo-cta-wa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  i { font-size: 18px; }
+  &:hover { background: #1fb855; }
+}
+
+// ─── HERO IMAGE UPLOAD ─────────────────
+.demo-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover { background: #e2e8f0; }
+}
+
+// ─── INLINE BOOKING SHOWCASE ───────────
+.booking-showcase {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+  margin-top: 24px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.booking-showcase-form {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  height: fit-content;
+}
+
+.showcase-form-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+
+  mat-icon {
+    font-size: 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+.showcase-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.showcase-field {
+  label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+}
+
+.showcase-input {
+  padding: 10px 14px;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.showcase-field-row {
+  display: flex;
+  gap: 12px;
+  .showcase-field { flex: 1; }
+}
+
+.booking-showcase-slots {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  max-height: 520px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.showcase-book-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ─── BOOKING BOTTOM SHEET ──────────────
+.booking-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 2000;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes slideUpCenter {
+  from { transform: translateX(-50%) translateY(100%); }
+  to { transform: translateX(-50%) translateY(0); }
+}
+
+.booking-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2001;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  height: 85vh;
+  max-height: 85vh;
+  animation: slideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+  @media (min-width: 768px) {
+    max-width: 520px;
+    left: 50%;
+    animation: slideUpCenter 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .booking-scroll-area {
+    flex: 1 1 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    padding: 16px 20px 8px;
+    -webkit-overflow-scrolling: touch;
+
+    @media (min-width: 768px) {
+      padding: 20px 28px 8px;
+    }
+  }
+}
+
+.booking-sheet-handle {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 4px;
+  cursor: pointer;
+}
+
+.booking-handle-bar {
+  width: 40px;
+  height: 4px;
+  border-radius: 4px;
+  background: #d1d5db;
+}
+
+// ─── MOCK DATE TABS ────────────────────
+.mock-date-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.mock-date-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+
+  .tab-text {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    text-transform: uppercase;
+  }
+
+  .tab-number {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+
+  &:hover {
+    background: #f0f9ff;
+    border-color: #93c5fd;
+  }
+
+  &--active {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    .tab-text { color: #1d4ed8; }
+    .tab-number { color: #2563eb; }
+  }
+}
+
+// ─── CONFIRMATION CARD (demo) ──────────
+.booking-sheet {
+  .confirmation-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    padding: 28px 20px;
+    text-align: center;
+  }
+
+  .confirmation-check {
+    margin-bottom: 16px;
+  }
+
+  .confirmation-check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  }
+
+  .confirmation-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 4px;
+  }
+
+  .confirmation-subtitle {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin: 0 0 20px;
+  }
+
+  .confirmation-details {
+    text-align: left;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 16px;
+  }
+
+  .confirmation-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f8fafc;
+
+    &--highlight {
+      background: #eff6ff;
+      margin: 8px -12px 0;
+      padding: 12px;
+      border-radius: 10px;
+      border-bottom: none;
+    }
+  }
+
+  .confirmation-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .conf-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    color: #2563eb;
+  }
+
+  .confirmation-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e293b;
+    text-align: right;
+  }
+
+  .confirmation-pin {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2563eb;
+    letter-spacing: 0.12em;
+  }
+
+  .confirmation-footer-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 12px;
+    background: #f0f9ff;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    color: #475569;
+    line-height: 1.5;
+  }
+}

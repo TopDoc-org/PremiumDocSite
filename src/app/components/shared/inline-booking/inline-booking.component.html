@@ -1,0 +1,117 @@
+<section class="ib-section">
+  <div class="ib-inner">
+    <div class="ib-section-label" [style.color]="accentColor">
+      <mat-icon class="ib-section-icon" [style.color]="accentColor">add_box</mat-icon>
+      <span>ONLINE BOOKING</span>
+    </div>
+    <h2 class="ib-section-heading">
+      Book an <span class="ib-heading-accent" [style.color]="accentColor">Appointment</span>
+    </h2>
+
+    <div class="ib-grid">
+      <!-- Left: Form Card -->
+      <div class="ib-form-card">
+        <div class="ib-form-header">
+          <div class="ib-form-icon" [style.background]="accentColor + '14'" >
+            <mat-icon [style.color]="accentColor">event_note</mat-icon>
+          </div>
+          <div>
+            <h4>Book Appointment</h4>
+            <p>Dr. {{ doctorName }} &mdash; {{ specialisation }}</p>
+          </div>
+        </div>
+        <form [formGroup]="form" class="ib-form-fields" *ngIf="form">
+          <div class="ib-field">
+            <label>Full Name</label>
+            <input formControlName="name" type="text" placeholder="Priya Sharma" class="ib-input">
+          </div>
+          <div class="ib-field">
+            <label>Mobile Number</label>
+            <input formControlName="mobile" type="tel" placeholder="98765 43210" class="ib-input">
+          </div>
+          <div class="ib-field-row">
+            <div class="ib-field">
+              <label>Gender</label>
+              <select formControlName="gender" class="ib-input">
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="ib-field">
+              <label>Procedure</label>
+              <select formControlName="reasonForVisit" class="ib-input">
+                <option value="">Select</option>
+                <option *ngFor="let svc of services" [value]="svc.name">{{ svc.name }}</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Right: Slots Panel -->
+      <div class="ib-slots-panel">
+        <div class="ib-slots-scroll">
+          <div class="ib-disabled-hint" *ngIf="form?.invalid && scheduleDetails.length > 0">
+            <mat-icon>info</mat-icon>
+            Fill in your details to select a slot
+          </div>
+
+          <mat-tab-group class="ib-tab-group" *ngIf="scheduleDetails.length > 0">
+            <mat-tab *ngFor="let sched of scheduleDetails">
+              <ng-template mat-tab-label>
+                <span class="ib-tab-day">{{ sched.day }}</span>
+                <span class="ib-tab-date">{{ sched.date }}</span>
+              </ng-template>
+
+              <ng-container *ngIf="sched.sessions.length > 0">
+                <ng-container *ngFor="let session of sched.sessions; let i = index">
+                  <ng-container *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1">
+                    <div class="ib-session-header">
+                      <span class="ib-session-badge" [style.border-color]="accentColor" [style.color]="accentColor">Session {{ i + 1 }}</span>
+                      <span class="ib-session-clinic">{{ session?.clinic?.clinicName || session?.clinic?.name }}</span>
+                      <span class="ib-session-time">{{ session.startTime }} &ndash; {{ session.endTime }}</span>
+                    </div>
+                    <div class="ib-slot-grid" *ngIf="session.slots.length > 1">
+                      <ng-container *ngFor="let slot of session.slots">
+                        <button *ngIf="slot._source?.status !== 'sessionCancelled' && slot._source?.status !== 'cancelled'"
+                          class="ib-slot-chip"
+                          [class.ib-slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
+                          [class.ib-slot-chip--booked]="slot._source?.status !== 'notBooked'"
+                          [disabled]="slot._source?.status !== 'notBooked' || form?.invalid"
+                          (click)="onSlotSelect(slot, session)">
+                          {{ slot._source?.slotTime }}
+                        </button>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+
+              <div class="ib-empty-msg" *ngIf="sched.sessions.length === 0">
+                The upcoming schedule has not been set by the doctor as of yet
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+
+          <div class="ib-empty-msg" *ngIf="scheduleDetails.length === 0">
+            The upcoming schedule has not been set by the doctor as of yet
+          </div>
+        </div>
+
+        <div class="ib-book-btn-wrapper">
+          <button class="ib-book-btn"
+            [disabled]="!selectedSlotId || form?.invalid"
+            [class.ib-book-btn--disabled]="!selectedSlotId || form?.invalid"
+            [style.background-color]="accentColor"
+            (click)="onBook()">
+            <mat-icon>event_available</mat-icon>
+            {{ selectedSlotId && !form?.invalid ? 'Book & Pay in Cash' : 'Select a slot to book' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

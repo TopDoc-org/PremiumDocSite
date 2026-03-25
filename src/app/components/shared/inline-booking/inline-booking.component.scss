@@ -1,0 +1,401 @@
+// ─── INLINE BOOKING — Reusable Component ─────
+:host { display: block; }
+
+$navy-900: #0f172a;
+$slate-200: #e2e8f0;
+$slate-400: #94a3b8;
+$slate-500: #64748b;
+
+.ib-section {
+  padding: 80px 24px;
+  background: #fff;
+
+  @media (max-width: 767px) {
+    padding: 48px 16px;
+  }
+}
+
+.ib-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+// Section header
+.ib-section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.ib-section-icon {
+  font-size: 22px !important;
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.ib-section-heading {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 800;
+  color: $navy-900;
+  margin: 0 0 36px;
+  line-height: 1.2;
+}
+
+// Two-column grid
+.ib-grid {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 24px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Left form card
+.ib-form-card {
+  background: #f8fafc;
+  border: 1px solid $slate-200;
+  border-radius: 16px;
+  padding: 24px;
+  height: fit-content;
+}
+
+.ib-form-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid $slate-200;
+
+  h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $navy-900;
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.75rem;
+    color: $slate-500;
+    margin: 0;
+  }
+}
+
+.ib-form-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.ib-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ib-field {
+  label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: $slate-400;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 5px;
+  }
+}
+
+.ib-field-row {
+  display: flex;
+  gap: 12px;
+  .ib-field { flex: 1; }
+}
+
+.ib-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  background: #fff;
+  border: 1.5px solid $slate-200;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: $navy-900;
+  font-family: inherit;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+  }
+
+  &::placeholder { color: $slate-400; }
+}
+
+select.ib-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+// Right slots panel
+.ib-slots-panel {
+  background: #f8fafc;
+  border: 1px solid $slate-200;
+  border-radius: 16px;
+  padding: 20px 24px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.ib-slots-scroll {
+  max-height: 500px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+.ib-book-btn-wrapper {
+  padding-top: 4px;
+}
+
+// Slots remain visible & scrollable even when form is invalid;
+// individual slot buttons are disabled via [disabled] attribute
+
+.ib-disabled-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #eef5ff;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: $slate-500;
+  margin-bottom: 12px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #3b82f6;
+  }
+}
+
+// Tab group overrides
+.ib-tab-group {
+  ::ng-deep .mat-tab-header {
+    border-bottom: none !important;
+    margin-bottom: 16px;
+  }
+
+  ::ng-deep .mat-tab-labels {
+    gap: 6px;
+  }
+
+  ::ng-deep .mat-tab-label {
+    min-width: 0;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1.5px solid $slate-200;
+    background: #fff;
+    opacity: 1;
+    height: auto;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #eef5ff;
+      border-color: #93c5fd;
+    }
+
+    &.mat-tab-label-active {
+      background: #eef5ff;
+      border-color: #2563eb;
+    }
+  }
+
+  ::ng-deep .mat-ink-bar {
+    display: none !important;
+  }
+
+  ::ng-deep .mat-tab-body-content {
+    overflow-x: hidden !important;
+  }
+}
+
+.ib-tab-day {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: $slate-500;
+  text-transform: uppercase;
+
+  .mat-tab-label-active & { color: #1d4ed8; }
+}
+
+.ib-tab-date {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: $slate-400;
+  margin-top: 2px;
+
+  .mat-tab-label-active & { color: #2563eb; }
+}
+
+// Session header
+.ib-session-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.ib-session-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1.5px solid currentColor;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.ib-session-clinic {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: $navy-900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.ib-session-time {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: $slate-500;
+}
+
+// Slot grid
+.ib-slot-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.ib-slot-chip {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1.5px solid $slate-200;
+  background: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $navy-900;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background: #f1f5f9;
+    color: $slate-400;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: #2563eb;
+    background: #eef5ff;
+  }
+
+  &--selected {
+    border-color: #2563eb !important;
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  }
+
+  &--booked {
+    color: $slate-400 !important;
+    text-decoration: line-through;
+    opacity: 0.55;
+    cursor: not-allowed;
+    border-color: transparent;
+    background: #f1f5f9;
+  }
+}
+
+.ib-empty-msg {
+  padding: 28px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: $slate-500;
+}
+
+// Book button
+.ib-book-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background-color: #2563eb;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: all 0.2s;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  &--disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+  }
+}
