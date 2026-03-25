@@ -1,0 +1,27 @@
+<section class="testimonials-section">
+  <div class="testimonials-container">
+    <h2 class="testimonials-heading">{{ data?.heading || 'What Our Patients Say' }}</h2>
+    <p class="testimonials-subheading" *ngIf="data?.subheading">{{ data.subheading }}</p>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card" *ngFor="let t of data?.items || []" [class.featured]="t.isFeatured">
+        <div class="testimonial-stars">
+          <span *ngFor="let star of [].constructor(t.rating || 5)">★</span>
+        </div>
+        <p class="testimonial-text">"{{ t.text }}"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" [style.background]="t.avatarGradient || 'linear-gradient(135deg, var(--primary), var(--accent))'">
+            {{ t.authorInitials || (t.authorName | slice:0:1) }}
+          </div>
+          <div class="author-info">
+            <span class="author-name">{{ t.authorName }}</span>
+            <span class="author-treatment" *ngIf="t.treatment">{{ t.treatment }}</span>
+          </div>
+          <span class="verified-badge" *ngIf="t.isVerified">
+            <mat-icon>verified</mat-icon> Verified
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

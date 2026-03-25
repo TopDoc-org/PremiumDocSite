@@ -1,0 +1,263 @@
+{
+  "doctorId": "jasbir-001",
+  "profileType": "standard",
+  "theme": {
+    "primaryColor": "#2563eb",
+    "accentColor": "#1d4ed8",
+    "gradientFrom": "#1a1a2e",
+    "gradientTo": "#16213e"
+  },
+  "meta": {
+    "title": "Dr. Jasbir Meher | Orthodontic Center & Dental Clinic",
+    "description": "Dr. Jasbir Meher - BDS, MDS with 10+ years of experience in orthodontics and dental care in Balangir, Odisha."
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "id": "hero-1",
+      "data": {
+        "clinicName": "Dr. Meher's Orthodontic Center & Dental Clinic",
+        "tagline": "\"At my dental office, you are never a number.\"",
+        "subtitle": "BDS, MDS · 10+ Years Experience · Balangir, Odisha",
+        "badge": "Premium Dental Care",
+        "backgroundImage": "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=1200&q=80",
+        "ctaText": "Book Appointment",
+        "ctaLink": "#booking",
+        "trustBadges": [
+          { "icon": "verified", "text": "Board Certified" },
+          { "icon": "star", "text": "4.9 Rating" },
+          { "icon": "people", "text": "10,000+ Patients" }
+        ],
+        "socialLinks": [
+          { "icon": "public", "url": "https://www.instagram.com/dr.mehers_orthodontic_center/" },
+          { "icon": "public", "url": "https://www.facebook.com/drmeherorthodontic" }
+        ]
+      }
+    },
+    {
+      "type": "marquee",
+      "id": "marquee-1",
+      "data": {
+        "items": ["Orthodontics", "Clear Aligners", "Braces", "Root Canal", "Laser Dentistry", "Teeth Whitening", "Dentures", "Crowns & Bridges", "Gum Treatment", "Children Orthodontics", "Emergency Care", "Tooth Fillings"]
+      }
+    },
+    {
+      "type": "about",
+      "id": "about-1",
+      "data": {
+        "heading": "About Dr. Jasbir Meher",
+        "highlightText": "Leading Orthodontist in Balangir",
+        "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80",
+        "description": "Dr. Jasbir Meher is a highly experienced orthodontist dedicated to providing exceptional dental care. With over a decade of experience and advanced training in modern orthodontic techniques, Dr. Meher has transformed thousands of smiles across Odisha.",
+        "bulletPoints": [
+          "MDS in Orthodontics from premier institution",
+          "Advanced training in Invisalign & Clear Aligners",
+          "Pioneer of laser dentistry in Balangir region",
+          "Founder of Dr. Meher's Orthodontic Center",
+          "Active member of Indian Dental Association"
+        ],
+        "stats": [
+          { "value": "10K+", "label": "Smiles Created" },
+          { "value": "10+", "label": "Years Experience" },
+          { "value": "98%", "label": "Success Rate" }
+        ]
+      }
+    },
+    {
+      "type": "big-numbers",
+      "id": "stats-1",
+      "data": {
+        "items": [
+          { "value": "10,000+", "label": "Smiles Created" },
+          { "value": "10+", "label": "Years Since Est. 2015" },
+          { "value": "98%", "label": "Success Rate" },
+          { "value": "4.9", "label": "Patient Rating" }
+        ]
+      }
+    },
+    {
+      "type": "offers",
+      "id": "offers-1",
+      "data": {
+        "heading": "Special Offers",
+        "heroOffer": {
+          "badge": "Limited Time",
+          "title": "FREE X-Ray for New Patients",
+          "description": "Get a comprehensive dental X-ray absolutely free with your first consultation.",
+          "savingsAmount": "₹500",
+          "validUntil": "Valid till March 31, 2026"
+        },
+        "cards": [
+          {
+            "badge": "NEW",
+            "title": "Advanced Laser Dentistry Now Available",
+            "description": "Experience painless dental treatments with our state-of-the-art laser technology."
+          },
+          {
+            "badge": "20% OFF",
+            "title": "Braces & Clear Aligners",
+            "description": "Get 20% off on all braces and clear aligner treatments this month."
+          },
+          {
+            "title": "Family Dental Check-up Package",
+            "description": "Comprehensive dental check-up for the entire family at a special bundled price."
+          }
+        ]
+      }
+    },
+    {
+      "type": "services",
+      "id": "services-1",
+      "data": {
+        "heading": "Our Services",
+        "subheading": "Comprehensive dental care tailored to your needs",
+        "items": [
+          {
+            "name": "Orthodontics",
+            "description": "Complete orthodontic solutions including traditional braces and modern aligners.",
+            "imageUrl": "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=400&h=250&fit=crop&q=80",
+            "badge": "Popular"
+          },
+          {
+            "name": "Clear Aligners / Invisalign",
+            "description": "Invisible teeth straightening for a confident smile without metal braces.",
+            "imageUrl": "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=400&h=250&fit=crop&q=80",
+            "badge": "Trending"
+          },
+          {
+            "name": "Root Canal Treatment",
+            "description": "Painless root canal procedures using advanced techniques and equipment.",
+            "imageUrl": "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=400&h=250&fit=crop&q=80"
+          },
+          {
+            "name": "Laser Dentistry",
+            "description": "Minimally invasive laser treatments for gum disease, whitening, and more.",
+            "imageUrl": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=250&fit=crop&q=80",
+            "badge": "Advanced"
+          },
+          {
+            "name": "Teeth Whitening",
+            "description": "Professional whitening treatments for a brighter, more radiant smile.",
+            "imageUrl": "https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?w=400&h=250&fit=crop&q=80"
+          },
+          {
+            "name": "Children Orthodontics",
+            "description": "Specialized orthodontic care designed specifically for children and teens.",
+            "imageUrl": "https://images.unsplash.com/photo-1588776813677-77aaf5595b83?w=400&h=250&fit=crop&q=80"
+          }
+        ]
+      }
+    },
+    {
+      "type": "gallery",
+      "id": "gallery-1",
+      "data": {
+        "heading": "Our Clinic",
+        "images": [
+          { "src": "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=1000&q=80", "alt": "Clinic Interior", "label": "Modern Facility" },
+          { "src": "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1000&q=80", "alt": "Dental Chair", "label": "Advanced Equipment" },
+          { "src": "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=1000&q=80", "alt": "Treatment Room", "label": "Treatment Room" },
+          { "src": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=1000&q=80", "alt": "Our Team", "label": "Expert Team" }
+        ]
+      }
+    },
+    {
+      "type": "process",
+      "id": "process-1",
+      "data": {
+        "heading": "How It Works",
+        "steps": [
+          { "number": "1", "icon": "medical_services", "title": "Pick Your Treatment", "description": "Browse our services and choose the treatment that's right for you." },
+          { "number": "2", "icon": "calendar_today", "title": "Choose a Time Slot", "description": "Select a convenient date and time for your appointment." },
+          { "number": "3", "icon": "sentiment_very_satisfied", "title": "Get Your Smile", "description": "Visit us and let our experts take care of the rest." }
+        ]
+      }
+    },
+    {
+      "type": "testimonials",
+      "id": "testimonials-1",
+      "data": {
+        "heading": "What Our Patients Say",
+        "subheading": "Real stories from real patients",
+        "items": [
+          {
+            "text": "Dr. Meher transformed my smile completely. The braces treatment was smooth and the results are amazing. Highly recommend!",
+            "rating": 5,
+            "authorName": "Ananya Patel",
+            "authorInitials": "AP",
+            "avatarGradient": "linear-gradient(135deg, #667eea, #764ba2)",
+            "treatment": "Braces Treatment",
+            "isVerified": true,
+            "isFeatured": true
+          },
+          {
+            "text": "Got Invisalign done here and couldn't be happier. The staff is friendly and Dr. Meher explains everything clearly.",
+            "rating": 5,
+            "authorName": "Rahul Kumar",
+            "authorInitials": "RK",
+            "avatarGradient": "linear-gradient(135deg, #f093fb, #f5576c)",
+            "treatment": "Invisalign"
+          },
+          {
+            "text": "My daughter's orthodontic treatment was handled with so much care. Dr. Meher is great with children!",
+            "rating": 5,
+            "authorName": "Sneha Mohapatra",
+            "authorInitials": "SM",
+            "avatarGradient": "linear-gradient(135deg, #4facfe, #00f2fe)",
+            "treatment": "Children Orthodontics"
+          },
+          {
+            "text": "The laser dentistry treatment was painless and quick. Modern equipment and very professional service.",
+            "rating": 5,
+            "authorName": "Priya Dash",
+            "authorInitials": "PD",
+            "avatarGradient": "linear-gradient(135deg, #43e97b, #38f9d7)",
+            "treatment": "Laser Dentistry",
+            "isVerified": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "video",
+      "id": "video-1",
+      "data": {
+        "heading": "Take a Virtual Tour",
+        "description": "Step inside our state-of-the-art dental clinic",
+        "youtubeEmbedUrl": "https://www.youtube.com/embed/-IlvqRKH_Ds",
+        "features": ["Modern Equipment", "Sterilized Environment", "Comfortable Seating", "Dedicated Consultation Rooms"]
+      }
+    },
+    {
+      "type": "map",
+      "id": "map-1",
+      "data": {
+        "heading": "Visit Us",
+        "embedUrl": "https://maps.google.com/maps?q=Balangir,+Odisha,+India&t=&z=13&ie=UTF8&iwloc=&output=embed",
+        "address": "Dr. Meher's Orthodontic Center & Dental Clinic, Balangir, Odisha, India",
+        "workingHours": "Mon - Sat, 9:00 AM - 8:00 PM",
+        "phone": "+91-XXXXXXXXXX",
+        "parkingInfo": "Free parking available"
+      }
+    },
+    {
+      "type": "cta",
+      "id": "cta-1",
+      "data": {
+        "heading": "Ready for Your Best Smile?",
+        "description": "Book your appointment today and take the first step towards a healthier, more confident smile.",
+        "ctaText": "Book Now",
+        "ctaLink": "#booking",
+        "guaranteeText": "✓ No waiting time · ✓ Affordable pricing · ✓ Expert care"
+      }
+    },
+    {
+      "type": "booking",
+      "id": "booking-1",
+      "data": {
+        "heading": "Book an Appointment",
+        "subheading": "Choose a convenient time and we'll take care of the rest"
+      }
+    }
+  ]
+}

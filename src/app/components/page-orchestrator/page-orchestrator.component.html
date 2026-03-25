@@ -1,0 +1,88 @@
+<ng-container *ngFor="let section of config.sections; trackBy: trackBySection">
+  <div [ngStyle]="getSectionStyle(section)"
+       [ngClass]="section.style?.className || ''">
+    <ng-container [ngSwitch]="section.type">
+
+      <app-hero-section
+        *ngSwitchCase="'hero'"
+        [data]="section.data"
+        [theme]="config.theme">
+      </app-hero-section>
+
+      <app-about-section
+        *ngSwitchCase="'about'"
+        [data]="section.data">
+      </app-about-section>
+
+      <app-services-section
+        *ngSwitchCase="'services'"
+        [data]="section.data">
+      </app-services-section>
+
+      <app-offers-section
+        *ngSwitchCase="'offers'"
+        [data]="section.data">
+      </app-offers-section>
+
+      <app-gallery-section
+        *ngSwitchCase="'gallery'"
+        [data]="section.data">
+      </app-gallery-section>
+
+      <app-testimonials-section
+        *ngSwitchCase="'testimonials'"
+        [data]="section.data">
+      </app-testimonials-section>
+
+      <app-big-numbers-section
+        *ngSwitchCase="'big-numbers'"
+        [data]="section.data">
+      </app-big-numbers-section>
+
+      <app-video-section
+        *ngSwitchCase="'video'"
+        [data]="section.data">
+      </app-video-section>
+
+      <app-map-section
+        *ngSwitchCase="'map'"
+        [data]="section.data">
+      </app-map-section>
+
+      <app-marquee-section
+        *ngSwitchCase="'marquee'"
+        [data]="section.data"
+        [theme]="config.theme">
+      </app-marquee-section>
+
+      <app-team-section
+        *ngSwitchCase="'team'"
+        [data]="section.data">
+      </app-team-section>
+
+      <app-process-section
+        *ngSwitchCase="'process'"
+        [data]="section.data">
+      </app-process-section>
+
+      <app-cta-section
+        *ngSwitchCase="'cta'"
+        [data]="section.data"
+        [theme]="config.theme">
+      </app-cta-section>
+
+      <app-booking-section
+        *ngSwitchCase="'booking'"
+        [data]="section.data"
+        [doctorId]="config.doctorId">
+      </app-booking-section>
+
+      <!-- Generic fallback for unknown section types -->
+      <app-generic-section
+        *ngSwitchDefault
+        [section]="section">
+      </app-generic-section>
+
+    </ng-container>
+  </div>
+</ng-container>

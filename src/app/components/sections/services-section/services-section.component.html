@@ -1,0 +1,19 @@
+<section class="services-section">
+  <div class="services-container">
+    <h2 class="services-heading">{{ data?.heading || 'Our Services' }}</h2>
+    <p class="services-subheading" *ngIf="data?.subheading">{{ data.subheading }}</p>
+
+    <div class="services-grid">
+      <div class="service-card" *ngFor="let service of data?.items || []">
+        <div class="service-image" *ngIf="service.imageUrl">
+          <img [src]="service.imageUrl" [alt]="service.name" loading="lazy">
+          <span class="service-badge" *ngIf="service.badge">{{ service.badge }}</span>
+        </div>
+        <div class="service-info">
+          <h3>{{ service.name }}</h3>
+          <p>{{ service.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

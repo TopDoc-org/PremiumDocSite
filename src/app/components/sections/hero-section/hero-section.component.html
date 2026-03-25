@@ -1,0 +1,32 @@
+<section class="hero" [style.background-image]="'url(' + data?.backgroundImage + ')'">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge" *ngIf="data?.badge">{{ data.badge }}</div>
+    <h1 class="hero-title">{{ data?.clinicName }}</h1>
+    <p class="hero-tagline" *ngIf="data?.tagline">{{ data.tagline }}</p>
+    <p class="hero-subtitle" *ngIf="data?.subtitle">{{ data.subtitle }}</p>
+
+    <div class="hero-trust-badges" *ngIf="data?.trustBadges?.length">
+      <div class="trust-badge" *ngFor="let badge of data.trustBadges">
+        <mat-icon *ngIf="badge.icon">{{ badge.icon }}</mat-icon>
+        <span>{{ badge.text }}</span>
+      </div>
+    </div>
+
+    <div class="hero-cta" *ngIf="data?.ctaText">
+      <a [href]="data.ctaLink || '#booking'" class="cta-button">
+        {{ data.ctaText }}
+      </a>
+    </div>
+
+    <div class="hero-social" *ngIf="data?.socialLinks?.length">
+      <a *ngFor="let link of data.socialLinks"
+         [href]="link.url"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="social-link">
+        <mat-icon>{{ link.icon || 'link' }}</mat-icon>
+      </a>
+    </div>
+  </div>
+</section>

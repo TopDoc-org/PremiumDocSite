@@ -1,0 +1,21 @@
+<section class="about-section">
+  <div class="about-container">
+    <div class="about-image" *ngIf="data?.image">
+      <img [src]="data.image" [alt]="data?.heading || 'About'" loading="lazy">
+    </div>
+    <div class="about-content">
+      <h2 class="about-heading">{{ data?.heading || 'About' }}</h2>
+      <p class="about-highlight" *ngIf="data?.highlightText">{{ data.highlightText }}</p>
+      <p class="about-description">{{ data?.description }}</p>
+      <ul class="about-bullets" *ngIf="data?.bulletPoints?.length">
+        <li *ngFor="let point of data.bulletPoints">{{ point }}</li>
+      </ul>
+      <div class="about-stats" *ngIf="data?.stats?.length">
+        <div class="stat" *ngFor="let stat of data.stats">
+          <span class="stat-value">{{ stat.value }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

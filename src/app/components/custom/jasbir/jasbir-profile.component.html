@@ -1,0 +1,1360 @@
+
+<!-- MAIN PROFILE LANDING PAGE -->
+<div class="profile-landing" [class.animations-on]="animationsEnabled">
+
+  <!-- Loading State -->
+  <div *ngIf="timelineFetchStatus === 'fetching'" class="loading-container">
+    <div class="profile-loader">
+      <div class="profile-loader-ring"></div>
+      <img src="assets/images/jasbir/clinic-logo.png" alt="Loading..." class="profile-loader-logo">
+    </div>
+    <span class="loading-text">Loading doctor profile...</span>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="timelineFetchStatus === 'error'" class="loading-container">
+    <mat-icon class="text-gray-300" style="font-size: 48px; width: 48px; height: 48px;">error_outline</mat-icon>
+    <span class="loading-text">Could not load profile. Please try again.</span>
+  </div>
+
+  <!-- Profile Content -->
+  <ng-container *ngIf="timelineFetchStatus === 'done'">
+
+    <!-- MOBILE STICKY HEADER -->
+    <nav class="custom-header-nav" *ngIf="isMobileOrTabView">
+      <h2 class="header-title">Dr. {{ profRes.name }}</h2>
+      <button class="header-book-btn" (click)="openTemplateSheetMenu()">Book</button>
+    </nav>
+
+    <!-- Animation Toggle -->
+    <div class="animation-toggle-bar">
+      <button class="animation-toggle-btn" (click)="toggleAnimations()"
+              [attr.title]="'Animations: ' + (animationsEnabled ? 'ON' : 'OFF')">
+        <mat-icon class="!text-lg">{{ animationsEnabled ? 'motion_photos_on' : 'motion_photos_off' }}</mat-icon>
+        <span class="toggle-label">Animations: {{ animationsEnabled ? 'ON' : 'OFF' }}</span>
+      </button>
+    </div>
+
+    <!-- SECTION 1: HERO -->
+    <section class="hero-landing">
+      <!-- Team photo background -->
+      <div class="hero-bg-image">
+        <img src="assets/images/jasbir/doctor-photo.jpg" alt="Dr. Meher's Orthodontic Center Team" loading="eager">
+      </div>
+
+      <div class="hero-star star-1">
+        <mat-icon>auto_awesome</mat-icon>
+      </div>
+      <div class="hero-star star-2">
+        <mat-icon>auto_awesome</mat-icon>
+      </div>
+      <div class="hero-star star-3">
+        <mat-icon>auto_awesome</mat-icon>
+      </div>
+
+      <div class="hero-content">
+        <!-- Text Side -->
+        <div class="hero-text">
+          <div class="hero-clinic-brand">
+            <div class="hero-logo-ring">
+              <img src="assets/images/jasbir/clinic-logo.png" alt="Dr. Meher's Clinic Logo" class="hero-clinic-logo">
+            </div>
+            <div class="hero-brand-text">
+              <span class="hero-clinic-name">Dr. Meher's Orthodontic Center</span>
+              <span class="hero-clinic-tagline">& Dental Clinic, Balangir</span>
+            </div>
+          </div>
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            <span>Top-Rated Doctor in {{ profRes.city || 'Your City' }}</span>
+          </div>
+
+          <h1>
+            &ldquo;At my dental office,<br>
+            <span class="typewriter-wrap">
+              <span class="typewriter-text">you are never a number.&rdquo;</span>
+              <span class="typewriter-cursor"></span>
+            </span>
+          </h1>
+
+          <p class="hero-subtitle">
+            Meet Dr. Jasbir Meher (BDS, MDS) &mdash; Orthodontist & Dental Surgeon
+            with 10+ years of experience crafting beautiful, healthy smiles
+            at Dr. Meher's Orthodontic Center & Dental Clinic, {{ profRes.city || 'Balangir' }}.
+          </p>
+
+          <div class="hero-ctas">
+            <button class="btn-primary" (click)="openTemplateSheetMenu()">
+              <mat-icon class="!text-xl">calendar_today</mat-icon>
+              Book Appointment
+            </button>
+            <button class="btn-outline" (click)="openTemplateSheetMenu()">
+              <span class="play-icon">
+                <mat-icon class="!text-base">call</mat-icon>
+              </span>
+              Contact Clinic
+            </button>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="trust-badges">
+            <div class="trust-badge">
+              <mat-icon class="!text-lg trust-badge-icon">verified</mat-icon>
+              <span>Board Certified</span>
+            </div>
+            <div class="trust-badge">
+              <mat-icon class="!text-lg trust-badge-icon">star</mat-icon>
+              <span>4.9 Rating</span>
+            </div>
+            <div class="trust-badge">
+              <mat-icon class="!text-lg trust-badge-icon">groups</mat-icon>
+              <span>10,000+ Patients</span>
+            </div>
+          </div>
+
+          <!-- Social Media Links -->
+          <div class="hero-social-links">
+            <a href="https://www.instagram.com/dr.mehers_orthodontic_center/" target="_blank" rel="noopener" class="social-link social-instagram" aria-label="Follow on Instagram">
+              <i class="fab fa-instagram"></i>
+              <span>Instagram</span>
+            </a>
+            <a href="https://www.facebook.com/drmeherorthodontic" target="_blank" rel="noopener" class="social-link social-facebook" aria-label="Follow on Facebook">
+              <i class="fab fa-facebook-f"></i>
+              <span>Facebook</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Image Side -->
+        <div class="hero-image-wrapper">
+          <div class="hero-accent-shape shape-1"></div>
+          <div class="hero-accent-shape shape-2"></div>
+          <div class="hero-image-container">
+            <img
+              [src]="profRes.profImageUrl?.src || 'assets/images/jasbir/profile.jpg'"
+              alt="Dr. {{ profRes.name }}"
+              loading="eager"
+              #heroImg
+              (error)="heroImg.src = 'assets/images/jasbir/profile.jpg'"
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <div class="profile-main-content">
+
+    <!-- SECTION 2: QUICK APPOINTMENT BAR -->
+    <div class="appointment-bar" *ngIf="!isMobileOrTabView">
+      <div class="bar-inner">
+        <div class="bar-field">
+          <label>
+            <mat-icon class="!text-sm !w-4 !h-4 text-gray-400">person</mat-icon>
+            Doctor
+          </label>
+          <div class="field-value">Dr. {{ profRes.name }}</div>
+        </div>
+
+        <div class="bar-divider"></div>
+
+        <div class="bar-field">
+          <label>
+            <mat-icon class="!text-sm !w-4 !h-4 text-gray-400">medical_services</mat-icon>
+            Specialization
+          </label>
+          <div class="field-value">{{ profRes.specialization || 'Dental Care' }}</div>
+        </div>
+
+        <div class="bar-divider"></div>
+
+        <div class="bar-field">
+          <label>
+            <mat-icon class="!text-sm !w-4 !h-4 text-gray-400">location_on</mat-icon>
+            Location
+          </label>
+          <div class="field-value">
+            <span *ngIf="profRes.city">{{ profRes.city }}</span>
+            <span *ngIf="profRes.city && profRes.state">, </span>
+            <span *ngIf="profRes.state">{{ profRes.state }}</span>
+            <span *ngIf="!profRes.city && !profRes.state">Available Online</span>
+          </div>
+        </div>
+
+        <div class="bar-divider"></div>
+
+        <div class="bar-field">
+          <label>
+            <mat-icon class="!text-sm !w-4 !h-4 text-gray-400">schedule</mat-icon>
+            Experience
+          </label>
+          <div class="field-value">{{ profRes.yearsOfExperience || '13' }}+ Years</div>
+        </div>
+
+        <button class="btn-primary-solid" (click)="openTemplateSheetMenu()">
+          <mat-icon class="!text-lg">calendar_today</mat-icon>
+          Book Appointment
+        </button>
+      </div>
+    </div>
+
+
+    <!-- SECTION 3: ABOUT THE DOCTOR -->
+    <section class="about-section">
+      <div class="about-grid">
+        <!-- Image Column -->
+        <div class="about-image">
+          <img
+            src="assets/images/jasbir/profile.jpg"
+            alt="Dr. {{ profRes.name }}"
+            loading="lazy"
+            style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;"
+          >
+        </div>
+
+        <!-- Content Column -->
+        <div class="about-content">
+          <div class="about-brand-row">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="Clinic Logo" class="about-clinic-logo">
+            <p class="about-label">About the Doctor</p>
+          </div>
+          <h2>
+            10+ Years of Expertise
+            in <span class="highlight">Orthodontics & Dental Care</span>
+          </h2>
+          <p>
+            Dr. Jasbir Meher (BDS, MDS) is a renowned Orthodontist and Dental Surgeon
+            based in Balangir, Odisha. He founded Dr. Meher's Orthodontic Center & Dental Clinic
+            in 2015, bringing world-class orthodontic and dental care to the region.
+            With advanced training in orthodontics, laser dentistry, and cosmetic procedures,
+            Dr. Meher combines cutting-edge technology with a gentle, patient-first approach
+            to create beautiful, healthy smiles for patients of all ages.
+          </p>
+
+          <ul class="about-checks">
+            <li>
+              <mat-icon class="check-tick">check_circle</mat-icon>
+              <span>BDS, MDS - Qualified Orthodontist & Dental Surgeon</span>
+            </li>
+            <li>
+              <mat-icon class="check-tick">check_circle</mat-icon>
+              <span>Specializing in Braces, Clear Aligners & Invisalign</span>
+            </li>
+            <li>
+              <mat-icon class="check-tick">check_circle</mat-icon>
+              <span>Advanced Laser Dentistry & Pain-Free Treatments</span>
+            </li>
+            <li>
+              <mat-icon class="check-tick">check_circle</mat-icon>
+              <span>Serving Balangir Since 2015</span>
+            </li>
+          </ul>
+
+          <!-- Stats Row -->
+          <div class="about-stats">
+            <div class="stat-item">
+              <div class="stat-number" [attr.data-count-to]="animationsEnabled ? '2015' : null" data-count-plain="true">2015</div>
+              <div class="stat-label">Est. Year</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" [attr.data-count-to]="animationsEnabled ? '99' : null" [attr.data-count-suffix]="animationsEnabled ? '%' : null">99%</div>
+              <div class="stat-label">Patient Satisfaction</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" [attr.data-count-to]="animationsEnabled ? '10' : null" [attr.data-count-suffix]="animationsEnabled ? 'K+' : null">10K+</div>
+              <div class="stat-label">Smiles Created</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 3-LANG: LANGUAGES -->
+    <section class="languages-strip" *ngIf="profRes.languages">
+      <div class="languages-strip-inner">
+        <div class="languages-strip-left">
+          <mat-icon class="!text-base languages-strip-icon">translate</mat-icon>
+          <span class="languages-strip-title">Languages</span>
+        </div>
+        <div class="languages-strip-chips">
+          <span class="lang-chip-light" *ngFor="let language of profRes.languages">
+            {{ language }}
+          </span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 3A: ANNOUNCEMENTS & OFFERS -->
+    <section class="offers-section">
+      <div class="offers-inner">
+        <div class="offers-header scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+          <span class="section-label">Offers & Announcements</span>
+          <h2 class="section-heading">Special Offers For You</h2>
+        </div>
+
+        <!-- HERO OFFER -->
+        <div class="offer-hero scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+          <canvas *ngIf="animationsEnabled" #confettiCanvas class="offer-hero-confetti-canvas"></canvas>
+          <div class="offer-hero-bg"></div>
+          <div class="offer-hero-content">
+            <div class="offer-hero-left">
+              <div class="offer-hero-badge">
+                <mat-icon class="!text-sm">local_offer</mat-icon>
+                Limited Time
+              </div>
+              <h3 class="offer-hero-title">FREE X-Ray for New Patients</h3>
+              <p class="offer-hero-desc">Get a complimentary dental X-ray on your first visit. Early detection leads to better outcomes.</p>
+              <div class="offer-hero-actions">
+                <button class="btn-hero-claim" (click)="openTemplateSheetMenu()">
+                  Claim Offer <mat-icon class="!text-base">arrow_forward</mat-icon>
+                </button>
+                <span class="offer-hero-validity">
+                  <mat-icon class="!text-sm">schedule</mat-icon>
+                  Valid till March 31, 2026
+                </span>
+              </div>
+            </div>
+            <div class="offer-hero-right">
+              <div class="offer-hero-savings">
+                <span class="offer-hero-savings-label">Save up to</span>
+                <span class="offer-hero-savings-amount">&#8377;500</span>
+                <span class="offer-hero-savings-sub">on your first visit</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary cards row -->
+        <div class="offers-featured-row">
+          <div class="offer-card offer-announcement scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
+            <div class="offer-badge-new">New</div>
+            <div class="offer-icon-wrap">
+              <mat-icon class="!text-2xl">bolt</mat-icon>
+            </div>
+            <h3>Advanced Laser Dentistry Now Available</h3>
+            <p>We've upgraded to the latest laser dentistry equipment for painless, precision treatments.</p>
+            <div class="offer-cta">
+              <span class="offer-tag">Announcement</span>
+              <button class="btn-offer" (click)="openTemplateSheetMenu()">
+                Know More <mat-icon class="!text-base">arrow_forward</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="offer-card offer-discount scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '200' : null">
+            <div class="offer-discount-pct">20% OFF</div>
+            <div class="offer-icon-wrap">
+              <mat-icon class="!text-2xl">sentiment_very_satisfied</mat-icon>
+            </div>
+            <h3>Braces & Clear Aligners</h3>
+            <p>Start your smile transformation journey with special pricing on all orthodontic treatments.</p>
+            <div class="offer-cta">
+              <span class="offer-tag">Orthodontics</span>
+              <button class="btn-offer" (click)="openTemplateSheetMenu()">
+                Book Now <mat-icon class="!text-base">arrow_forward</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- More Offers (hidden by default) -->
+        <div class="offers-more" *ngIf="showAllOffers">
+          <div class="offers-grid">
+            <div class="offer-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+              <div class="offer-icon-wrap">
+                <mat-icon class="!text-2xl">family_restroom</mat-icon>
+              </div>
+              <h3>Family Dental Check-up Package</h3>
+              <p>Bring the whole family! Get comprehensive dental check-ups for 4 members at a bundled price.</p>
+              <div class="offer-cta">
+                <span class="offer-tag">Family Plan</span>
+                <button class="btn-offer" (click)="openTemplateSheetMenu()">
+                  Learn More <mat-icon class="!text-base">arrow_forward</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="offer-card offer-announcement scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+              <div class="offer-badge-new">New</div>
+              <div class="offer-icon-wrap">
+                <mat-icon class="!text-2xl">schedule</mat-icon>
+              </div>
+              <h3>Extended Evening Hours</h3>
+              <p>Now open till 8 PM on weekdays! Visit us after work for all dental needs.</p>
+              <div class="offer-cta">
+                <span class="offer-tag">Update</span>
+                <button class="btn-offer" (click)="openTemplateSheetMenu()">
+                  Book Evening Slot <mat-icon class="!text-base">arrow_forward</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="offer-card offer-discount scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+              <div class="offer-discount-pct">Flat &#8377;2,999</div>
+              <div class="offer-icon-wrap">
+                <mat-icon class="!text-2xl">auto_awesome</mat-icon>
+              </div>
+              <h3>Professional Teeth Whitening</h3>
+              <p>Brighter, more confident smile in just one session. Professional in-clinic whitening.</p>
+              <div class="offer-cta">
+                <span class="offer-tag">Popular</span>
+                <button class="btn-offer" (click)="openTemplateSheetMenu()">
+                  Book Now <mat-icon class="!text-base">arrow_forward</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- View More / View Less toggle -->
+        <div class="offers-toggle-wrap">
+          <button class="btn-view-more" (click)="showAllOffers = !showAllOffers">
+            <span *ngIf="!showAllOffers">View All Offers</span>
+            <span *ngIf="showAllOffers">Show Less</span>
+            <mat-icon class="!text-lg" [style.transform]="showAllOffers ? 'rotate(180deg)' : ''">expand_more</mat-icon>
+          </button>
+          <span class="offers-count" *ngIf="!showAllOffers">+3 more</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 3B: PHOTO GALLERY -->
+    <section class="gallery-section">
+      <div class="gallery-inner">
+        <div class="section-brand-label" style="justify-content: center;">
+          <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+          <p class="section-label" style="text-align: center; margin-bottom: 0;">Inside Our Clinic</p>
+        </div>
+        <h2 class="section-heading" style="text-align: center; margin-bottom: 48px;">
+          A Glimpse of Our Practice
+        </h2>
+        <!-- Carousel mode when animations enabled -->
+        <div class="gallery-carousel" *ngIf="animationsEnabled">
+          <div class="gallery-carousel-track" #galleryTrack>
+            <div class="gallery-carousel-slide" [class.active]="i === activeSlide" *ngFor="let img of [
+              { src: 'assets/images/jasbir/doctor-photo.jpg', alt: 'Our Team', label: 'Our Team', position: 'center 25%' },
+              { src: 'assets/images/jasbir/clinic.jpg', alt: 'Clinic Interior', label: 'Modern Clinic Interior', position: 'center center' },
+              { src: 'assets/images/jasbir/clinic-seat.jpg', alt: 'Dental Chair', label: 'Advanced Equipment', position: 'center center' },
+              { src: 'assets/images/jasbir/catalogue.jpg', alt: 'Services & Treatments', label: 'Our Services', position: 'center top' }
+            ]; let i = index">
+              <img [src]="img.src" [alt]="img.alt" loading="lazy" [style.object-position]="img.position">
+              <div class="gallery-carousel-overlay">
+                <span>{{ img.label }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="gallery-carousel-controls">
+            <button class="gallery-carousel-btn" (click)="prevSlide()">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <div class="gallery-carousel-dots">
+              <span *ngFor="let img of [1,2,3,4]; let i = index"
+                    class="gallery-dot"
+                    [class.active]="i === activeSlide"
+                    (click)="goToSlide(i)"></span>
+            </div>
+            <button class="gallery-carousel-btn" (click)="nextSlide()">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Static grid when animations disabled -->
+        <div class="gallery-grid" *ngIf="!animationsEnabled">
+          <div class="gallery-item gallery-featured">
+            <img src="assets/images/jasbir/doctor-photo.jpg" alt="Dr. Meher's Orthodontic Center & Dental Clinic Team" loading="lazy" style="object-position: center 25%;">
+            <div class="gallery-overlay">
+              <span>Our Team</span>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="assets/images/jasbir/clinic.jpg" alt="Clinic Interior" loading="lazy">
+            <div class="gallery-overlay">
+              <span>Modern Clinic Interior</span>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="assets/images/jasbir/clinic-seat.jpg" alt="Dental Chair" loading="lazy">
+            <div class="gallery-overlay">
+              <span>Advanced Equipment</span>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="assets/images/jasbir/catalogue.jpg" alt="Services & Treatments" loading="lazy" style="object-position: center top;">
+            <div class="gallery-overlay">
+              <span>Our Services</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 4: SCROLLING MARQUEE -->
+    <div class="marquee-section">
+      <div class="marquee-track">
+        <ng-container *ngFor="let i of [1,2,3]">
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Emergency Orthodontic Care
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Clear Aligners / Invisalign
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Orthodontic Appliances
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Adult Orthodontics
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Children Orthodontics
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Root Canal Treatments
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Orthodontics
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Laser Dentistry Treatment
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Tooth Coloured Fillings
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Dentures
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Braces
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Crowns and Bridges Fixing
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Teeth Whitening
+          </span>
+          <span class="marquee-item">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            Gum Disease Treatment
+          </span>
+        </ng-container>
+      </div>
+    </div>
+
+
+    <!-- SECTION 5: HOW IT WORKS -->
+    <section class="process-section">
+      <div class="process-inner">
+        <div class="section-brand-label" style="justify-content: center;">
+          <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+          <p class="section-label" style="text-align: center; margin-bottom: 0;">Simple & Quick</p>
+        </div>
+        <h2 class="section-heading" style="text-align: center; margin-bottom: 56px;">
+          Book Your Dental Visit in 3 Steps
+        </h2>
+        <div class="process-grid">
+          <div class="process-step scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+            <div class="process-number">01</div>
+            <div class="process-icon-wrap">
+              <mat-icon class="!text-3xl text-blue-600">search</mat-icon>
+            </div>
+            <h3>Pick Your Treatment</h3>
+            <p>Browse available services from teeth cleaning to cosmetic procedures and pick what you need.</p>
+          </div>
+          <div class="process-connector scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+            <mat-icon class="!text-2xl text-blue-300">arrow_forward</mat-icon>
+          </div>
+          <div class="process-step scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+            <div class="process-number">02</div>
+            <div class="process-icon-wrap">
+              <mat-icon class="!text-3xl text-blue-600">event_available</mat-icon>
+            </div>
+            <h3>Choose a Time Slot</h3>
+            <p>Select a convenient appointment slot. Get instant confirmation with zero hassle.</p>
+          </div>
+          <div class="process-connector scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+            <mat-icon class="!text-2xl text-blue-300">arrow_forward</mat-icon>
+          </div>
+          <div class="process-step scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+            <div class="process-number">03</div>
+            <div class="process-icon-wrap">
+              <mat-icon class="!text-3xl text-blue-600">health_and_safety</mat-icon>
+            </div>
+            <h3>Get Your Smile</h3>
+            <p>Visit Dr. Meher's Orthodontic Center for world-class dental care and walk out smiling.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 8B: VIDEO TOUR -->
+    <section class="video-tour-section">
+      <div class="video-tour-inner">
+        <div class="video-tour-text">
+          <div class="section-brand-label">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+            <p class="section-label" style="margin-bottom: 0;">Virtual Tour</p>
+          </div>
+          <h2 class="section-heading" style="margin-bottom: 16px;">Take a Look Inside<br>Dr. Meher's Clinic</h2>
+          <p class="video-tour-desc">
+            Step inside Dr. Meher's Orthodontic Center & Dental Clinic in Balangir.
+            See our advanced orthodontic equipment, laser dentistry setup, comfortable
+            treatment rooms, and the welcoming environment that has served
+            thousands of patients since 2015.
+          </p>
+          <ul class="video-tour-features">
+            <li>
+              <mat-icon class="!text-lg text-blue-500">check_circle</mat-icon>
+              <span>State-of-the-art dental equipment</span>
+            </li>
+            <li>
+              <mat-icon class="!text-lg text-blue-500">check_circle</mat-icon>
+              <span>Sterilized, hygienic environment</span>
+            </li>
+            <li>
+              <mat-icon class="!text-lg text-blue-500">check_circle</mat-icon>
+              <span>Comfortable waiting lounge</span>
+            </li>
+            <li>
+              <mat-icon class="!text-lg text-blue-500">check_circle</mat-icon>
+              <span>Kid-friendly treatment area</span>
+            </li>
+          </ul>
+        </div>
+        <div class="video-tour-embed">
+          <div class="video-wrapper">
+            <iframe
+              src="https://www.youtube.com/embed/-IlvqRKH_Ds?rel=0"
+              title="Dental Clinic Tour"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy">
+            </iframe>
+          </div>
+          <p class="video-caption">
+            <mat-icon class="!text-sm text-gray-400">play_circle</mat-icon>
+            Watch our clinic tour video
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 6: DENTAL SERVICES -->
+    <section class="services-section">
+      <div class="services-header">
+        <div>
+          <div class="section-brand-label">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+            <p class="services-label" style="margin-bottom: 0;">Our Services</p>
+          </div>
+          <h2>Complete Orthodontic &<br>Dental Care Under One Roof</h2>
+        </div>
+        <button class="btn-primary-solid" (click)="openTemplateSheetMenu()">
+          <mat-icon class="!text-lg">calendar_today</mat-icon>
+          Book Now
+        </button>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=400&h=250&fit=crop&q=80" alt="Emergency Orthodontic Care" loading="lazy">
+            <div class="service-card-badge" style="background: linear-gradient(135deg, #ef4444, #dc2626);">Emergency</div>
+          </div>
+          <div class="service-card-body"><h3>Emergency Orthodontic Care</h3><p>Immediate care for broken brackets, loose wires, and orthodontic emergencies when you need it most.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?w=400&h=250&fit=crop&q=80" alt="Clear Aligners Invisalign" loading="lazy">
+            <div class="service-card-badge" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">Premium</div>
+          </div>
+          <div class="service-card-body"><h3>Clear Aligners/Invisalign</h3><p>Virtually invisible aligners that straighten your teeth without the look of traditional braces. Perfect for professionals.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1629909615184-74f495363b67?w=400&h=250&fit=crop&q=80" alt="Orthodontic Appliances" loading="lazy">
+            <div class="service-card-badge">Specialty</div>
+          </div>
+          <div class="service-card-body"><h3>Orthodontic Appliances</h3><p>Custom-designed retainers, expanders, and functional appliances for precise orthodontic corrections.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=400&h=250&fit=crop&q=80" alt="Adult Orthodontics" loading="lazy">
+          </div>
+          <div class="service-card-body"><h3>Adult Orthodontics</h3><p>Discreet and effective orthodontic solutions designed specifically for adults seeking a straighter smile.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=400&h=250&fit=crop&q=80" alt="Children Orthodontics" loading="lazy">
+          </div>
+          <div class="service-card-body"><h3>Children Orthodontics</h3><p>Early intervention and gentle orthodontic care to guide your child's dental development the right way.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=400&h=250&fit=crop&q=80" alt="Root Canal Treatments" loading="lazy">
+          </div>
+          <div class="service-card-body"><h3>Root Canal Treatments</h3><p>Painless, modern root canal therapy to save your natural teeth and eliminate infection completely.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=400&h=250&fit=crop&q=80" alt="Orthodontics" loading="lazy">
+            <div class="service-card-badge">Core</div>
+          </div>
+          <div class="service-card-body"><h3>Orthodontics</h3><p>Comprehensive orthodontic treatment plans to correct misaligned teeth, bites, and jaw issues for all ages.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=250&fit=crop&q=80" alt="Laser Dentistry Treatment" loading="lazy">
+            <div class="service-card-badge" style="background: linear-gradient(135deg, #f59e0b, #d97706);">Advanced</div>
+          </div>
+          <div class="service-card-body"><h3>Laser Dentistry Treatment</h3><p>Cutting-edge laser treatments for gum disease, cavity preparation, and soft tissue procedures with minimal discomfort.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1571772996211-2f02c9727629?w=400&h=250&fit=crop&q=80" alt="Tooth Coloured Fillings" loading="lazy">
+          </div>
+          <div class="service-card-body"><h3>Tooth Coloured Fillings</h3><p>Natural-looking composite fillings that blend seamlessly with your teeth for invisible cavity restoration.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1445527815219-ecbfec67492e?w=400&h=250&fit=crop&q=80" alt="Dentures" loading="lazy">
+          </div>
+          <div class="service-card-body"><h3>Dentures</h3><p>Custom-fitted partial and complete dentures for a comfortable, natural-looking replacement of missing teeth.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=400&h=250&fit=crop&crop=top&q=80" alt="Braces" loading="lazy">
+            <div class="service-card-badge">Popular</div>
+          </div>
+          <div class="service-card-body"><h3>Braces</h3><p>Traditional metal braces and modern ceramic options for effective teeth straightening and bite correction.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1629909615184-74f495363b67?w=400&h=250&fit=crop&crop=bottom&q=80" alt="Crowns and Bridges Fixing" loading="lazy">
+          </div>
+          <div class="service-card-body"><h3>Crowns and Bridges Fixing</h3><p>Custom-made crowns and bridges to restore damaged teeth and fill gaps for a natural, complete smile.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1445527815219-ecbfec67492e?w=400&h=250&fit=crop&crop=top&q=80" alt="Teeth Whitening" loading="lazy">
+          </div>
+          <div class="service-card-body"><h3>Teeth Whitening</h3><p>Professional whitening treatments to brighten your smile by up to 8 shades in a single visit.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+          <div class="service-card-img">
+            <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=400&h=250&fit=crop&crop=bottom&q=80" alt="Gum Disease Treatment" loading="lazy">
+          </div>
+          <div class="service-card-body"><h3>Gum Disease Treatment</h3><p>Expert periodontal care including deep cleaning, scaling, and advanced treatments to restore healthy gums.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 7: DARK MARQUEE -->
+    <div class="marquee-section dark">
+      <div class="marquee-track" style="animation-direction: reverse;">
+        <ng-container *ngFor="let i of [1,2,3,4]">
+          <span class="marquee-item"><img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">Beautiful Smiles Since 2015</span>
+          <span class="marquee-item"><img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">BDS, MDS Qualified</span>
+          <span class="marquee-item"><img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">Dr. Meher's Orthodontic Center</span>
+          <span class="marquee-item"><img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">Balangir, Odisha</span>
+        </ng-container>
+      </div>
+    </div>
+
+
+    <!-- SECTION 8: BIG NUMBERS -->
+    <section class="big-numbers-section">
+      <img src="assets/images/jasbir/clinic-logo.png" alt="" class="big-numbers-watermark">
+      <div class="big-numbers-inner">
+        <div class="big-number-item scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+          <div class="big-num" [attr.data-count-to]="animationsEnabled ? '10' : null" [attr.data-count-suffix]="animationsEnabled ? 'K+' : null">10K+</div>
+          <div class="big-num-label">Smiles Created</div>
+        </div>
+        <div class="big-number-divider"></div>
+        <div class="big-number-item scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+          <div class="big-num" [attr.data-count-to]="animationsEnabled ? '10' : null" [attr.data-count-suffix]="animationsEnabled ? '+' : null">10+</div>
+          <div class="big-num-label">Years Since Est. 2015</div>
+        </div>
+        <div class="big-number-divider"></div>
+        <div class="big-number-item scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+          <div class="big-num" [attr.data-count-to]="animationsEnabled ? '98' : null" [attr.data-count-suffix]="animationsEnabled ? '%' : null">98%</div>
+          <div class="big-num-label">Success Rate</div>
+        </div>
+        <div class="big-number-divider"></div>
+        <div class="big-number-item scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '450' : null">
+          <div class="big-num" [attr.data-count-to]="animationsEnabled ? '4.9' : null">4.9</div>
+          <div class="big-num-label">Patient Rating</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 8C: MEET OUR TEAM -->
+    <section class="team-section">
+      <div class="team-container">
+        <p class="team-label">The People Behind Your Smile</p>
+        <h2 class="team-heading">Meet Our Team</h2>
+        <p class="team-subtitle">
+          A dedicated team of dental professionals committed to providing you with the highest quality orthodontic and dental care in Balangir.
+        </p>
+        <div class="team-image-wrapper scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+          <img src="assets/images/jasbir/doctor-photo.jpg" alt="Dr. Meher's Orthodontic Center & Dental Clinic Team" loading="lazy">
+          <div class="team-image-overlay">
+            <div class="team-overlay-content">
+              <img src="assets/images/jasbir/clinic-logo.png" alt="Clinic Logo" class="team-logo">
+              <span class="team-clinic-name">Dr. Meher's Orthodontic Center & Dental Clinic</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 10: PATIENT TESTIMONIALS -->
+    <section class="testimonials-section">
+      <div class="testimonials-inner">
+        <p class="section-label" style="text-align: center;">Real Patient Stories</p>
+        <h2 class="section-heading" style="text-align: center; margin-bottom: 16px;">
+          Why Patients Love Dr. Meher
+        </h2>
+        <p class="testimonials-subtitle">
+          Hundreds of patients trust Dr. Meher's Orthodontic Center for their orthodontic and dental care. Here is what some of them have to say.
+        </p>
+
+        <div class="testimonials-grid">
+          <div class="testimonial-card featured scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+            <div class="testimonial-quote-icon"><mat-icon class="!text-3xl">format_quote</mat-icon></div>
+            <p class="testimonial-text">"I got my braces done at Dr. Meher's clinic and the transformation is unbelievable. Dr. Meher (BDS, MDS) really knows his orthodontics. The clinic is spotless, the staff is incredibly warm, and the entire 18-month journey was completely comfortable. My smile has never looked better. Cannot recommend this practice enough!"</p>
+            <div class="testimonial-stars">
+              <mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon>
+            </div>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);"><span>AP</span></div>
+              <div><div class="testimonial-name">Ananya Patel</div><div class="testimonial-meta">Braces & Orthodontic Treatment</div></div>
+              <div class="testimonial-verified"><mat-icon class="!text-sm">verified</mat-icon> Verified</div>
+            </div>
+          </div>
+
+          <div class="testimonial-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+            <div class="testimonial-quote-icon small"><mat-icon class="!text-xl">format_quote</mat-icon></div>
+            <p class="testimonial-text">"Got Invisalign clear aligners from Dr. Meher and it was the best decision. He explained the entire treatment plan clearly with 3D simulations. Nobody even noticed I was wearing aligners! Best orthodontic experience ever."</p>
+            <div class="testimonial-stars"><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon></div>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);"><span>RK</span></div>
+              <div><div class="testimonial-name">Rahul Kumar</div><div class="testimonial-meta">Clear Aligners / Invisalign</div></div>
+            </div>
+          </div>
+
+          <div class="testimonial-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+            <div class="testimonial-quote-icon small"><mat-icon class="!text-xl">format_quote</mat-icon></div>
+            <p class="testimonial-text">"My daughter needed orthodontic treatment and Dr. Meher was so gentle and patient with her. The children's orthodontics program is excellent. Now she actually looks forward to her visits! Amazing with kids."</p>
+            <div class="testimonial-stars"><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-half">star_half</mat-icon></div>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><span>SM</span></div>
+              <div><div class="testimonial-name">Sneha Mohapatra</div><div class="testimonial-meta">Children Orthodontics</div></div>
+            </div>
+          </div>
+
+          <div class="testimonial-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+            <div class="testimonial-quote-icon small"><mat-icon class="!text-xl">format_quote</mat-icon></div>
+            <p class="testimonial-text">"Had laser gum treatment and crowns done at Dr. Meher's clinic. The laser dentistry was incredibly painless compared to my previous experiences elsewhere. The crowns and bridges look completely natural. Worth every rupee. The follow-up care has been exceptional."</p>
+            <div class="testimonial-stars"><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon></div>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" style="background: linear-gradient(135deg, #ec4899, #be185d);"><span>PD</span></div>
+              <div><div class="testimonial-name">Priya Dash</div><div class="testimonial-meta">Laser Dentistry & Crowns</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 11: PRACTICES / CLINICS -->
+    <section class="practices-section" *ngIf="profRes.associatedClinics && profRes.associatedClinics.length > 0">
+      <div class="section-brand-label">
+        <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+        <p class="section-label" style="margin-bottom: 0;">Our Locations</p>
+      </div>
+      <div class="flex justify-between items-end mb-10">
+        <h2 class="section-heading" style="margin-bottom: 0;">Visit Our Dental Clinic</h2>
+      </div>
+
+      <div *ngFor="let clinic of profRes.associatedClinics; let i = index"
+           class="clinic-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+        <div class="flex gap-6 items-start">
+          <div class="flex-shrink-0">
+            <div class="clinic-logo-wrap">
+              <img src="assets/images/jasbir/clinic-logo.png" alt="Clinic Logo" class="clinic-logo-img">
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+              <div>
+                <h4 class="clinic-card-name">{{ clinic.clinicName }}</h4>
+                <p class="clinic-card-address" *ngIf="clinic.clinicLocation">
+                  <mat-icon class="!text-sm !w-4 !h-4">location_on</mat-icon>
+                  {{ clinic.clinicLocation }}
+                </p>
+                <div class="flex items-center gap-2 mt-1.5 flex-wrap">
+                  <span class="chip chip-teal text-xs !py-1 !px-3" *ngFor="let tag of clinic.tagReceived">{{ tag }}</span>
+                </div>
+                <a class="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-semibold mt-3 hover:underline"
+                   target="_blank" href="{{ getGoogleMapsLink(clinic.geoPoint) }}">
+                  <mat-icon class="!text-base !w-4 !h-4">near_me</mat-icon>
+                  Get directions
+                </a>
+              </div>
+              <div class="mt-4 sm:mt-0 sm:ml-8 flex flex-col items-end gap-3" *ngIf="!isMobileOrTabView">
+                <div *ngIf="clinic.fees > 10" class="text-right">
+                  <span class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Consultation</span>
+                  <div class="text-2xl font-bold text-gray-900" style="letter-spacing: -0.03em;">&#8377;{{ clinic.fees }}</div>
+                </div>
+                <button class="btn-sm" (click)="openTemplateSheetMenu()">Book Now</button>
+              </div>
+            </div>
+            <div *ngIf="isMobileOrTabView" class="mt-4 flex items-center justify-between">
+              <div *ngIf="clinic.fees > 10">
+                <span class="text-xs text-gray-400 font-medium">Consultation</span>
+                <div class="text-lg font-bold text-gray-900" style="letter-spacing: -0.02em;">&#8377;{{ clinic.fees }}</div>
+              </div>
+              <button class="btn-sm" (click)="openTemplateSheetMenu()">Book Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 11B: CLINIC MAP -->
+    <section class="map-section">
+      <div class="map-inner">
+        <div class="map-info">
+          <p class="section-label">Find Us</p>
+          <h2 class="section-heading" style="margin-bottom: 16px;">Visit Our Clinic</h2>
+          <div class="map-address-card">
+            <div class="map-address-icon">
+              <mat-icon class="!text-2xl text-blue-600">location_on</mat-icon>
+            </div>
+            <div>
+              <h4 class="map-address-title">
+                <span *ngIf="profRes.associatedClinics && profRes.associatedClinics.length > 0">{{ profRes.associatedClinics[0].clinicName }}</span>
+                <span *ngIf="!profRes.associatedClinics || profRes.associatedClinics.length === 0">Dr. Meher's Orthodontic Center & Dental Clinic</span>
+              </h4>
+              <p class="map-address-text">
+                <span *ngIf="profRes.associatedClinics && profRes.associatedClinics.length > 0 && profRes.associatedClinics[0].clinicLocation">
+                  {{ profRes.associatedClinics[0].clinicLocation }}
+                </span>
+                <span *ngIf="!profRes.associatedClinics || profRes.associatedClinics.length === 0 || !profRes.associatedClinics[0].clinicLocation">
+                  {{ profRes.city || 'Balangir' }}, {{ profRes.state || 'Odisha' }}
+                </span>
+              </p>
+            </div>
+          </div>
+          <div class="map-details-row">
+            <div class="map-detail">
+              <mat-icon class="!text-lg text-blue-500">schedule</mat-icon>
+              <div>
+                <span class="map-detail-label">Working Hours</span>
+                <span class="map-detail-value">Mon - Sat, 9:00 AM - 8:00 PM</span>
+              </div>
+            </div>
+            <div class="map-detail">
+              <mat-icon class="!text-lg text-blue-500">directions_car</mat-icon>
+              <div>
+                <span class="map-detail-label">Parking</span>
+                <span class="map-detail-value">Free parking available</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-primary" style="margin-top: 24px;" (click)="openTemplateSheetMenu()">
+            <mat-icon class="!text-xl">calendar_today</mat-icon>
+            Book Appointment
+          </button>
+        </div>
+        <div class="map-embed">
+          <iframe
+            src="https://maps.google.com/maps?q=Balangir,+Odisha,+India&t=&z=14&ie=UTF8&iwloc=&output=embed"
+            width="100%"
+            height="100%"
+            style="border:0; border-radius: 20px;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Clinic Location">
+          </iframe>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 12: WHY CHOOSE THIS DOCTOR -->
+    <section class="why-choose-section">
+      <div class="why-grid">
+        <div>
+          <div class="section-brand-label">
+            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+            <p class="section-label" style="margin-bottom: 0;">Why Choose Dr. Meher</p>
+          </div>
+          <h2 class="section-heading">The Orthodontic &<br>Dental Care You
+            <span style="color: #2563eb;">Deserve</span>
+          </h2>
+          <p class="text-base text-gray-500 leading-relaxed mb-8">
+            With BDS and MDS qualifications, state-of-the-art equipment, and a decade of
+            experience, Dr. Jasbir Meher provides orthodontic and dental care that makes
+            you feel comfortable and confident at every step.
+          </p>
+
+          <ul class="benefit-list">
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>BDS, MDS qualified Orthodontist & Dental Surgeon</span></li>
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>Advanced laser dentistry for painless treatments</span></li>
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>Invisalign & clear aligner certified provider</span></li>
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>Emergency orthodontic care available</span></li>
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>Serving Balangir community since 2015</span></li>
+          </ul>
+        </div>
+
+        <div class="relative">
+          <div class="about-image">
+            <img src="assets/images/jasbir/profile.jpg" alt="Dr. {{ profRes.name }}" loading="lazy"
+              style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
+          </div>
+          <div class="absolute -bottom-4 -left-4 sm:left-4 bg-white rounded-2xl p-5 shadow-xl border border-gray-100"
+               style="min-width: 180px;">
+            <div class="about-stats" style="gap: 20px;">
+              <div class="stat-item">
+                <div class="stat-number" [attr.data-count-to]="animationsEnabled ? '10' : null" [attr.data-count-suffix]="animationsEnabled ? '+' : null">10+</div>
+                <div class="stat-label">Years Exp.</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" [attr.data-count-to]="animationsEnabled ? '4.9' : null">4.9</div>
+                <div class="stat-label">Rating</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 14: EDUCATION -->
+    <section class="detail-section alt-bg">
+      <div class="detail-inner">
+        <div class="flex justify-between items-center mb-8">
+          <div>
+            <div class="section-brand-label">
+              <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+              <p class="section-label" style="margin-bottom: 0;">Academic Background</p>
+            </div>
+            <h3 class="section-heading" style="margin-bottom: 0;">Education</h3>
+          </div>
+        </div>
+        <div class="edu-cards-grid">
+          <div *ngFor="let qual of (profRes.education || placeholderEducation); let i = index"
+               class="edu-card" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? (i * 100) : null">
+            <div class="edu-card-icon"><mat-icon class="!text-2xl">school</mat-icon></div>
+            <div class="edu-card-content">
+              <h4 class="edu-card-degree">
+                <span *ngIf="qual.degree">{{ qual.degree }}</span>
+                <span *ngIf="qual.studyField"> &mdash; {{ qual.studyField }}</span>
+              </h4>
+              <p class="edu-card-institution" *ngIf="qual.institution">{{ qual.institution }}</p>
+              <p class="edu-card-year" *ngIf="qual.startDate || qual.endDate">{{ qual.startDate }} &mdash; {{ qual.endDate }}</p>
+              <p class="edu-card-desc" *ngIf="qual.description">{{ qual.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 15: EXPERIENCE -->
+    <section class="detail-section">
+      <div class="detail-inner" style="max-width: 1180px; margin: 0 auto;">
+        <div class="flex justify-between items-center mb-8">
+          <div>
+            <div class="section-brand-label">
+              <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+              <p class="section-label" style="margin-bottom: 0;">Career Journey</p>
+            </div>
+            <h3 class="section-heading" style="margin-bottom: 0;">Professional Experience</h3>
+          </div>
+        </div>
+        <div class="experience-timeline">
+          <div *ngFor="let exp of (profRes.experience || placeholderExperience); let last = last; let i = index"
+               class="exp-timeline-item" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? (i * 120) : null">
+            <div class="exp-timeline-marker">
+              <div class="exp-dot"></div>
+              <div class="exp-line" *ngIf="!last"></div>
+            </div>
+            <div class="exp-card">
+              <div class="exp-card-header">
+                <h4 class="exp-card-title">{{ exp.title }}</h4>
+                <span class="exp-card-date">{{ exp.startDate }} &mdash; {{ exp.endDate || 'Present' }}</span>
+              </div>
+              <p class="exp-card-company" *ngIf="exp.comapanyName">{{ exp.comapanyName }}</p>
+              <p class="exp-card-desc" *ngIf="exp.description">{{ exp.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 16: HONORS & AWARDS -->
+    <section class="detail-section alt-bg">
+      <div class="detail-inner">
+        <div class="flex justify-between items-center mb-8">
+          <div>
+            <div class="section-brand-label">
+              <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+              <p class="section-label" style="margin-bottom: 0;">Achievements</p>
+            </div>
+            <h3 class="section-heading" style="margin-bottom: 0;">Honors & Awards</h3>
+          </div>
+        </div>
+        <div class="awards-grid">
+          <div *ngFor="let award of (profRes.awardsAndPublications?.length ? profRes.awardsAndPublications : placeholderAwards); let i = index"
+               class="award-tile" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? (i * 100) : null">
+            <div class="award-tile-icon"><i class="fas fa-trophy"></i></div>
+            <div class="award-tile-content">
+              <h4 class="award-tile-name">{{ award.awardName }}</h4>
+              <p class="award-tile-place" *ngIf="award.place">{{ award.place }}</p>
+              <p class="award-tile-date" *ngIf="award.date">{{ award.date }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    </div><!-- END .profile-main-content -->
+
+    <!-- FINAL CTA SECTION -->
+    <section class="final-cta-section">
+      <div class="final-cta-glow"></div>
+      <div class="final-cta-content">
+        <div class="final-cta-logo-wrap">
+          <div class="final-cta-logo-ring"></div>
+          <img src="assets/images/jasbir/clinic-logo.png" alt="Dr. Meher's Clinic" class="final-cta-logo">
+        </div>
+        <div class="final-cta-badge">
+          <mat-icon class="!text-sm">favorite</mat-icon>
+          <span>Your Smile Matters</span>
+        </div>
+        <h2>
+          Ready For Your<br>
+          <span class="typewriter-wrap">
+            <span class="typewriter-text cta-typewriter">Perfect Smile?</span>
+            <span class="typewriter-cursor"></span>
+          </span>
+        </h2>
+        <p>
+          Take the first step towards a healthier, brighter smile. Book a consultation
+          at Dr. Meher's Orthodontic Center & Dental Clinic, Balangir.
+          BDS, MDS qualified care since 2015.
+        </p>
+        <div class="final-cta-buttons">
+          <button class="btn-primary" (click)="openTemplateSheetMenu()">
+            <mat-icon class="!text-xl">calendar_today</mat-icon>
+            Book Appointment Now
+          </button>
+          <div class="final-cta-guarantee">
+            <mat-icon class="!text-base text-blue-400">shield</mat-icon>
+            <span>Free cancellation up to 24 hours</span>
+          </div>
+        </div>
+        <!-- Social Media in CTA -->
+        <div class="final-cta-social">
+          <span class="final-cta-social-label">Follow Us</span>
+          <div class="final-cta-social-icons">
+            <a href="https://www.instagram.com/dr.mehers_orthodontic_center/" target="_blank" rel="noopener" class="cta-social-icon cta-social-instagram" aria-label="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.facebook.com/drmeherorthodontic" target="_blank" rel="noopener" class="cta-social-icon cta-social-facebook" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- POWERED BY KNOCDOC -->
+    <div class="powered-by-knocdoc">
+      <div class="powered-by-row">
+        <span>Powered by</span>
+        <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="powered-by-logo">
+      </div>
+      <div class="powered-by-contacts">
+        <a href="https://wa.me/916370020832" target="_blank" rel="noopener" class="powered-by-contact whatsapp">
+          <i class="fab fa-whatsapp"></i>
+          <span>WhatsApp</span>
+        </a>
+        <a href="tel:+916370020832" class="powered-by-contact call">
+          <i class="fas fa-phone-alt"></i>
+          <span>Call Us</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- MOBILE FIXED BOTTOM CTA -->
+    <div class="mobile-bottom-cta" *ngIf="isMobileOrTabView">
+      <button class="btn-primary w-full flex items-center justify-center gap-2" (click)="openTemplateSheetMenu()">
+        <mat-icon class="!text-xl">calendar_today</mat-icon>
+        Book Appointment
+      </button>
+    </div>
+
+  </ng-container>
+</div>
+
+
+<!-- BOOKING BOTTOM SHEET / PULLOVER -->
+<ng-template #templateBottomSheet>
+  <div class="custom-bottom-sheet-content">
+    <div class="sheet-header">
+      <div class="sheet-header-left">
+        <mat-icon class="!text-xl text-teal-600">calendar_today</mat-icon>
+        <h3>Book Appointment</h3>
+      </div>
+      <button (click)="closeTemplateSheetMenu()" class="sheet-close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <ng-container *ngTemplateOutlet="bookingWidget"></ng-container>
+  </div>
+</ng-template>
+
+<!-- SHARED BOOKING WIDGET (used in pullover bottom sheet) -->
+<ng-template #bookingWidget>
+  <section class="bottom-section">
+    <div class="booking-scroll-area">
+      <form [formGroup]="unregForm">
+        <p class="sm:text-base text-lg font-medium title-font mb-2">Book An Appointment For Dr {{ profRes?.name || 'Jasbir Meher' }}</p>
+
+        <div class="mb-2">
+          <label class="center-block">Full Name *:
+            <input formControlName="name" type="text"
+              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              placeholder="Full Name">
+          </label>
+          <div *ngIf="unregForm.controls['name'].invalid && (unregForm.controls['name'].dirty || unregForm.controls['name'].touched)" class="alert">
+            <div *ngIf="unregForm.controls['name'].errors?.['required']">Please enter full name</div>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="center-block">Mobile Number *:
+            <input formControlName="mobile" type="tel"
+              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              placeholder="10 digit mobile number">
+          </label>
+          <div *ngIf="unregForm.controls['mobile'].invalid && (unregForm.controls['mobile'].dirty || unregForm.controls['mobile'].touched)" class="alert">
+            <div *ngIf="unregForm.controls['mobile'].errors?.['required']">Please enter mobile number</div>
+            <div *ngIf="unregForm.controls['mobile'].errors?.['pattern']">Enter a valid 10-digit number</div>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="center-block">Gender *:</label>
+          <div class="flex gap-4 mt-1">
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+              <input type="radio" formControlName="gender" value="male" class="accent-blue-600"> Male
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+              <input type="radio" formControlName="gender" value="female" class="accent-blue-600"> Female
+            </label>
+          </div>
+        </div>
+
+        <div class="slot-scroll-area" [class.slots-disabled]="unregForm.invalid">
+          <div class="slots-disabled-hint" *ngIf="unregForm.invalid && scheduleDetails.length > 0">
+            <mat-icon class="!text-sm">info</mat-icon>
+            Fill in your details above to select a slot
+          </div>
+          <!-- Date tabs with sessions -->
+          <mat-tab-group class="mb-4 tab-body" *ngIf="scheduleDetails.length > 0">
+            <mat-tab *ngFor="let sched of scheduleDetails">
+              <ng-template mat-tab-label>
+                <span class="tab-text uppercase">{{ sched.day }}</span>
+                <span class="tab-number">{{ sched.date }}</span>
+              </ng-template>
+
+              <span *ngIf="sched.sessions.length > 0">
+                <span *ngFor="let session of sched.sessions; let i = index">
+                  <span *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1">
+                    <div class="session-header">
+                      <div class="session-info">
+                        <span class="session-label">Session {{ i + 1 }}</span>
+                        <span class="session-clinic">{{ session?.clinic?.clinicName || session?.clinic?.name }}</span>
+                        <span class="session-time">{{ session.startTime }} - {{ session.endTime }}</span>
+                      </div>
+                    </div>
+                    <div class="session-actions">
+                      <a class="directions-link" target="_blank" [href]="session.geoPoint">
+                        <mat-icon class="!text-sm !w-4 !h-4">near_me</mat-icon>
+                        Directions
+                      </a>
+                    </div>
+
+                    <div class="slot-grid" *ngIf="session.slots.length > 1">
+                      <span *ngFor="let slot of session.slots" class="slot-cell">
+                        <button *ngIf="slot._source?.status !== 'sessionCancelled' && slot._source?.status !== 'cancelled'"
+                          class="slot-chip"
+                          [class.slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
+                          [class.slot-chip--booked]="slot._source?.status !== 'notBooked'"
+                          [disabled]="slot._source?.status !== 'notBooked' || unregForm.invalid"
+                          (click)="setSelectedSlot(slot, session)">
+                          {{ slot._source?.slotTime }}
+                        </button>
+                      </span>
+                    </div>
+                  </span>
+                </span>
+              </span>
+
+              <div class="w-full text-center text-lg" *ngIf="sched.sessions.length === 0">
+                The upcoming schedule has not been set by the doctor as of yet
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+
+          <div class="w-full text-center text-lg" *ngIf="scheduleDetails.length === 0">
+            The upcoming schedule has not been set by the doctor as of yet
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Book action pinned at bottom -->
+    <div class="book-action-area">
+      <button class="book-pay-btn"
+        [disabled]="!selectedSlotId || unregForm.invalid"
+        [class.book-pay-btn--disabled]="!selectedSlotId || unregForm.invalid"
+        (click)="onSpotFreeBook(sessionIdSelected)">
+        <mat-icon class="!text-lg !mr-1">event_available</mat-icon>
+        {{ selectedSlotId && !unregForm.invalid ? 'Book & Pay in Cash' : 'Fill details & select a slot' }}
+      </button>
+    </div>
+  </section>
+</ng-template>
