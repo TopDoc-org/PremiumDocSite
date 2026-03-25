@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import { MatIconModule } from "@angular/material/icon";
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 interface Specialization {
@@ -33,6 +34,7 @@ interface StatItem {
 @Component({
   selector: 'app-sachin-profile',
   templateUrl: './sachin-profile.component.html',
+
   styleUrls: ['./sachin-profile.component.scss']
 })
 export class SachinProfileComponent implements OnInit, OnDestroy {
