@@ -1,0 +1,242 @@
+<!-- ═══════════════════════════════════════════════════════════════
+     DR. SACHIN SHUKLA — ORTHOPEDIC SURGEON PROFILE
+     Editorial / Magazine Aesthetic · Warm Ivory + Emerald + Gold
+     ═══════════════════════════════════════════════════════════════ -->
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge scroll-reveal">
+      <span class="badge-dot"></span>
+      Orthopedic Excellence · Raipur
+    </div>
+    <h1 class="hero-name scroll-reveal">{{ doctorName }}</h1>
+    <p class="hero-spec scroll-reveal">{{ specialization }}</p>
+    <p class="hero-degree scroll-reveal">{{ degree }}</p>
+    <div class="hero-cta-row scroll-reveal">
+      <a href="#booking" class="btn-book">Book Consultation</a>
+      <a href="#about" class="btn-explore">Learn More <span class="arrow">↓</span></a>
+    </div>
+    <div class="hero-trust scroll-reveal">
+      <div class="trust-item">
+        <span class="trust-value">{{ experience }}</span>
+        <span class="trust-label">Years Exp.</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <span class="trust-value">{{ rating }}</span>
+        <span class="trust-label">Rating</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <span class="trust-value">5000+</span>
+        <span class="trust-label">Surgeries</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section class="about-section" id="about">
+  <div class="container">
+    <div class="about-layout">
+      <div class="about-image-col scroll-reveal">
+        <div class="about-image-frame">
+          <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80"
+               alt="Dr. Sachin Shukla" class="about-image" />
+          <div class="image-accent"></div>
+        </div>
+        <div class="about-languages">
+          <span class="lang-label">Speaks</span>
+          <span class="lang-item" *ngFor="let lang of languages">{{ lang }}</span>
+        </div>
+      </div>
+      <div class="about-content-col scroll-reveal">
+        <span class="section-eyebrow">About the Doctor</span>
+        <blockquote class="about-quote">{{ aboutQuote }}</blockquote>
+        <p class="about-body">{{ aboutText }}</p>
+        <p class="about-body">{{ aboutText2 }}</p>
+        <div class="about-highlights">
+          <div class="highlight-item">
+            <mat-icon class="highlight-icon">verified</mat-icon>
+            <span>Board Certified Orthopedic Surgeon</span>
+          </div>
+          <div class="highlight-item">
+            <mat-icon class="highlight-icon">workspace_premium</mat-icon>
+            <span>International Fellowship — UK</span>
+          </div>
+          <div class="highlight-item">
+            <mat-icon class="highlight-icon">favorite</mat-icon>
+            <span>5000+ Successful Joint Replacements</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SPECIALIZATIONS ─── -->
+<section class="specializations-section">
+  <div class="container">
+    <div class="section-header scroll-reveal">
+      <span class="section-eyebrow">What We Treat</span>
+      <h2 class="section-title">Areas of Expertise</h2>
+      <p class="section-subtitle">Comprehensive orthopedic care backed by advanced surgical skill and genuine compassion.</p>
+    </div>
+    <div class="spec-grid">
+      <div class="spec-card scroll-reveal" *ngFor="let spec of specializations; let i = index"
+           [style.transitionDelay]="(i * 80) + 'ms'">
+        <div class="spec-card-inner">
+          <div class="spec-icon-wrap">
+            <mat-icon class="spec-icon">{{ spec.icon }}</mat-icon>
+          </div>
+          <span class="spec-tag" *ngIf="spec.tag">{{ spec.tag }}</span>
+          <h3 class="spec-title">{{ spec.title }}</h3>
+          <p class="spec-desc">{{ spec.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATS ─── -->
+<section class="stats-section">
+  <div class="stats-bg-text">ORTHO</div>
+  <div class="container">
+    <div class="stats-grid scroll-reveal">
+      <div class="stat-item" *ngFor="let stat of stats">
+        <span class="stat-value" #animatedCounter>{{ stat.current }}{{ stat.suffix }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ─── -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header scroll-reveal">
+      <span class="section-eyebrow">Patient Stories</span>
+      <h2 class="section-title">Words That Move Us</h2>
+    </div>
+    <div class="testimonials-controls scroll-reveal">
+      <button class="scroll-btn" (click)="scrollTestimonials('left')" aria-label="Scroll left">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button class="scroll-btn" (click)="scrollTestimonials('right')" aria-label="Scroll right">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+    <div class="testimonials-track scroll-reveal">
+      <div class="testimonial-card" *ngFor="let t of testimonials">
+        <div class="testimonial-stars">
+          <mat-icon *ngFor="let s of getStars(t.rating)" class="star-icon">star</mat-icon>
+        </div>
+        <p class="testimonial-quote">"{{ t.quote }}"</p>
+        <div class="testimonial-footer">
+          <div class="testimonial-avatar">{{ t.name.charAt(0) }}</div>
+          <div class="testimonial-info">
+            <span class="testimonial-name">{{ t.name }}, {{ t.age }}</span>
+            <span class="testimonial-treatment">{{ t.treatment }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TIMELINE ─── -->
+<section class="timeline-section">
+  <div class="container">
+    <div class="section-header scroll-reveal">
+      <span class="section-eyebrow">Journey</span>
+      <h2 class="section-title">Education & Career</h2>
+    </div>
+    <div class="timeline-track scroll-reveal">
+      <div class="timeline-line"></div>
+      <div class="timeline-item" *ngFor="let item of timeline; let i = index"
+           [class.experience]="item.type === 'experience'"
+           [style.transitionDelay]="(i * 120) + 'ms'">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">{{ item.year }}</div>
+        <div class="timeline-content">
+          <h4 class="timeline-title">{{ item.title }}</h4>
+          <p class="timeline-institution">{{ item.institution }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CLINIC + MAP ─── -->
+<section class="clinic-section" id="clinic">
+  <div class="container">
+    <div class="clinic-layout scroll-reveal">
+      <div class="clinic-info-col">
+        <span class="section-eyebrow">Visit Us</span>
+        <h2 class="section-title">{{ clinicName }}</h2>
+        <div class="clinic-detail">
+          <mat-icon>location_on</mat-icon>
+          <span>{{ address }}</span>
+        </div>
+        <div class="clinic-detail">
+          <mat-icon>schedule</mat-icon>
+          <span>{{ workingHours }}</span>
+        </div>
+        <div class="clinic-detail">
+          <mat-icon>phone</mat-icon>
+          <span>{{ phone }}</span>
+        </div>
+        <a href="tel:{{ phone }}" class="btn-book clinic-cta">
+          <mat-icon>call</mat-icon> Call Now
+        </a>
+      </div>
+      <div class="clinic-map-col">
+        <iframe
+          [src]="safeMapUrl"
+          class="clinic-map"
+          frameborder="0"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER CTA ─── -->
+<section class="footer-cta" id="booking">
+  <div class="container">
+    <div class="cta-content scroll-reveal">
+      <span class="cta-eyebrow">Ready to Move Without Pain?</span>
+      <h2 class="cta-heading">Your Journey to Recovery<br/>Starts With One Step.</h2>
+      <p class="cta-sub">Book a consultation with {{ doctorName }} and take that step today.</p>
+      <a href="tel:{{ phone }}" class="btn-book cta-btn">
+        Book Appointment
+      </a>
+      <div class="cta-trust">
+        <span>✓ No waiting time</span>
+        <span>✓ Transparent pricing</span>
+        <span>✓ Expert care</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="footer-doctor">{{ doctorName }}</span>
+      <span class="footer-spec">{{ specialization }}</span>
+    </div>
+    <div class="footer-powered">
+      Powered by <strong>KnocDoc</strong>
+    </div>
+  </div>
+</footer>

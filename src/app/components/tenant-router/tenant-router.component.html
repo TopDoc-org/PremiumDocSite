@@ -1,6 +1,7 @@
 <ng-container [ngSwitch]="componentType">
   <!-- Fully custom profiles -->
   <app-jasbir-profile *ngSwitchCase="'custom-jasbir'"></app-jasbir-profile>
+  <app-sachin-profile *ngSwitchCase="'custom-sachin'"></app-sachin-profile>
 
   <!-- Config-driven standard template -->
   <app-page-orchestrator *ngSwitchCase="'standard'" [config]="config!" ></app-page-orchestrator>

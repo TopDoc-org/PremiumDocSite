@@ -32,6 +32,7 @@ import { ProcessSectionComponent } from './components/sections/process-section/p
 import { CtaSectionComponent } from './components/sections/cta-section/cta-section.component';
 import { BookingSectionComponent } from './components/sections/booking-section/booking-section.component';
 import { JasbirProfileComponent } from './components/custom/jasbir/jasbir-profile.component';
+import { SachinProfileComponent } from './components/custom/sachin/sachin-profile.component';
 import { DemoProfileComponent } from './components/demo/demo-profile.component';
 import { InlineBookingComponent } from './components/shared/inline-booking/inline-booking.component';
 import { AdminHomeComponent } from './components/admin-home/admin-home.component';
@@ -62,6 +63,7 @@ import { TenantInterceptor } from './interceptors/tenant.interceptor';
     CtaSectionComponent,
     BookingSectionComponent,
     JasbirProfileComponent,
+    SachinProfileComponent,
     DemoProfileComponent,
     InlineBookingComponent,
     AdminHomeComponent,
