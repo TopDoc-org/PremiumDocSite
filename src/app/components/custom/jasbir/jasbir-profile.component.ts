@@ -32,8 +32,29 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   selectedSlotId = '';
   slotSelectedDetail: any = {};
   showSessionsinAbha = false;
+  selectedService: any = null;
+  bookingConfirmation: any = null;
+
+  @ViewChild('confirmationSheet') ConfirmationSheet!: TemplateRef<any>;
+  @ViewChild('knocdocPromoSheet') KnocdocPromoSheet!: TemplateRef<any>;
+
+  services = [
+    { name: 'Root Canal Treatment (RCT)', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/RCT.gif', description: 'Painless, modern root canal therapy to save your natural teeth and eliminate infection completely.', details: 'Root canal treatment removes infected pulp from inside your tooth, cleans and disinfects the canal, then fills and seals it. This saves your natural tooth and prevents the need for extraction. At our clinic, we use advanced rotary instruments and apex locators for precise, painless treatment with high success rates.' },
+    { name: 'Dental Crowns', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Crowns.gif', description: 'Custom-made crowns to restore damaged teeth for a natural, complete smile.', details: 'Dental crowns are tooth-shaped caps placed over damaged or weakened teeth to restore their shape, size, strength, and appearance. We offer metal-free ceramic crowns, zirconia crowns, and porcelain-fused-to-metal options customized to match your natural teeth perfectly.' },
+    { name: 'Laser Dentistry', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2022/09/Laser-Treatment-1.gif', description: 'Cutting-edge laser treatments for gum disease and soft tissue procedures with minimal discomfort.', details: 'Our advanced diode laser technology enables minimally invasive treatments for gum disease, cavity preparation, teeth whitening, and soft tissue procedures. Laser dentistry means less pain, reduced bleeding, faster healing, and often no need for anesthesia.' },
+    { name: 'Clear Aligners / Invisible Braces', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2025/06/Invisible-Braces-1.gif', description: 'Virtually invisible aligners that straighten your teeth without the look of traditional braces.', details: 'Clear aligners are custom-made, removable transparent trays that gradually move your teeth into the desired position. They are virtually invisible, comfortable, and allow you to eat and brush normally. We provide Invisalign and other premium aligner systems with 3D treatment planning.' },
+    { name: 'Dental Fillings / Teeth Fillings', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dental-Fillings-1-1.gif', description: 'Natural-looking composite fillings that blend seamlessly with your teeth for invisible restoration.', details: 'We use tooth-colored composite resin fillings that bond directly to your tooth structure, providing a strong, natural-looking restoration. These mercury-free fillings are safe, durable, and virtually invisible, replacing old silver amalgam fillings.' },
+    { name: 'Wisdom Teeth Removal', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Wisdom-Tooth-1.gif', description: 'Safe and efficient extraction of wisdom teeth to prevent crowding and infection.', details: 'Wisdom teeth often cause problems like impaction, crowding, infection, or cyst formation. Our oral surgeons perform safe, minimally invasive extractions using advanced techniques. We ensure proper anesthesia, clear post-operative instructions, and follow-up care for quick recovery.' },
+    { name: 'Dental Braces & Aligners', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2017/05/Braces-2.gif', description: 'Traditional metal braces and modern ceramic options for effective teeth straightening.', details: 'We offer a full range of orthodontic braces including traditional metal braces, tooth-colored ceramic braces, self-ligating braces, and lingual (behind-the-teeth) braces. Each treatment plan is customized using digital diagnostics and 3D planning for optimal results.' },
+    { name: 'Dental Implants / Teeth Implants', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dental-Implants.gif', description: 'Permanent tooth replacement with titanium implants that look and feel like natural teeth.', details: 'Dental implants are titanium posts surgically placed into the jawbone to serve as artificial tooth roots. They provide a permanent, stable foundation for replacement teeth that look, feel, and function like natural teeth. We offer single implants, implant bridges, and full-arch solutions.' },
+    { name: 'Dentures', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dentures.gif', description: 'Custom-fitted partial and complete dentures for a comfortable, natural-looking replacement.', details: 'Our custom dentures are crafted for a precise, comfortable fit. We offer complete dentures for full arch replacement, partial dentures for multiple missing teeth, flexible dentures for enhanced comfort, and implant-supported dentures for maximum stability.' },
+    { name: 'Kids Dentistry', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Kids-Dentistery.gif', description: 'Gentle orthodontic care to guide your child\'s dental development the right way.', details: 'Our child-friendly environment makes dental visits fun and stress-free. We provide preventive care including fluoride treatments and sealants, early orthodontic intervention, habit-breaking appliances, and gentle cavity treatments. Our team is specially trained to handle pediatric patients with care and patience.' },
+    { name: 'Mouth Ulcers', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Mouth-ulcers-1-2.gif', description: 'Expert diagnosis and treatment of oral ulcers for fast relief and healing.', details: 'Mouth ulcers can be painful and recurring. We provide thorough diagnosis to identify the cause — whether nutritional deficiency, stress, or underlying conditions — and offer effective treatments including medicated gels, laser therapy for instant pain relief, and preventive guidance.' },
+    { name: 'Advanced Gum Treatment', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2017/05/Gum-Treatment.gif', description: 'Expert periodontal care including deep cleaning, scaling, and advanced treatments.', details: 'Gum disease affects the tissues supporting your teeth and can lead to tooth loss if untreated. We offer scaling and root planing (deep cleaning), flap surgery, gum grafting, and laser-assisted gum treatment. Early treatment preserves your natural teeth and prevents bone loss.' }
+  ];
 
   @ViewChild('templateBottomSheet') TemplateBottomSheet!: TemplateRef<any>;
+  @ViewChild('serviceDetailSheet') ServiceDetailSheet!: TemplateRef<any>;
   @ViewChild('confettiCanvas') confettiCanvas!: ElementRef<HTMLCanvasElement>;
 
   private offersObserver: IntersectionObserver | null = null;
@@ -76,7 +97,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.unregForm = this.fb.group({
       name: ['', [Validators.required]],
       mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      gender: ['', [Validators.required]]
+      gender: ['', [Validators.required]],
+      reasonForVisit: ['']
     });
 
     // Responsive detection
@@ -476,7 +498,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
 
     const req = {
       sessionId,
-      reasonForVisit: '',
+      reasonForVisit: this.unregForm.value.reasonForVisit || '',
       slotType: 'normal',
       pin: Math.floor(Math.random() * 9000) + 1000 + '',
       email: '',
@@ -494,16 +516,115 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       isQueueUpdateReminder: false
     };
     this.bookingService.bookUnregisteredUser(req).subscribe(
-      () => {
-        this._snackBar.open('Appointment booked successfully!', '', { duration: 3000 });
+      (res: any) => {
+        this.bookingConfirmation = {
+          patientName: req.userName,
+          mobile: req.mobile,
+          gender: req.gender,
+          doctorName: req.doctorName,
+          appointmentDate: req.appointmentDate,
+          slotDay: req.slotDay,
+          slotTime: this.slotSelectedDetail?.slotTime || '',
+          sessionTime: (this.slotSelectedDetail?.sessionStartTime || '') + ' - ' + (this.slotSelectedDetail?.sessionEndTime || ''),
+          clinicName: this.slotSelectedDetail?.clinicDetails?.clinicName || this.slotSelectedDetail?.clinicDetails?.name || '',
+          clinicLocation: this.slotSelectedDetail?.clinicDetails?.clinicLocation || '',
+          reasonForVisit: req.reasonForVisit,
+          pin: req.pin,
+          tokenNo: res?.tokenNo || res?.slotId || ''
+        };
         this.selectedSlotId = '';
         this.slotSelectedDetail = {};
         this.closeTemplateSheetMenu();
+        setTimeout(() => {
+          this.bottomSheet.open(this.ConfirmationSheet, {
+            panelClass: 'confirmation-sheet',
+            disableClose: true
+          });
+        }, 400);
       },
       () => {
         this._snackBar.open('Error booking appointment. Please try again.', '', { duration: 3000 });
       }
     );
+  }
+
+  downloadConfirmation(): void {
+    const el = document.getElementById('confirmation-card');
+    if (!el) return;
+    // Clone the card into body so html2canvas can access it outside the CDK overlay
+    const clone = el.cloneNode(true) as HTMLElement;
+    clone.style.position = 'absolute';
+    clone.style.left = '-9999px';
+    clone.style.top = '0';
+    clone.style.width = el.offsetWidth + 'px';
+    document.body.appendChild(clone);
+    // @ts-ignore
+    import(/* webpackChunkName: "html2canvas" */ 'html2canvas').then((mod: any) => {
+      const html2canvas = mod.default || mod;
+      html2canvas(clone, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        imageTimeout: 5000
+      }).then((canvas: HTMLCanvasElement) => {
+        document.body.removeChild(clone);
+        const link = document.createElement('a');
+        link.download = `appointment-${this.bookingConfirmation?.appointmentDate || 'confirmation'}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }).catch((err: any) => {
+        document.body.removeChild(clone);
+        console.error('html2canvas error:', err);
+      });
+    });
+  }
+
+  closeConfirmation(): void {
+    this.bottomSheet.dismiss();
+    setTimeout(() => {
+      this.bottomSheet.open(this.KnocdocPromoSheet, {
+        panelClass: 'knocdoc-promo-sheet'
+      });
+    }, 300);
+  }
+
+  closeKnocdocPromo(): void {
+    this.bottomSheet.dismiss();
+    this.bookingConfirmation = null;
+  }
+
+  openServiceDetail(service: any): void {
+    this.selectedService = service;
+    this.bottomSheet.open(this.ServiceDetailSheet, {
+      panelClass: 'service-detail-sheet'
+    });
+  }
+
+  bookFromService(): void {
+    if (this.selectedService) {
+      this.unregForm.patchValue({ reasonForVisit: this.selectedService.name });
+    }
+    this.bottomSheet.dismiss();
+    setTimeout(() => {
+      this.openTemplateSheetMenu();
+    }, 300);
+  }
+
+  shareProfile(): void {
+    const shareData = {
+      title: this.profRes?.name || 'Dr. Jasbir Meher',
+      text: `Book an appointment with ${this.profRes?.name || 'Dr. Jasbir Meher'} - ${this.profRes?.specialization || 'Orthodontist & Dental Surgeon'}`,
+      url: window.location.href
+    };
+    if (navigator.share) {
+      navigator.share(shareData).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        this._snackBar.open('Profile link copied to clipboard!', '', { duration: 3000 });
+      });
+    }
   }
 
   onSubmit(form: any): void {

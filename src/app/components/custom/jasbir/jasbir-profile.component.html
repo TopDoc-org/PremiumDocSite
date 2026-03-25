@@ -114,14 +114,18 @@
 
           <!-- Social Media Links -->
           <div class="hero-social-links">
-            <a href="https://www.instagram.com/dr.mehers_orthodontic_center/" target="_blank" rel="noopener" class="social-link social-instagram" aria-label="Follow on Instagram">
+            <a href="https://www.instagram.com/dr.mehers_orthodontic_center/" target="_blank" rel="noopener" class="social-icon-btn" aria-label="Follow on Instagram">
               <i class="fab fa-instagram"></i>
-              <span>Instagram</span>
             </a>
-            <a href="https://www.facebook.com/drmeherorthodontic" target="_blank" rel="noopener" class="social-link social-facebook" aria-label="Follow on Facebook">
+            <a href="https://www.facebook.com/drmeherorthodontic" target="_blank" rel="noopener" class="social-icon-btn" aria-label="Follow on Facebook">
               <i class="fab fa-facebook-f"></i>
-              <span>Facebook</span>
             </a>
+            <a href="https://www.youtube.com/@DrMehersOrthodonticCenter" target="_blank" rel="noopener" class="social-icon-btn" aria-label="Watch on YouTube">
+              <i class="fab fa-youtube"></i>
+            </a>
+            <button class="social-icon-btn share-btn" (click)="shareProfile()" aria-label="Share Profile">
+              <i class="fas fa-share-nodes"></i>
+            </button>
           </div>
         </div>
 
@@ -188,7 +192,7 @@
             <mat-icon class="!text-sm !w-4 !h-4 text-gray-400">schedule</mat-icon>
             Experience
           </label>
-          <div class="field-value">{{ profRes.yearsOfExperience || '13' }}+ Years</div>
+          <div class="field-value">{{ profRes.yearsOfExperience || '15' }}+ Years</div>
         </div>
 
         <button class="btn-primary-solid" (click)="openTemplateSheetMenu()">
@@ -219,7 +223,7 @@
             <p class="about-label">About the Doctor</p>
           </div>
           <h2>
-            10+ Years of Expertise
+            15+ Years of Expertise
             in <span class="highlight">Orthodontics & Dental Care</span>
           </h2>
           <p>
@@ -674,96 +678,18 @@
         </button>
       </div>
 
-      <div class="services-grid">
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=400&h=250&fit=crop&q=80" alt="Emergency Orthodontic Care" loading="lazy">
-            <div class="service-card-badge" style="background: linear-gradient(135deg, #ef4444, #dc2626);">Emergency</div>
+      <div class="services-icon-grid">
+        <div *ngFor="let service of services; let i = index"
+          class="service-icon-card scroll-animate"
+          [attr.data-aos]="animationsEnabled ? 'fade-up' : null"
+          [attr.data-aos-delay]="animationsEnabled ? (i % 3) * 100 : null"
+          (click)="openServiceDetail(service)">
+          <div class="dental-icon">
+            <img loading="lazy" [src]="service.icon" [alt]="service.name">
           </div>
-          <div class="service-card-body"><h3>Emergency Orthodontic Care</h3><p>Immediate care for broken brackets, loose wires, and orthodontic emergencies when you need it most.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?w=400&h=250&fit=crop&q=80" alt="Clear Aligners Invisalign" loading="lazy">
-            <div class="service-card-badge" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">Premium</div>
-          </div>
-          <div class="service-card-body"><h3>Clear Aligners/Invisalign</h3><p>Virtually invisible aligners that straighten your teeth without the look of traditional braces. Perfect for professionals.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1629909615184-74f495363b67?w=400&h=250&fit=crop&q=80" alt="Orthodontic Appliances" loading="lazy">
-            <div class="service-card-badge">Specialty</div>
-          </div>
-          <div class="service-card-body"><h3>Orthodontic Appliances</h3><p>Custom-designed retainers, expanders, and functional appliances for precise orthodontic corrections.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=400&h=250&fit=crop&q=80" alt="Adult Orthodontics" loading="lazy">
-          </div>
-          <div class="service-card-body"><h3>Adult Orthodontics</h3><p>Discreet and effective orthodontic solutions designed specifically for adults seeking a straighter smile.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=400&h=250&fit=crop&q=80" alt="Children Orthodontics" loading="lazy">
-          </div>
-          <div class="service-card-body"><h3>Children Orthodontics</h3><p>Early intervention and gentle orthodontic care to guide your child's dental development the right way.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=400&h=250&fit=crop&q=80" alt="Root Canal Treatments" loading="lazy">
-          </div>
-          <div class="service-card-body"><h3>Root Canal Treatments</h3><p>Painless, modern root canal therapy to save your natural teeth and eliminate infection completely.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=400&h=250&fit=crop&q=80" alt="Orthodontics" loading="lazy">
-            <div class="service-card-badge">Core</div>
-          </div>
-          <div class="service-card-body"><h3>Orthodontics</h3><p>Comprehensive orthodontic treatment plans to correct misaligned teeth, bites, and jaw issues for all ages.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=250&fit=crop&q=80" alt="Laser Dentistry Treatment" loading="lazy">
-            <div class="service-card-badge" style="background: linear-gradient(135deg, #f59e0b, #d97706);">Advanced</div>
-          </div>
-          <div class="service-card-body"><h3>Laser Dentistry Treatment</h3><p>Cutting-edge laser treatments for gum disease, cavity preparation, and soft tissue procedures with minimal discomfort.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1571772996211-2f02c9727629?w=400&h=250&fit=crop&q=80" alt="Tooth Coloured Fillings" loading="lazy">
-          </div>
-          <div class="service-card-body"><h3>Tooth Coloured Fillings</h3><p>Natural-looking composite fillings that blend seamlessly with your teeth for invisible cavity restoration.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1445527815219-ecbfec67492e?w=400&h=250&fit=crop&q=80" alt="Dentures" loading="lazy">
-          </div>
-          <div class="service-card-body"><h3>Dentures</h3><p>Custom-fitted partial and complete dentures for a comfortable, natural-looking replacement of missing teeth.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=400&h=250&fit=crop&crop=top&q=80" alt="Braces" loading="lazy">
-            <div class="service-card-badge">Popular</div>
-          </div>
-          <div class="service-card-body"><h3>Braces</h3><p>Traditional metal braces and modern ceramic options for effective teeth straightening and bite correction.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1629909615184-74f495363b67?w=400&h=250&fit=crop&crop=bottom&q=80" alt="Crowns and Bridges Fixing" loading="lazy">
-          </div>
-          <div class="service-card-body"><h3>Crowns and Bridges Fixing</h3><p>Custom-made crowns and bridges to restore damaged teeth and fill gaps for a natural, complete smile.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1445527815219-ecbfec67492e?w=400&h=250&fit=crop&crop=top&q=80" alt="Teeth Whitening" loading="lazy">
-          </div>
-          <div class="service-card-body"><h3>Teeth Whitening</h3><p>Professional whitening treatments to brighten your smile by up to 8 shades in a single visit.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
-        </div>
-        <div class="service-card has-image scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
-          <div class="service-card-img">
-            <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=400&h=250&fit=crop&crop=bottom&q=80" alt="Gum Disease Treatment" loading="lazy">
-          </div>
-          <div class="service-card-body"><h3>Gum Disease Treatment</h3><p>Expert periodontal care including deep cleaning, scaling, and advanced treatments to restore healthy gums.</p><span class="service-link" (click)="openTemplateSheetMenu()">Book appointment <mat-icon class="!text-base">arrow_forward</mat-icon></span></div>
+          <h3>{{ service.name }}</h3>
+          <p>{{ service.description }}</p>
+          <span class="check-details-link">Check details <mat-icon class="!text-sm !w-3.5 !h-3.5">arrow_forward</mat-icon></span>
         </div>
       </div>
     </section>
@@ -1185,14 +1111,20 @@
         </div>
         <!-- Social Media in CTA -->
         <div class="final-cta-social">
-          <span class="final-cta-social-label">Follow Us</span>
+          <span class="final-cta-social-label">Connect With Us</span>
           <div class="final-cta-social-icons">
-            <a href="https://www.instagram.com/dr.mehers_orthodontic_center/" target="_blank" rel="noopener" class="cta-social-icon cta-social-instagram" aria-label="Instagram">
+            <a href="https://www.instagram.com/dr.mehers_orthodontic_center/" target="_blank" rel="noopener" class="cta-social-icon" aria-label="Instagram">
               <i class="fab fa-instagram"></i>
             </a>
-            <a href="https://www.facebook.com/drmeherorthodontic" target="_blank" rel="noopener" class="cta-social-icon cta-social-facebook" aria-label="Facebook">
+            <a href="https://www.facebook.com/drmeherorthodontic" target="_blank" rel="noopener" class="cta-social-icon" aria-label="Facebook">
               <i class="fab fa-facebook-f"></i>
             </a>
+            <a href="https://www.youtube.com/@DrMehersOrthodonticCenter" target="_blank" rel="noopener" class="cta-social-icon" aria-label="YouTube">
+              <i class="fab fa-youtube"></i>
+            </a>
+            <button class="cta-social-icon share-btn" (click)="shareProfile()" aria-label="Share Profile">
+              <i class="fas fa-share-nodes"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -1245,6 +1177,167 @@
   </div>
 </ng-template>
 
+<!-- SERVICE DETAIL BOTTOM SHEET -->
+<ng-template #serviceDetailSheet>
+  <div class="service-detail-content" *ngIf="selectedService">
+    <div class="service-detail-header">
+      <div class="service-detail-header-left">
+        <div class="service-detail-icon">
+          <img [src]="selectedService.icon" [alt]="selectedService.name">
+        </div>
+        <h3>{{ selectedService.name }}</h3>
+      </div>
+      <button (click)="closeTemplateSheetMenu()" class="sheet-close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="service-detail-body">
+      <p class="service-detail-summary">{{ selectedService.description }}</p>
+      <div class="service-detail-divider"></div>
+      <h4>About This Procedure</h4>
+      <p class="service-detail-text">{{ selectedService.details }}</p>
+    </div>
+    <div class="service-detail-actions">
+      <button class="service-book-btn" (click)="bookFromService()">
+        <mat-icon class="!text-lg !mr-1">calendar_today</mat-icon>
+        Book for {{ selectedService.name }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- BOOKING CONFIRMATION SHEET -->
+<ng-template #confirmationSheet>
+  <div class="confirmation-content">
+    <div class="confirmation-scroll">
+      <div id="confirmation-card" class="confirmation-card">
+        <div class="confirmation-check">
+          <div class="confirmation-check-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+        <h2 class="confirmation-title">Appointment Confirmed!</h2>
+        <p class="confirmation-subtitle">Your appointment has been booked successfully</p>
+
+        <div class="confirmation-details">
+          <div class="confirmation-row">
+            <div class="confirmation-label">
+              <svg class="conf-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              Patient
+            </div>
+            <div class="confirmation-value">{{ bookingConfirmation?.patientName }}</div>
+          </div>
+          <div class="confirmation-row">
+            <div class="confirmation-label">
+              <svg class="conf-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+              Mobile
+            </div>
+            <div class="confirmation-value">{{ bookingConfirmation?.mobile }}</div>
+          </div>
+          <div class="confirmation-row">
+            <div class="confirmation-label">
+              <svg class="conf-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-8-2h4v2h-4V4zm-1 10h-2v2H7v-2H5v-2h2v-2h2v2h2v2zm7 2h-2v-2h-2v-2h2v-2h2v2h2v2h-2v2z"/></svg>
+              Doctor
+            </div>
+            <div class="confirmation-value">Dr. {{ bookingConfirmation?.doctorName }}</div>
+          </div>
+          <div class="confirmation-row">
+            <div class="confirmation-label">
+              <svg class="conf-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+              Date
+            </div>
+            <div class="confirmation-value">{{ bookingConfirmation?.slotDay }}, {{ bookingConfirmation?.appointmentDate }}</div>
+          </div>
+          <div class="confirmation-row">
+            <div class="confirmation-label">
+              <svg class="conf-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+              Slot Time
+            </div>
+            <div class="confirmation-value">{{ bookingConfirmation?.slotTime || 'As per queue' }}</div>
+          </div>
+          <div class="confirmation-row" *ngIf="bookingConfirmation?.reasonForVisit">
+            <div class="confirmation-label">
+              <svg class="conf-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.73 12.02l3.98-3.98a.996.996 0 000-1.41l-4.34-4.34a.996.996 0 00-1.41 0l-3.98 3.98L8 2.29C7.8 2.1 7.55 2 7.29 2c-.25 0-.51.1-.7.29L2.25 6.63a.996.996 0 000 1.41l3.98 3.98L2.25 16a.996.996 0 000 1.41l4.34 4.34c.39.39 1.02.39 1.41 0l3.98-3.98 3.98 3.98c.2.2.45.29.71.29.26 0 .51-.1.71-.29l4.34-4.34a.996.996 0 000-1.41l-3.99-3.97z"/></svg>
+              Procedure
+            </div>
+            <div class="confirmation-value">{{ bookingConfirmation?.reasonForVisit }}</div>
+          </div>
+          <div class="confirmation-row">
+            <div class="confirmation-label">
+              <svg class="conf-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              Clinic
+            </div>
+            <div class="confirmation-value">{{ bookingConfirmation?.clinicName }}<br *ngIf="bookingConfirmation?.clinicLocation"><small>{{ bookingConfirmation?.clinicLocation }}</small></div>
+          </div>
+          <div class="confirmation-row confirmation-row--highlight" *ngIf="bookingConfirmation?.pin">
+            <div class="confirmation-label">
+              <svg class="conf-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+              PIN
+            </div>
+            <div class="confirmation-value confirmation-pin">{{ bookingConfirmation?.pin }}</div>
+          </div>
+        </div>
+
+        <div class="confirmation-footer-note">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#2872bf" style="flex-shrink:0;margin-top:1px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <span>Show this confirmation at the clinic reception. Payment to be made in cash at the clinic.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="confirmation-actions">
+      <button class="confirmation-download-btn" (click)="downloadConfirmation()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        Save as Image
+      </button>
+      <button class="confirmation-close-btn" (click)="closeConfirmation()">
+        Done
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- KNOCDOC PROMO SHEET (shown after Done) -->
+<ng-template #knocdocPromoSheet>
+  <div class="knocdoc-promo">
+    <button class="knocdoc-promo-close" (click)="closeKnocdocPromo()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div class="knocdoc-promo-body">
+      <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="knocdoc-promo-logo">
+      <h3 class="knocdoc-promo-title">Track Your Appointment</h3>
+      <p class="knocdoc-promo-desc">
+        Download <strong>KnocDoc</strong> and sign in with <strong>{{ bookingConfirmation?.mobile }}</strong> to track your booking, get reminders and manage your appointments.
+      </p>
+      <div class="knocdoc-promo-steps">
+        <div class="knocdoc-promo-step">
+          <span class="knocdoc-promo-step-num">1</span>
+          <span>Download KnocDoc from Play Store</span>
+        </div>
+        <div class="knocdoc-promo-step">
+          <span class="knocdoc-promo-step-num">2</span>
+          <span>Sign in with {{ bookingConfirmation?.mobile }}</span>
+        </div>
+        <div class="knocdoc-promo-step">
+          <span class="knocdoc-promo-step-num">3</span>
+          <span>View &amp; track your appointment</span>
+        </div>
+      </div>
+      <div class="knocdoc-promo-actions">
+        <a href="https://play.google.com/store/apps/details?id=in.knocdoc.app.user" target="_blank" rel="noopener" class="knocdoc-promo-btn knocdoc-promo-btn--play">
+          <svg viewBox="0 0 512 512" fill="currentColor" width="18" height="18"><path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/></svg>
+          Get on Google Play
+        </a>
+        <a href="https://knocdoc.in/signUp/claimProfile" target="_blank" rel="noopener" class="knocdoc-promo-btn knocdoc-promo-btn--web">
+          <mat-icon class="!text-lg !w-[18px] !h-[18px]">language</mat-icon>
+          Open KnocDoc Web
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 <!-- SHARED BOOKING WIDGET (used in pullover bottom sheet) -->
 <ng-template #bookingWidget>
   <section class="bottom-section">
@@ -1285,6 +1378,17 @@
               <input type="radio" formControlName="gender" value="female" class="accent-blue-600"> Female
             </label>
           </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="center-block">Reason for Visit:
+            <select formControlName="reasonForVisit"
+              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+              <option value="">Select procedure (optional)</option>
+              <option *ngFor="let svc of services" [value]="svc.name">{{ svc.name }}</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
         </div>
 
         <div class="slot-scroll-area" [class.slots-disabled]="unregForm.invalid">
