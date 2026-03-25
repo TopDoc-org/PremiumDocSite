@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx playwright:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4200)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080)",
+      "Bash(curl:*)",
+      "Bash(netstat -ano)",
+      "Bash(tasklist)",
+      "Bash(node screenshot.js)",
+      "Bash(echo $http_proxy)",
+      "Bash(echo $https_proxy)",
+      "Bash(echo $no_proxy)",
+      "Bash(echo $HTTP_PROXY)",
+      "Bash(echo $HTTPS_PROXY)",
+      "Bash(npx ng:*)",
+      "Bash(ls styles*.css)",
+      "Bash(node seed-slots.js)",
+      "Bash(node -e \"process.stdout.write\\(''''test''''\\)\")",
+      "Bash(node:*)",
+      "Bash(xxd -l 100 \"C:/Sarthak/doctor-sites/src/assets/Reference/code for icons\")",
+      "Bash(npm list:*)",
+      "Bash(npm install:*)",
+      "Bash(node -e \":*)",
+      "Bash(ls screenshot-*.png test-screenshots/)",
+      "Bash(rm -f screenshot-*.png)",
+      "Bash(rm -rf test-screenshots/)",
+      "Bash(rm -f screenshot.js)",
+      "Bash(cd:*)",
+      "Bash(grep -n \"background.*#fff\\\\|background.*white\\\\|background:.*$slate-50\\\\|color.*$navy-950\\\\|color.*$slate-900\\\\|\\\\.alt-bg\\\\|\\\\.profile-landing\" \"C:\\\\Sarthak\\\\doctor-sites\\\\src\\\\app\\\\components\\\\custom\\\\jasbir\\\\jasbir-profile.component.scss\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}

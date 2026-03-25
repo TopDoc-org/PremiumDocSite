@@ -34,6 +34,8 @@ import { BookingSectionComponent } from './components/sections/booking-section/b
 import { JasbirProfileComponent } from './components/custom/jasbir/jasbir-profile.component';
 import { DemoProfileComponent } from './components/demo/demo-profile.component';
 import { InlineBookingComponent } from './components/shared/inline-booking/inline-booking.component';
+import { AdminHomeComponent } from './components/admin-home/admin-home.component';
+import { MultiDoctorComponent } from './components/templates/multi-doctor/multi-doctor.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,8 @@ import { InlineBookingComponent } from './components/shared/inline-booking/inlin
     JasbirProfileComponent,
     DemoProfileComponent,
     InlineBookingComponent,
+    AdminHomeComponent,
+    MultiDoctorComponent,
   ],
   imports: [
     BrowserModule,

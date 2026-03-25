@@ -1,0 +1,194 @@
+<div class="admin-page">
+
+  <!-- ─── TOP BAR ─────────────────────────────── -->
+  <header class="admin-topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <div class="brand-mark">K</div>
+        <div>
+          <h1 class="brand-name">KnocDoc</h1>
+          <span class="brand-sub">Site Builder &middot; Internal</span>
+        </div>
+      </div>
+      <div class="topbar-badge">
+        <mat-icon class="topbar-badge-icon">admin_panel_settings</mat-icon>
+        Admin Dashboard
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+
+    <!-- ─── STATS ROW ───────────────────────────── -->
+    <section class="stats-row">
+      <div class="stat-card" *ngFor="let s of stats">
+        <mat-icon class="stat-icon" [style.color]="s.icon === 'dashboard' ? '#2563eb' : s.icon === 'widgets' ? '#7c3aed' : s.icon === 'public' ? '#0d9488' : '#ea580c'">{{ s.icon }}</mat-icon>
+        <div class="stat-info">
+          <span class="stat-value">{{ s.value }}</span>
+          <span class="stat-label">{{ s.label }}</span>
+          <span class="stat-sub">{{ s.sub }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── QUICK LINKS ─────────────────────────── -->
+    <section class="quick-section">
+      <h2 class="section-title">Quick Actions</h2>
+      <div class="quick-grid">
+        <a *ngFor="let q of quickLinks"
+           class="quick-card"
+           [href]="q.url || '#'"
+           [class.quick-card--disabled]="!q.url">
+          <div class="quick-icon-wrap" [style.background]="q.color + '12'" [style.color]="q.color">
+            <mat-icon>{{ q.icon }}</mat-icon>
+          </div>
+          <div class="quick-info">
+            <span class="quick-label">{{ q.label }}</span>
+            <span class="quick-desc">{{ q.description }}</span>
+          </div>
+          <mat-icon class="quick-arrow">arrow_forward</mat-icon>
+        </a>
+      </div>
+    </section>
+
+    <!-- ─── TEMPLATES ───────────────────────────── -->
+    <section class="templates-section">
+      <div class="templates-header">
+        <h2 class="section-title">Templates</h2>
+        <div class="filter-tabs">
+          <button class="filter-tab" [class.filter-tab--active]="activeFilter === 'all'" (click)="activeFilter = 'all'">All</button>
+          <button class="filter-tab" [class.filter-tab--active]="activeFilter === 'live'" (click)="activeFilter = 'live'">Live</button>
+          <button class="filter-tab" [class.filter-tab--active]="activeFilter === 'coming-soon'" (click)="activeFilter = 'coming-soon'">Upcoming</button>
+        </div>
+      </div>
+
+      <div class="templates-grid">
+        <div class="template-card" *ngFor="let t of filteredTemplates" [class.template-card--coming]="t.status === 'coming-soon'">
+          <!-- Thumbnail -->
+          <div class="template-thumb">
+            <img [src]="t.thumbnail" [alt]="t.name" loading="lazy">
+            <div class="template-overlay">
+              <a *ngIf="t.previewUrl" [href]="t.previewUrl" class="overlay-btn overlay-btn--preview">
+                <mat-icon>visibility</mat-icon> Preview
+              </a>
+              <a *ngIf="t.demoUrl && t.demoUrl !== t.previewUrl" [href]="t.demoUrl" class="overlay-btn overlay-btn--demo">
+                <mat-icon>tune</mat-icon> Customize
+              </a>
+            </div>
+            <span class="template-status" [class.template-status--live]="t.status === 'live'" [class.template-status--coming]="t.status === 'coming-soon'" [class.template-status--beta]="t.status === 'beta'">
+              {{ t.status === 'live' ? 'Live' : t.status === 'beta' ? 'Beta' : 'Coming Soon' }}
+            </span>
+          </div>
+
+          <!-- Info -->
+          <div class="template-body">
+            <div class="template-title-row">
+              <h3 class="template-name">{{ t.name }}</h3>
+              <div class="template-accent" [style.background]="t.accentColor"></div>
+            </div>
+            <p class="template-subtitle">{{ t.subtitle }}</p>
+            <p class="template-desc">{{ t.description }}</p>
+
+            <!-- Tags -->
+            <div class="template-tags">
+              <span class="template-tag" *ngFor="let tag of t.tags">{{ tag }}</span>
+            </div>
+
+            <!-- Features -->
+            <details class="template-features">
+              <summary>{{ t.features.length }} Features</summary>
+              <ul>
+                <li *ngFor="let f of t.features">
+                  <mat-icon class="feature-check">check_circle</mat-icon>
+                  {{ f }}
+                </li>
+              </ul>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SHARED COMPONENTS ───────────────────── -->
+    <section class="components-section">
+      <h2 class="section-title">Shared Components</h2>
+      <p class="section-desc">Reusable building blocks available across all templates.</p>
+
+      <div class="components-grid">
+        <div class="comp-card" *ngFor="let c of sharedComponents">
+          <div class="comp-header">
+            <code class="comp-name">{{ c.name }}</code>
+            <code class="comp-path">{{ c.path }}</code>
+          </div>
+          <p class="comp-desc">{{ c.description }}</p>
+          <div class="comp-used">
+            <span class="comp-used-label">Used in:</span>
+            <span class="comp-used-tag" *ngFor="let u of c.usedIn">{{ u }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ROADMAP ─────────────────────────────── -->
+    <section class="roadmap-section">
+      <h2 class="section-title">Roadmap</h2>
+      <div class="roadmap-timeline">
+        <div class="roadmap-item roadmap-item--done">
+          <div class="roadmap-dot"></div>
+          <div class="roadmap-content">
+            <span class="roadmap-phase">Phase 1</span>
+            <h4>Premium Profile V1</h4>
+            <p>Custom Jasbir profile with full booking, services, testimonials, team, and map sections.</p>
+          </div>
+        </div>
+        <div class="roadmap-item roadmap-item--done">
+          <div class="roadmap-dot"></div>
+          <div class="roadmap-content">
+            <span class="roadmap-phase">Phase 2</span>
+            <h4>Demo / Sales Tool</h4>
+            <p>Interactive customizable demo for prospects with live editing, color themes, and shareable links.</p>
+          </div>
+        </div>
+        <div class="roadmap-item roadmap-item--done">
+          <div class="roadmap-dot"></div>
+          <div class="roadmap-content">
+            <span class="roadmap-phase">Phase 3</span>
+            <h4>Reusable Components</h4>
+            <p>Extract inline booking into shared component. Build component library for future templates.</p>
+          </div>
+        </div>
+        <div class="roadmap-item roadmap-item--current">
+          <div class="roadmap-dot"></div>
+          <div class="roadmap-content">
+            <span class="roadmap-phase">Phase 4</span>
+            <h4>Admin Dashboard</h4>
+            <p>Internal template gallery, component registry, and deployment management.</p>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-dot"></div>
+          <div class="roadmap-content">
+            <span class="roadmap-phase">Phase 5</span>
+            <h4>Minimal Template + Multi-Doctor</h4>
+            <p>Lightweight single-page template and multi-practitioner clinic template.</p>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-dot"></div>
+          <div class="roadmap-content">
+            <span class="roadmap-phase">Phase 6</span>
+            <h4>Self-Serve Builder</h4>
+            <p>Doctor-facing dashboard to pick a template, customize, and publish their own site.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── FOOTER ──────────────────────────────── -->
+  <footer class="admin-footer">
+    <span>KnocDoc Site Builder &middot; Internal Admin &middot; {{ currentYear }}</span>
+  </footer>
+
+</div>

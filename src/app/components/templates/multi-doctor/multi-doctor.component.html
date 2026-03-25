@@ -1,0 +1,347 @@
+<div class="mc-page">
+
+  <!-- ═══ NAVIGATION ═══════════════════════════ -->
+  <nav class="mc-nav">
+    <div class="mc-nav-inner">
+      <a class="mc-nav-brand" href="#">
+        <div class="mc-nav-logo">A</div>
+        <div>
+          <span class="mc-nav-name">{{ clinicName }}</span>
+          <span class="mc-nav-sub">Multi-Specialty Dental</span>
+        </div>
+      </a>
+      <div class="mc-nav-links">
+        <a href="#doctors">Doctors</a>
+        <a href="#departments">Departments</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#locations">Locations</a>
+      </div>
+      <a class="mc-nav-cta" href="#doctors">
+        <mat-icon>event_available</mat-icon>
+        Book Now
+      </a>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═════════════════════════════════ -->
+  <section class="mc-hero">
+    <div class="mc-hero-bg">
+      <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=1400&q=80" alt="Clinic">
+    </div>
+    <div class="mc-hero-overlay"></div>
+
+    <!-- Floating shapes -->
+    <div class="mc-hero-shape mc-hero-shape--1"></div>
+    <div class="mc-hero-shape mc-hero-shape--2"></div>
+    <div class="mc-hero-shape mc-hero-shape--3"></div>
+
+    <div class="mc-hero-content" data-aos="fade-up">
+      <div class="mc-hero-badge">
+        <span class="mc-hero-badge-dot"></span>
+        Trusted by 50,000+ Patients
+      </div>
+      <h1 class="mc-hero-title">{{ clinicName }}</h1>
+      <p class="mc-hero-tagline">{{ clinicTagline }}</p>
+      <p class="mc-hero-sub">{{ clinicSubtext }}</p>
+
+      <div class="mc-hero-actions">
+        <a class="mc-btn mc-btn--primary" href="#doctors">
+          <mat-icon>calendar_today</mat-icon>
+          Book Appointment
+        </a>
+        <a class="mc-btn mc-btn--ghost" href="#gallery">
+          <mat-icon>play_circle</mat-icon>
+          Virtual Tour
+        </a>
+      </div>
+
+      <div class="mc-hero-trust">
+        <div class="mc-trust-item" *ngFor="let badge of trustBadges">
+          <mat-icon class="mc-trust-icon">verified</mat-icon>
+          {{ badge }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ STATS BAR ════════════════════════════ -->
+  <section class="mc-stats" data-aos="fade-up">
+    <div class="mc-stats-inner">
+      <div class="mc-stat" *ngFor="let s of stats; let i = index">
+        <mat-icon class="mc-stat-icon">{{ s.icon }}</mat-icon>
+        <div class="mc-stat-info">
+          <span class="mc-stat-value">{{ animatedStats[i] }}{{ s.suffix }}</span>
+          <span class="mc-stat-label">{{ s.label }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ DEPARTMENTS ══════════════════════════ -->
+  <section class="mc-section mc-departments" id="departments">
+    <div class="mc-container">
+      <div class="mc-section-header" data-aos="fade-up">
+        <span class="mc-label">Specialties</span>
+        <h2 class="mc-heading">Our Departments</h2>
+        <p class="mc-subheading">Six specialized departments working together to deliver comprehensive dental care under one roof.</p>
+      </div>
+
+      <div class="mc-dept-grid">
+        <div class="mc-dept-card" *ngFor="let d of departments" data-aos="fade-up" data-aos-delay="50">
+          <div class="mc-dept-icon-wrap" [style.background]="d.gradient">
+            <mat-icon>{{ d.icon }}</mat-icon>
+          </div>
+          <h3 class="mc-dept-name">{{ d.name }}</h3>
+          <p class="mc-dept-desc">{{ d.description }}</p>
+          <div class="mc-dept-meta">
+            <span class="mc-dept-count">{{ d.doctorCount }} {{ d.doctorCount > 1 ? 'Doctors' : 'Doctor' }}</span>
+            <a class="mc-dept-link" (click)="activeDeptFilter = d.name" href="#doctors">
+              View Team <mat-icon>arrow_forward</mat-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ DOCTORS ══════════════════════════════ -->
+  <section class="mc-section mc-doctors-section" id="doctors">
+    <div class="mc-container">
+      <div class="mc-section-header" data-aos="fade-up">
+        <span class="mc-label">The Team</span>
+        <h2 class="mc-heading">Meet Our Doctors</h2>
+        <p class="mc-subheading">Each of our specialists brings years of focused expertise, advanced training, and a genuine passion for patient care.</p>
+      </div>
+
+      <!-- Department filter -->
+      <div class="mc-dept-filter" data-aos="fade-up">
+        <button class="mc-filter-chip" [class.mc-filter-chip--active]="activeDeptFilter === 'all'" (click)="activeDeptFilter = 'all'">All Doctors</button>
+        <button class="mc-filter-chip" *ngFor="let d of departments"
+          [class.mc-filter-chip--active]="activeDeptFilter === d.name"
+          (click)="activeDeptFilter = d.name">
+          {{ d.name }}
+        </button>
+      </div>
+
+      <!-- Doctor cards -->
+      <div class="mc-doctors-grid">
+        <div class="mc-doctor-card" *ngFor="let doc of filteredDoctors" data-aos="fade-up">
+          <!-- Photo -->
+          <div class="mc-doc-photo-wrap">
+            <img [src]="doc.photo" [alt]="doc.name" class="mc-doc-photo" loading="lazy">
+            <div class="mc-doc-avail" [class.mc-doc-avail--yes]="doc.availableToday" [class.mc-doc-avail--no]="!doc.availableToday">
+              <span class="mc-avail-dot"></span>
+              {{ doc.availableToday ? 'Available Today' : 'Next Available' }}
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="mc-doc-body">
+            <h3 class="mc-doc-name">{{ doc.name }}</h3>
+            <p class="mc-doc-degree">{{ doc.degree }}</p>
+            <p class="mc-doc-specialty">{{ doc.specialty }}</p>
+
+            <div class="mc-doc-rating">
+              <div class="mc-doc-stars">
+                <mat-icon *ngFor="let s of getRatingStars(doc.rating)" class="mc-star">star</mat-icon>
+              </div>
+              <span class="mc-doc-rating-text">{{ doc.rating }} ({{ doc.reviews }} reviews)</span>
+            </div>
+
+            <p class="mc-doc-bio">{{ doc.bio }}</p>
+
+            <div class="mc-doc-tags">
+              <span class="mc-doc-tag">
+                <mat-icon>schedule</mat-icon>
+                {{ doc.experience }} yrs exp
+              </span>
+              <span class="mc-doc-tag">
+                <mat-icon>translate</mat-icon>
+                {{ doc.languages.join(', ') }}
+              </span>
+            </div>
+
+            <div class="mc-doc-actions">
+              <span class="mc-doc-slot">
+                <mat-icon>access_time</mat-icon>
+                Next: {{ doc.nextSlot }}
+              </span>
+              <button class="mc-doc-book-btn">
+                Book Appointment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ GALLERY ══════════════════════════════ -->
+  <section class="mc-section mc-gallery-section" id="gallery">
+    <div class="mc-container">
+      <div class="mc-section-header" data-aos="fade-up">
+        <span class="mc-label">Our Space</span>
+        <h2 class="mc-heading">A Glimpse Inside</h2>
+        <p class="mc-subheading">Step inside our state-of-the-art facility designed for comfort, hygiene, and clinical excellence.</p>
+      </div>
+
+      <div class="mc-gallery-grid" data-aos="fade-up">
+        <div class="mc-gallery-item"
+          *ngFor="let img of gallery"
+          [class.mc-gallery-item--wide]="img.span === 'wide'"
+          [class.mc-gallery-item--tall]="img.span === 'tall'">
+          <img [src]="img.src" [alt]="img.alt" loading="lazy">
+          <div class="mc-gallery-caption">{{ img.alt }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ INSURANCE ════════════════════════════ -->
+  <section class="mc-section mc-insurance-section">
+    <div class="mc-container">
+      <div class="mc-section-header" data-aos="fade-up">
+        <span class="mc-label">Cashless Claims</span>
+        <h2 class="mc-heading">Insurance Partners</h2>
+      </div>
+      <div class="mc-insurance-grid" data-aos="fade-up">
+        <div class="mc-insurance-card" *ngFor="let ins of insurancePartners">
+          <mat-icon class="mc-insurance-icon">verified_user</mat-icon>
+          <span>{{ ins }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TESTIMONIALS ═════════════════════════ -->
+  <section class="mc-section mc-testimonials-section" id="reviews">
+    <div class="mc-container">
+      <div class="mc-section-header" data-aos="fade-up">
+        <span class="mc-label">Patient Stories</span>
+        <h2 class="mc-heading">What Our Patients Say</h2>
+      </div>
+
+      <div class="mc-testimonials-carousel" data-aos="fade-up">
+        <div class="mc-testi-cards">
+          <div class="mc-testi-card" *ngFor="let t of testimonials; let i = index" [class.mc-testi-card--active]="i === activeTestimonial">
+            <div class="mc-testi-quote">
+              <mat-icon class="mc-testi-quote-icon">format_quote</mat-icon>
+              <p>{{ t.text }}</p>
+            </div>
+            <div class="mc-testi-author">
+              <div class="mc-testi-avatar" [style.background]="t.gradient">{{ t.initials }}</div>
+              <div class="mc-testi-info">
+                <span class="mc-testi-name">{{ t.name }}</span>
+                <span class="mc-testi-dept">{{ t.doctor }} &middot; {{ t.department }}</span>
+              </div>
+              <span class="mc-testi-date">{{ t.date }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="mc-testi-dots">
+          <button *ngFor="let t of testimonials; let i = index"
+            class="mc-testi-dot"
+            [class.mc-testi-dot--active]="i === activeTestimonial"
+            (click)="setTestimonial(i)">
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ LOCATIONS ════════════════════════════ -->
+  <section class="mc-section mc-locations-section" id="locations">
+    <div class="mc-container">
+      <div class="mc-section-header" data-aos="fade-up">
+        <span class="mc-label">Find Us</span>
+        <h2 class="mc-heading">Our Locations</h2>
+      </div>
+
+      <div class="mc-locations-grid" data-aos="fade-up">
+        <div class="mc-location-card" *ngFor="let loc of locations" [class.mc-location-card--main]="loc.isMain">
+          <div class="mc-loc-image">
+            <img [src]="loc.image" [alt]="loc.name" loading="lazy">
+            <span class="mc-loc-badge" *ngIf="loc.isMain">Main Center</span>
+          </div>
+          <div class="mc-loc-body">
+            <h3 class="mc-loc-name">{{ loc.name }}</h3>
+            <div class="mc-loc-detail">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ loc.address }}</span>
+            </div>
+            <div class="mc-loc-detail">
+              <mat-icon>phone</mat-icon>
+              <span>{{ loc.phone }}</span>
+            </div>
+            <div class="mc-loc-detail">
+              <mat-icon>schedule</mat-icon>
+              <span>{{ loc.hours }}</span>
+            </div>
+            <a [href]="loc.mapUrl" target="_blank" class="mc-loc-directions">
+              <mat-icon>directions</mat-icon>
+              Get Directions
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ══════════════════════════════════ -->
+  <section class="mc-cta" data-aos="fade-up">
+    <div class="mc-cta-inner">
+      <div class="mc-cta-shape mc-cta-shape--1"></div>
+      <div class="mc-cta-shape mc-cta-shape--2"></div>
+      <h2 class="mc-cta-title">Ready to Transform Your Smile?</h2>
+      <p class="mc-cta-text">Book a consultation with one of our specialists today. Walk-ins welcome at both locations.</p>
+      <div class="mc-cta-actions">
+        <a class="mc-btn mc-btn--white" href="#doctors">
+          <mat-icon>event_available</mat-icon>
+          Book Appointment
+        </a>
+        <a class="mc-btn mc-btn--outline" href="tel:+919876543210">
+          <mat-icon>call</mat-icon>
+          Call Now
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══════════════════════════════ -->
+  <footer class="mc-footer">
+    <div class="mc-footer-inner">
+      <div class="mc-footer-brand">
+        <div class="mc-footer-logo">A</div>
+        <div>
+          <span class="mc-footer-name">{{ clinicName }}</span>
+          <span class="mc-footer-sub">Multi-Specialty Dental Institute</span>
+        </div>
+      </div>
+      <div class="mc-footer-cols">
+        <div class="mc-footer-col">
+          <h4>Quick Links</h4>
+          <a href="#doctors">Our Doctors</a>
+          <a href="#departments">Departments</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#reviews">Reviews</a>
+        </div>
+        <div class="mc-footer-col">
+          <h4>Departments</h4>
+          <a *ngFor="let d of departments" href="#departments">{{ d.name }}</a>
+        </div>
+        <div class="mc-footer-col">
+          <h4>Contact</h4>
+          <a href="tel:+919876543210">+91 98765 43210</a>
+          <a href="mailto:info@apexdental.in">info&#64;apexdental.in</a>
+          <a href="#locations">Bhubaneswar, Odisha</a>
+        </div>
+      </div>
+    </div>
+    <div class="mc-footer-bottom">
+      <span>&copy; 2026 {{ clinicName }}. All rights reserved.</span>
+      <span>Powered by <strong>KnocDoc</strong></span>
+    </div>
+  </footer>
+
+</div>
