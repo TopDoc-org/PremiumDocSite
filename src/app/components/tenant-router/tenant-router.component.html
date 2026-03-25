@@ -1,0 +1,16 @@
+<ng-container [ngSwitch]="componentType">
+  <!-- Fully custom profiles -->
+  <app-jasbir-profile *ngSwitchCase="'custom-jasbir'"></app-jasbir-profile>
+
+  <!-- Config-driven standard template -->
+  <app-page-orchestrator *ngSwitchCase="'standard'" [config]="config!" ></app-page-orchestrator>
+
+  <!-- Multi-doctor clinic template -->
+  <app-multi-doctor *ngSwitchCase="'clinic'"></app-multi-doctor>
+
+  <!-- Fallback -->
+  <div *ngSwitchDefault class="tenant-error">
+    <h2>Unable to load profile</h2>
+    <p>Please try again later.</p>
+  </div>
+</ng-container>

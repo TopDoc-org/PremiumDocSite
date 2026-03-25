@@ -1,0 +1,118 @@
+{
+  "doctorId": "demo-doctor",
+  "profileType": "standard",
+  "theme": {
+    "primaryColor": "#10b981",
+    "accentColor": "#059669",
+    "gradientFrom": "#0f172a",
+    "gradientTo": "#1e293b"
+  },
+  "meta": {
+    "title": "Dr. Demo | General Physician",
+    "description": "Dr. Demo - MBBS, MD with 8+ years of experience in general medicine."
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "id": "hero-1",
+      "data": {
+        "clinicName": "Dr. Demo's Health Clinic",
+        "tagline": "\"Your health is our priority.\"",
+        "subtitle": "MBBS, MD · 8+ Years Experience · Mumbai, Maharashtra",
+        "badge": "Trusted Healthcare",
+        "backgroundImage": "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1200&q=80",
+        "ctaText": "Book Appointment",
+        "ctaLink": "#booking",
+        "trustBadges": [
+          { "icon": "verified", "text": "Board Certified" },
+          { "icon": "star", "text": "4.8 Rating" },
+          { "icon": "people", "text": "5,000+ Patients" }
+        ]
+      }
+    },
+    {
+      "type": "about",
+      "id": "about-1",
+      "data": {
+        "heading": "About Dr. Demo",
+        "highlightText": "Trusted Physician in Mumbai",
+        "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80",
+        "description": "Dr. Demo is a dedicated general physician committed to providing comprehensive healthcare. With years of experience in diagnosing and treating a wide range of conditions.",
+        "bulletPoints": [
+          "MD from a premier medical institution",
+          "Specialization in preventive healthcare",
+          "Active member of Indian Medical Association"
+        ],
+        "stats": [
+          { "value": "5K+", "label": "Patients Treated" },
+          { "value": "8+", "label": "Years Experience" },
+          { "value": "97%", "label": "Satisfaction Rate" }
+        ]
+      }
+    },
+    {
+      "type": "services",
+      "id": "services-1",
+      "data": {
+        "heading": "Our Services",
+        "subheading": "Comprehensive healthcare for you and your family",
+        "items": [
+          {
+            "name": "General Consultation",
+            "description": "Thorough health check-ups and consultations for all age groups.",
+            "imageUrl": "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=400&h=250&fit=crop&q=80",
+            "badge": "Popular"
+          },
+          {
+            "name": "Preventive Health",
+            "description": "Regular screenings and health packages to keep you in top shape.",
+            "imageUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=250&fit=crop&q=80"
+          },
+          {
+            "name": "Chronic Disease Management",
+            "description": "Expert management of diabetes, hypertension, and other chronic conditions.",
+            "imageUrl": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=250&fit=crop&q=80"
+          }
+        ]
+      }
+    },
+    {
+      "type": "testimonials",
+      "id": "testimonials-1",
+      "data": {
+        "heading": "What Our Patients Say",
+        "subheading": "Real feedback from real patients",
+        "items": [
+          {
+            "text": "Dr. Demo is thorough and caring. Always takes the time to explain everything clearly.",
+            "rating": 5,
+            "authorName": "Amit Shah",
+            "authorInitials": "AS",
+            "avatarGradient": "linear-gradient(135deg, #10b981, #059669)",
+            "treatment": "General Consultation",
+            "isVerified": true
+          },
+          {
+            "text": "Great experience with the preventive health check-up package. Highly recommend!",
+            "rating": 5,
+            "authorName": "Priya Verma",
+            "authorInitials": "PV",
+            "avatarGradient": "linear-gradient(135deg, #f59e0b, #d97706)",
+            "treatment": "Health Check-up"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "id": "cta-1",
+      "data": {
+        "heading": "Ready to Prioritize Your Health?",
+        "description": "Book your appointment today for a comprehensive health consultation.",
+        "ctaText": "Book Now",
+        "ctaLink": "#booking",
+        "guaranteeText": "No waiting time · Affordable pricing · Expert care"
+      }
+    }
+  ]
+}

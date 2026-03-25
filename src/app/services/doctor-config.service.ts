@@ -9,6 +9,7 @@ import { IDoctorSiteConfig } from '../models/doctor-site-config.model';
 const MOCK_CONFIGS: { [key: string]: string } = {
   'jasbir-001': 'jasbir',
   'jasbir': 'jasbir',
+  'demo-doctor': 'demo-doctor',
 };
 
 @Injectable({
