@@ -65,12 +65,16 @@
     <div class="demo-field">
       <label>Typography</label>
       <div class="demo-font-presets">
-        <button *ngFor="let fp of fontPairs"
+        <button *ngFor="let fp of visibleFontPairs"
           class="demo-font-btn"
           [class.demo-font-btn--active]="config.fontPair === fp.name"
           (click)="selectFont(fp)">
           <span class="demo-font-preview" [style.fontFamily]="fp.heading">Aa</span>
           <span class="demo-font-name">{{ fp.name }}</span>
+        </button>
+        <button class="demo-font-more" (click)="showAllFonts = !showAllFonts" *ngIf="fontPairs.length > initialFontCount">
+          <mat-icon class="!text-sm !w-4 !h-4">{{ showAllFonts ? 'expand_less' : 'expand_more' }}</mat-icon>
+          {{ showAllFonts ? 'Show less' : (fontPairs.length - initialFontCount) + ' more fonts' }}
         </button>
       </div>
     </div>

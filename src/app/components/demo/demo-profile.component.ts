@@ -75,14 +75,29 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
     fontPair: 'outfit-dm'
   };
 
+  showAllFonts = false;
+  initialFontCount = 4;
+
   fontPairs: FontPair[] = [
+    // Featured (shown by default)
     { name: 'Outfit + DM Sans', heading: "'Outfit'", body: "'DM Sans'", url: 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap' },
     { name: 'Playfair + DM Sans', heading: "'Playfair Display'", body: "'DM Sans'", url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Sans:wght@400;500;600;700&display=swap' },
     { name: 'Poppins + Inter', heading: "'Poppins'", body: "'Inter'", url: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap' },
     { name: 'Sora + Source Sans 3', heading: "'Sora'", body: "'Source Sans 3'", url: 'https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap' },
+    // More options (shown on expand)
     { name: 'Libre Baskerville + Karla', heading: "'Libre Baskerville'", body: "'Karla'", url: 'https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Karla:wght@400;500;600;700&display=swap' },
     { name: 'Space Grotesk + Work Sans', heading: "'Space Grotesk'", body: "'Work Sans'", url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap' },
+    { name: 'Lora + Nunito', heading: "'Lora'", body: "'Nunito'", url: 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Nunito:wght@400;500;600;700&display=swap' },
+    { name: 'Merriweather + Open Sans', heading: "'Merriweather'", body: "'Open Sans'", url: 'https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Open+Sans:wght@400;500;600;700&display=swap' },
+    { name: 'Raleway + Lato', heading: "'Raleway'", body: "'Lato'", url: 'https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&family=Lato:wght@400;700&display=swap' },
+    { name: 'Cormorant + Mulish', heading: "'Cormorant Garamond'", body: "'Mulish'", url: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Mulish:wght@400;500;600;700&display=swap' },
+    { name: 'Josefin Sans + Quicksand', heading: "'Josefin Sans'", body: "'Quicksand'", url: 'https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap' },
+    { name: 'Crimson Pro + Manrope', heading: "'Crimson Pro'", body: "'Manrope'", url: 'https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap' },
   ];
+
+  get visibleFontPairs(): FontPair[] {
+    return this.showAllFonts ? this.fontPairs : this.fontPairs.slice(0, this.initialFontCount);
+  }
 
   private loadedFontUrls = new Set<string>();
 
