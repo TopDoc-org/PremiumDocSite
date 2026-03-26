@@ -133,7 +133,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // Get doctorId from query params or use default
     this.activated.queryParamMap.subscribe(queryMap => {
-      this.doctorId = queryMap.get('doctorId') || queryMap.get('id') || 'jasbir';
+      this.doctorId = queryMap.get('doctorId') || queryMap.get('id') || '0e828c42-82da-4c56-bf35-a3e205161b92';
       this.referredBy = queryMap.get('referredBy') || null;
       if (queryMap.has('book')) {
         this.openBookByDefault = true;
@@ -215,15 +215,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private fetchClinicDetails(): void {
     if (!this.doctorId) return;
-    const req = {
-      role: 'orgcontract',
-      pageNo: 0,
-      pageSize: 100,
-      id: this.doctorId,
-      filter: [{ type: 'doctor' }, { status: 'active' }],
-      sortBy: []
-    };
-    this.bookingService.searchMulti(req).subscribe(
+    this.bookingService.getOrgContracts(this.doctorId).subscribe(
       (data: any) => {
         const orgIds = data.results?.map((doc: any) => doc.organisationId) || [];
         if (orgIds.length > 0) {
@@ -235,9 +227,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private fetchOrgDetails(idList: string[]): void {
-    // Use searchMulti to get org details
-    const req = { id: idList, role: 'organisation', fields: ['all'] };
-    this.bookingService.searchMulti(req).subscribe(
+    this.bookingService.getOrgDetails(idList).subscribe(
       (data: any) => {
         (data.results || []).forEach((org: any) => {
           const clinicObj = {

@@ -13,11 +13,28 @@ export class BookingService {
   constructor(private http: HttpClient) {}
 
   getSchedule(req: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/queue/searchMulti`, req);
+    return this.http.post(`${this.baseUrl}/api/v1/appointment/search/`, req);
   }
 
   searchMulti(query: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/api/queue/searchMulti`, query);
+  }
+
+  getOrgContracts(doctorId: string, pageNo = 0, pageSize = 100): Observable<any> {
+    return this.http.post(`${this.baseUrl}/organization/search`, {
+      id: doctorId,
+      pageNo,
+      pageSize,
+      filter: [{ type: 'doctor' }, { status: 'active' }]
+    });
+  }
+
+  getOrgDetails(idList: string[]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/doctors/doctorDetail`, {
+      id: idList,
+      role: 'organisation',
+      fields: ['all']
+    });
   }
 
   bookUnregisteredUser(data: any): Observable<any> {
@@ -25,8 +42,10 @@ export class BookingService {
   }
 
   fetchDoctorProfile(doctorId: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/doctor/profile`, {
-      params: { doctorId }
+    return this.http.post(`${this.baseUrl}/doctors/doctorDetail`, {
+      id: [doctorId],
+      role: 'doctor',
+      fields: ['all']
     });
   }
 }

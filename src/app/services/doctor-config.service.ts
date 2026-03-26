@@ -9,6 +9,7 @@ import { IDoctorSiteConfig } from '../models/doctor-site-config.model';
 const MOCK_CONFIGS: { [key: string]: string } = {
   'jasbir-001': 'jasbir',
   'jasbir': 'jasbir',
+  '0e828c42-82da-4c56-bf35-a3e205161b92': 'jasbir',
   'demo-doctor': 'demo-doctor',
 };
 
