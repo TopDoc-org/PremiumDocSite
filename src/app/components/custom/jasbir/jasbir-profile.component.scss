@@ -7713,6 +7713,28 @@ $dark-text-muted: #6b7790;
       color: $dark-text-muted;
     }
 
+    .ib-lock-banner {
+      background: linear-gradient(135deg, rgba($teal-600, 0.12), rgba(37, 99, 235, 0.08));
+      border-color: rgba($teal-500, 0.3);
+
+      .ib-lock-icon { color: $teal-400; }
+      strong { color: $teal-400; }
+      p { color: $dark-text-muted; }
+    }
+
+    .ib-slots--locked {
+      .ib-session-header,
+      .ib-slot-grid {
+        opacity: 0.65 !important;
+      }
+
+      .ib-slot-chip {
+        background: $dark-bg !important;
+        color: $dark-text-muted !important;
+        border-color: $dark-border !important;
+      }
+    }
+
     .ib-session-header {
       background: $dark-bg;
     }

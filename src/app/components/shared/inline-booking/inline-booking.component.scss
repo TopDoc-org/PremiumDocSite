@@ -184,25 +184,64 @@ select.ib-input {
   padding-top: 4px;
 }
 
-// Slots remain visible & scrollable even when form is invalid;
-// individual slot buttons are disabled via [disabled] attribute
+// Slots locked state — greyed out look, still scrollable
+.ib-slots--locked {
+  position: relative;
 
-.ib-disabled-hint {
+  .ib-session-header,
+  .ib-slot-grid {
+    opacity: 0.6;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .ib-slot-chip {
+    background: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    border-color: #e2e8f0 !important;
+    cursor: not-allowed !important;
+  }
+
+  // Keep tab headers clickable for browsing
+  .ib-tab-group {
+    ::ng-deep .mat-tab-body-wrapper {
+      pointer-events: none;
+    }
+  }
+}
+
+.ib-lock-banner {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  background: #eef5ff;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  color: $slate-500;
-  margin-bottom: 12px;
+  gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #eff6ff, #f0f9ff);
+  border: 1.5px solid #bfdbfe;
+  border-radius: 12px;
+  margin-bottom: 14px;
 
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    color: #3b82f6;
+  .ib-lock-icon {
+    font-size: 22px !important;
+    width: 22px !important;
+    height: 22px !important;
+    color: #2563eb;
+    flex-shrink: 0;
+  }
+
+  strong {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 2px;
+  }
+
+  p {
+    font-size: 0.72rem;
+    color: $slate-500;
+    margin: 0;
+    line-height: 1.4;
   }
 }
 
