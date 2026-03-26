@@ -113,16 +113,16 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
   ];
 
   services = [
-    { name: 'Root Canal Treatment (RCT)', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/RCT.gif', description: 'Painless, modern root canal therapy to save your natural teeth and eliminate infection completely.' },
-    { name: 'Dental Crowns', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Crowns.gif', description: 'Custom-made crowns to restore damaged teeth for a natural, complete smile.' },
-    { name: 'Laser Dentistry', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2022/09/Laser-Treatment-1.gif', description: 'Cutting-edge laser treatments for gum disease and soft tissue with minimal discomfort.' },
-    { name: 'Clear Aligners / Invisible Braces', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2025/06/Invisible-Braces-1.gif', description: 'Virtually invisible aligners that straighten your teeth without traditional braces.' },
-    { name: 'Dental Fillings', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dental-Fillings-1-1.gif', description: 'Tooth-colored composite fillings that blend seamlessly with your natural teeth.' },
-    { name: 'Wisdom Teeth Removal', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Wisdom-Tooth-1.gif', description: 'Safe, expert removal of impacted wisdom teeth with minimal recovery time.' },
-    { name: 'Dental Braces & Aligners', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2017/05/Braces-2.gif', description: 'Metal, ceramic, and self-ligating braces for precise teeth alignment.' },
-    { name: 'Dental Implants', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dental-Implants.gif', description: 'Permanent titanium implants that look and function like natural teeth.' },
-    { name: 'Dentures', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dentures.gif', description: 'Custom removable or fixed dentures for a confident, comfortable smile.' },
-    { name: 'Teeth Whitening', icon: 'https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dental-Fillings-1-1.gif', description: 'Professional whitening treatments for a brighter, more confident smile.' }
+    { name: 'Root Canal Treatment (RCT)', image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=400&h=300&fit=crop', matIcon: 'healing', description: 'Painless, modern root canal therapy to save your natural teeth and eliminate infection completely.' },
+    { name: 'Dental Crowns', image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=400&h=300&fit=crop', matIcon: 'star_border', description: 'Custom-made crowns to restore damaged teeth for a natural, complete smile.' },
+    { name: 'Laser Dentistry', image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=300&fit=crop', matIcon: 'flash_on', description: 'Cutting-edge laser treatments for gum disease and soft tissue with minimal discomfort.' },
+    { name: 'Clear Aligners / Invisible Braces', image: 'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=400&h=300&fit=crop', matIcon: 'visibility', description: 'Virtually invisible aligners that straighten your teeth without traditional braces.' },
+    { name: 'Dental Fillings', image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=400&h=300&fit=crop', matIcon: 'build', description: 'Tooth-colored composite fillings that blend seamlessly with your natural teeth.' },
+    { name: 'Wisdom Teeth Removal', image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=400&h=300&fit=crop', matIcon: 'content_cut', description: 'Safe, expert removal of impacted wisdom teeth with minimal recovery time.' },
+    { name: 'Dental Braces & Aligners', image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=400&h=300&fit=crop', matIcon: 'straighten', description: 'Metal, ceramic, and self-ligating braces for precise teeth alignment.' },
+    { name: 'Dental Implants', image: 'https://images.unsplash.com/photo-1629909615184-74f495363b67?w=400&h=300&fit=crop', matIcon: 'settings', description: 'Permanent titanium implants that look and function like natural teeth.' },
+    { name: 'Dentures', image: 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=400&h=300&fit=crop', matIcon: 'sentiment_satisfied_alt', description: 'Custom removable or fixed dentures for a confident, comfortable smile.' },
+    { name: 'Teeth Whitening', image: 'https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?w=400&h=300&fit=crop', matIcon: 'wb_sunny', description: 'Professional whitening treatments for a brighter, more confident smile.' }
   ];
 
   testimonials = [

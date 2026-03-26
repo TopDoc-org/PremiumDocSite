@@ -16,8 +16,8 @@
             <mat-icon [style.color]="accentColor">event_note</mat-icon>
           </div>
           <div>
-            <h4>Book Appointment</h4>
-            <p>Dr. {{ doctorName }} &mdash; {{ specialisation }}</p>
+            <p class="ib-form-subtitle">Book Appointment</p>
+            <h4 class="ib-doctor-name">Dr. {{ doctorName }}, {{ specialisation }}</h4>
           </div>
         </div>
         <form [formGroup]="form" class="ib-form-fields" *ngIf="form">

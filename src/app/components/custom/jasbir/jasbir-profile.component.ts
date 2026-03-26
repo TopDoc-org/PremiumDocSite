@@ -28,6 +28,24 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   animationsEnabled = true;
   darkMode = false;
   activeSlide = 0;
+  showSectionNav = false;
+  activeSection = '';
+  mobileMenuOpen = false;
+  private sectionIds = ['sec-about', 'sec-tech', 'sec-offers', 'sec-services', 'sec-gallery', 'sec-contact'];
+  private scrollListener: (() => void) | null = null;
+
+  get clinicLogo(): string {
+    return this.darkMode ? 'assets/images/jasbir/logo-dark.png' : 'assets/images/jasbir/logo-light.png';
+  }
+  activeTechSlide = 0;
+  showSidhantFull = false;
+  techImages = [
+    { src: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&h=500&fit=crop', alt: 'Digital X-Ray Machine' },
+    { src: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&h=500&fit=crop', alt: 'Dental Treatment Setup' },
+    { src: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&h=500&fit=crop', alt: 'Modern Dental Equipment' },
+    { src: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&h=500&fit=crop', alt: 'Advanced Diagnostics' },
+    { src: 'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=800&h=500&fit=crop', alt: 'Intraoral Scanner in Action' }
+  ];
   referredBy: string | null = null;
   sessionIdSelected = '';
   selectedSlotId = '';
@@ -77,6 +95,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   private confettiInstance: any = null;
   private confettiAnimId: number | null = null;
   private carouselInterval: any = null;
+  private techCarouselInterval: any = null;
   private counterObserver: IntersectionObserver | null = null;
   private mediaQuery!: MediaQueryList;
   private mobileQuery!: MediaQueryList;
@@ -84,8 +103,9 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   placeholderEducation = [
-    { degree: 'MDS', studyField: 'Orthodontics & Dentofacial Orthopedics', institution: 'SCB Dental College & Hospital, Cuttack', startDate: '2012', endDate: '2015', description: 'Specialized training in advanced orthodontic techniques, clear aligners, and dentofacial orthopedics.' },
-    { degree: 'BDS', studyField: 'Dental Surgery', institution: 'MKCG Medical College, Berhampur', startDate: '2007', endDate: '2012', description: 'Comprehensive dental education covering all aspects of oral healthcare and dental surgery.' }
+    { degree: 'PhD', studyField: 'Dental Science', institution: 'Kalinga Institute of Dental Science (KIDS), BBSR, Odisha', startDate: '', endDate: '', description: 'Doctoral research in dental science at one of the premier dental institutes in Eastern India.' },
+    { degree: 'MDS', studyField: 'Orthodontics & Dentofacial Orthopedics', institution: 'Kothiwal Dental College & Research Center, Moradabad, UP', startDate: '', endDate: '', description: 'Specialized training in advanced orthodontic techniques, clear aligners, and dentofacial orthopedics.' },
+    { degree: 'BDS', studyField: 'Dental Surgery', institution: 'Utkal University', startDate: '', endDate: '', description: 'Comprehensive dental education covering all aspects of oral healthcare and dental surgery.' }
   ];
   placeholderExperience = [
     { title: 'Founder & Chief Orthodontist', comapanyName: "Dr. Meher's Orthodontic Center & Dental Clinic, Balangir", startDate: '2015', endDate: '', description: 'Established a state-of-the-art orthodontic and dental clinic serving the Balangir region with advanced treatments including Invisalign, laser dentistry, and cosmetic procedures.' },
@@ -148,6 +168,27 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.openBookByDefault) {
       this.openTemplateSheetMenu();
     }
+    this.techCarouselInterval = setInterval(() => {
+      this.activeTechSlide = (this.activeTechSlide + 1) % this.techImages.length;
+    }, 3500);
+
+    // Section nav scroll listener
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      this.showSectionNav = scrollY > 500;
+
+      // Determine active section
+      let current = '';
+      for (const id of this.sectionIds) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 120) {
+          current = id;
+        }
+      }
+      this.activeSection = current;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    this.scrollListener = () => window.removeEventListener('scroll', onScroll);
   }
 
   ngOnDestroy(): void {
@@ -155,7 +196,34 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.offersObserver) this.offersObserver.disconnect();
     this.stopConfetti();
     if (this.carouselInterval) clearInterval(this.carouselInterval);
+    if (this.techCarouselInterval) clearInterval(this.techCarouselInterval);
     this.stopKnocdocTypewriter();
+    if (this.scrollListener) this.scrollListener();
+  }
+
+  scrollToSection(id: string): void {
+    const el = document.getElementById(id);
+    if (el) {
+      const offset = this.isMobileOrTabView ? 100 : 60;
+      const targetTop = el.getBoundingClientRect().top + window.scrollY - offset;
+      const startTop = window.scrollY;
+      const distance = targetTop - startTop;
+      const duration = Math.min(1800, Math.max(800, Math.abs(distance) * 0.8));
+      let startTime: number | null = null;
+
+      const easeInOutCubic = (t: number) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      const step = (timestamp: number) => {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        window.scrollTo(0, startTop + distance * easeInOutCubic(progress));
+        if (progress < 1) requestAnimationFrame(step);
+      };
+
+      requestAnimationFrame(step);
+    }
   }
 
   private fetchProfileData(): void {

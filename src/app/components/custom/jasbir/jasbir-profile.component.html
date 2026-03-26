@@ -6,7 +6,7 @@
   <div *ngIf="timelineFetchStatus === 'fetching'" class="loading-container">
     <div class="profile-loader">
       <div class="profile-loader-ring"></div>
-      <img src="assets/images/jasbir/clinic-logo.png" alt="Loading..." class="profile-loader-logo">
+      <img [src]="clinicLogo" alt="Loading..." class="profile-loader-logo">
     </div>
     <span class="loading-text">Loading doctor profile...</span>
   </div>
@@ -22,9 +22,46 @@
 
     <!-- MOBILE STICKY HEADER -->
     <nav class="custom-header-nav" *ngIf="isMobileOrTabView">
+      <button class="hamburger-btn" (click)="mobileMenuOpen = !mobileMenuOpen" [class.open]="mobileMenuOpen">
+        <span></span><span></span><span></span>
+      </button>
       <h2 class="header-title">Dr. {{ profRes.name }}</h2>
       <button class="header-book-btn" (click)="openTemplateSheetMenu()">Book</button>
     </nav>
+
+    <!-- MOBILE NAV DRAWER -->
+    <div class="mobile-nav-overlay" *ngIf="mobileMenuOpen && isMobileOrTabView" (click)="mobileMenuOpen = false"></div>
+    <div class="mobile-nav-drawer" *ngIf="isMobileOrTabView" [class.mobile-nav-drawer--open]="mobileMenuOpen">
+      <div class="mobile-nav-header">
+        <img [src]="clinicLogo" alt="Clinic Logo" class="mobile-nav-logo">
+        <span class="mobile-nav-clinic-name">Dr. Meher's Orthodontic Center</span>
+      </div>
+      <div class="mobile-nav-links">
+        <a class="mobile-nav-link" (click)="scrollToSection('sec-about'); mobileMenuOpen = false" [class.active]="activeSection === 'sec-about'">
+          <mat-icon>person</mat-icon><span>About</span>
+        </a>
+        <a class="mobile-nav-link" (click)="scrollToSection('sec-tech'); mobileMenuOpen = false" [class.active]="activeSection === 'sec-tech'">
+          <mat-icon>precision_manufacturing</mat-icon><span>Technology</span>
+        </a>
+        <a class="mobile-nav-link" (click)="scrollToSection('sec-offers'); mobileMenuOpen = false" [class.active]="activeSection === 'sec-offers'">
+          <mat-icon>local_offer</mat-icon><span>Offers</span>
+        </a>
+        <a class="mobile-nav-link" (click)="scrollToSection('sec-services'); mobileMenuOpen = false" [class.active]="activeSection === 'sec-services'">
+          <mat-icon>medical_services</mat-icon><span>Services</span>
+        </a>
+        <a class="mobile-nav-link" (click)="scrollToSection('sec-gallery'); mobileMenuOpen = false" [class.active]="activeSection === 'sec-gallery'">
+          <mat-icon>groups</mat-icon><span>Team</span>
+        </a>
+        <a class="mobile-nav-link" (click)="scrollToSection('sec-contact'); mobileMenuOpen = false" [class.active]="activeSection === 'sec-contact'">
+          <mat-icon>location_on</mat-icon><span>Contact</span>
+        </a>
+      </div>
+      <div class="mobile-nav-footer">
+        <button class="mobile-nav-book-btn" (click)="openTemplateSheetMenu(); mobileMenuOpen = false">
+          <mat-icon>calendar_today</mat-icon> Book Appointment
+        </button>
+      </div>
+    </div>
 
     <!-- Dark Mode Toggle -->
     <button class="dark-mode-toggle" (click)="toggleDarkMode()" [attr.title]="darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
@@ -35,7 +72,7 @@
     <section class="hero-landing">
       <!-- Team photo background -->
       <div class="hero-bg-image">
-        <img src="assets/images/jasbir/doctor-photo.jpg" alt="Dr. Meher's Orthodontic Center Team" loading="eager">
+        <img src="assets/images/jasbir/newClinicBg.jpeg" alt="Dr. Meher's Orthodontic Center & Dental Clinic" loading="eager">
       </div>
 
       <div class="hero-star star-1">
@@ -51,13 +88,19 @@
       <div class="hero-content">
         <!-- Text Side -->
         <div class="hero-text">
-          <div class="hero-clinic-brand">
-            <div class="hero-logo-ring">
-              <img src="assets/images/jasbir/clinic-logo.png" alt="Dr. Meher's Clinic Logo" class="hero-clinic-logo">
+          <div class="hero-brands-row">
+            <div class="hero-clinic-brand">
+              <div class="hero-logo-ring">
+                <img src="assets/images/jasbir/logo-dark.png" alt="Dr. Meher's Clinic Logo" class="hero-clinic-logo">
+              </div>
+              <div class="hero-brand-text">
+                <span class="hero-clinic-name">Dr. Meher's Orthodontic Center</span>
+                <span class="hero-clinic-tagline">& Dental Clinic, Balangir</span>
+                <span class="hero-clinic-regn">Regd No: BOL/00051/2022</span>
+              </div>
             </div>
-            <div class="hero-brand-text">
-              <span class="hero-clinic-name">Dr. Meher's Orthodontic Center</span>
-              <span class="hero-clinic-tagline">& Dental Clinic, Balangir</span>
+            <div class="hero-sponsor-pill">
+              <img src="assets/images/jasbir/InvisAlignBrand.png" alt="Invisalign Provider" class="hero-sponsor-img">
             </div>
           </div>
           <div class="hero-badge">
@@ -74,8 +117,8 @@
           </h1>
 
           <p class="hero-subtitle">
-            Meet Dr. Jasbir Meher (BDS, MDS) &mdash; Orthodontist & Dental Surgeon
-            with 10+ years of experience crafting beautiful, healthy smiles
+            Meet <strong class="hero-doctor-name">Prof. Dr. Jasbir Meher (BDS, MDS, PhD)</strong> &mdash; Orthodontist & Dental Surgeon
+            with 15+ years of experience crafting beautiful, healthy smiles
             at Dr. Meher's Orthodontic Center & Dental Clinic, {{ profRes.city || 'Balangir' }}.
           </p>
 
@@ -131,6 +174,13 @@
               #heroImg
               (error)="heroImg.src = 'assets/images/jasbir/profile.jpg'"
             >
+          </div>
+          <div class="hero-iso-stamp">
+            <img src="assets/images/jasbir/isoWBG.png" alt="ISO 9001:2015 Certified" class="iso-stamp-img">
+          </div>
+          <div class="hero-image-footer">
+            <span class="hero-highlight-tag">Only Orthodontist Specialist In Western Odisha</span>
+            <span class="hero-reg-number">Dental Regd.No. 738-A</span>
           </div>
         </div>
       </div>
@@ -193,13 +243,45 @@
     </div>
 
 
+    <!-- SECTION NAV -->
+    <nav class="section-nav" [class.section-nav--visible]="showSectionNav">
+      <div class="section-nav-inner">
+        <img [src]="clinicLogo" alt="Clinic Logo" class="section-nav-logo">
+        <div class="section-nav-divider"></div>
+        <a class="section-nav-pill" (click)="scrollToSection('sec-about')" [class.active]="activeSection === 'sec-about'">
+          <mat-icon class="nav-pill-icon">person</mat-icon>
+          <span>About</span>
+        </a>
+        <a class="section-nav-pill" (click)="scrollToSection('sec-tech')" [class.active]="activeSection === 'sec-tech'">
+          <mat-icon class="nav-pill-icon">precision_manufacturing</mat-icon>
+          <span>Technology</span>
+        </a>
+        <a class="section-nav-pill" (click)="scrollToSection('sec-offers')" [class.active]="activeSection === 'sec-offers'">
+          <mat-icon class="nav-pill-icon">local_offer</mat-icon>
+          <span>Offers</span>
+        </a>
+        <a class="section-nav-pill" (click)="scrollToSection('sec-services')" [class.active]="activeSection === 'sec-services'">
+          <mat-icon class="nav-pill-icon">medical_services</mat-icon>
+          <span>Services</span>
+        </a>
+        <a class="section-nav-pill" (click)="scrollToSection('sec-gallery')" [class.active]="activeSection === 'sec-gallery'">
+          <mat-icon class="nav-pill-icon">groups</mat-icon>
+          <span>Team</span>
+        </a>
+        <a class="section-nav-pill" (click)="scrollToSection('sec-contact')" [class.active]="activeSection === 'sec-contact'">
+          <mat-icon class="nav-pill-icon">location_on</mat-icon>
+          <span>Contact</span>
+        </a>
+      </div>
+    </nav>
+
     <!-- SECTION 3: ABOUT THE DOCTOR -->
-    <section class="about-section">
+    <section class="about-section" id="sec-about">
       <div class="about-grid">
         <!-- Image Column -->
         <div class="about-image">
           <img
-            src="assets/images/jasbir/profile.jpg"
+            src="assets/images/jasbir/SKP00027.JPG.jpeg"
             alt="Dr. {{ profRes.name }}"
             loading="lazy"
             style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;"
@@ -209,7 +291,7 @@
         <!-- Content Column -->
         <div class="about-content">
           <div class="about-brand-row">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="Clinic Logo" class="about-clinic-logo">
+            <img [src]="clinicLogo" alt="Clinic Logo" class="about-clinic-logo">
             <p class="about-label">About the Doctor</p>
           </div>
           <h2>
@@ -217,30 +299,40 @@
             in <span class="highlight">Orthodontics & Dental Care</span>
           </h2>
           <p>
-            Dr. Jasbir Meher (BDS, MDS) is a renowned Orthodontist and Dental Surgeon
-            based in Balangir, Odisha. He founded Dr. Meher's Orthodontic Center & Dental Clinic
-            in 2015, bringing world-class orthodontic and dental care to the region.
-            With advanced training in orthodontics, laser dentistry, and cosmetic procedures,
-            Dr. Meher combines cutting-edge technology with a gentle, patient-first approach
-            to create beautiful, healthy smiles for patients of all ages.
+            <strong style="color: #2563eb; font-weight: 800;">Prof. Dr. Jasbir Meher</strong> is a renowned Orthodontist and Professor at Kalinga Institute of Dental Science (KIDS).
+            He founded Dr. Meher's Orthodontic Center & Dental Clinic in Balangir, Odisha &mdash;
+            a Modern Hi-tech & ISO 9001:2015 certified multispecialty dental clinic committed to providing
+            world-class dental treatment at affordable prices. From kids to senior citizens, we provide complete family dental solutions.
           </p>
 
           <ul class="about-checks">
             <li>
               <mat-icon class="check-tick">check_circle</mat-icon>
-              <span>BDS, MDS - Qualified Orthodontist & Dental Surgeon</span>
+              <span>BDS (Utkal)</span>
             </li>
             <li>
               <mat-icon class="check-tick">check_circle</mat-icon>
-              <span>Specializing in Braces, Clear Aligners & Invisalign</span>
+              <span>MDS (Kothiwal Dental College & Research Center, Moradabad, UP)</span>
             </li>
             <li>
               <mat-icon class="check-tick">check_circle</mat-icon>
-              <span>Advanced Laser Dentistry & Pain-Free Treatments</span>
+              <span>PhD (Kalinga Institute of Dental Science, BBSR, Odisha)</span>
             </li>
             <li>
               <mat-icon class="check-tick">check_circle</mat-icon>
-              <span>Serving Balangir Since 2015</span>
+              <span>Professor, Kalinga Institute of Dental Science (KIDS)</span>
+            </li>
+            <li>
+              <mat-icon class="check-tick">check_circle</mat-icon>
+              <span>Certified Implantologist (Osstem Implant System, Korea)</span>
+            </li>
+            <li>
+              <mat-icon class="check-tick">check_circle</mat-icon>
+              <span>Life Member, Indian Orthodontics Society</span>
+            </li>
+            <li>
+              <mat-icon class="check-tick">check_circle</mat-icon>
+              <span>Life Member, Indian Dental Association</span>
             </li>
           </ul>
 
@@ -261,27 +353,122 @@
           </div>
         </div>
       </div>
-    </section>
 
-
-    <!-- SECTION 3-LANG: LANGUAGES -->
-    <section class="languages-strip" *ngIf="profRes.languages">
-      <div class="languages-strip-inner">
-        <div class="languages-strip-left">
-          <mat-icon class="!text-base languages-strip-icon">translate</mat-icon>
-          <span class="languages-strip-title">Languages</span>
+      <!-- Visiting Consultant Dentists -->
+      <div class="about-team-row">
+        <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+          <div class="about-team-img">
+            <img src="assets/images/jasbir/asst2.jpeg" alt="Dr. Pratikshya Tripathy" loading="lazy">
+          </div>
+          <div class="about-team-info">
+            <h3>Dr. Pratikshya Tripathy</h3>
+            <span class="about-team-role">Associate Dentist</span>
+            <p>
+              2+ years of experience in general dentistry and patient care.
+              Dedicated to providing compassionate, quality dental treatments
+              at Dr. Meher's Orthodontic Center & Dental Clinic.
+            </p>
+          </div>
         </div>
-        <div class="languages-strip-chips">
-          <span class="lang-chip-light" *ngFor="let language of profRes.languages">
-            {{ language }}
-          </span>
+
+        <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+          <div class="about-team-img">
+            <img src="assets/images/jasbir/asst1.jpeg" alt="Dr. Sidhant Nayak" loading="lazy">
+          </div>
+          <div class="about-team-info">
+            <h3>Dr. Sidhant Nayak <span class="visiting-tag">(Visiting Doctor)</span></h3>
+            <span class="about-team-role">Oral & Maxillofacial Surgeon</span>
+            <p [class.about-team-truncated]="!showSidhantFull">
+              MDS (OMFS), FAGE (Manipal), MHA (Hyd), CLD (USA),
+              PGDMT (Germany), FMC (Germany).
+              Fellowship Implantology (Osstem, S.Korea).
+              Facial Aesthetics, Micro-Vascular and Reconstruction Surgeon.
+              Hair Transplant Surgeon. Member AO-CMF (Cranio-Maxillofacial Surgery).
+              Consultant Trichologist, Implantologist, Cosmetologist.
+            </p>
+            <button class="about-team-readmore" (click)="showSidhantFull = !showSidhantFull">
+              {{ showSidhantFull ? 'Show Less' : 'Read More' }}
+            </button>
+          </div>
         </div>
       </div>
     </section>
 
 
+    <!-- SECTION 3B-TECH: ADVANCED TECHNOLOGY (Care with Precision) -->
+    <section class="tech-showcase-section" id="sec-tech">
+      <div class="tech-showcase-inner">
+        <!-- Header -->
+        <div class="tech-showcase-header">
+          <div class="section-brand-label" style="justify-content: center;">
+            <img [src]="clinicLogo" alt="" class="section-brand-icon">
+            <p class="section-label" style="margin-bottom: 0;">Our Technology</p>
+          </div>
+          <h2 class="section-heading" style="text-align: center;">
+            Care with <span class="tech-gradient-text">Precision</span>
+          </h2>
+          <p class="tech-showcase-subtitle">
+            We combine advanced technology with treatment plans for the best results for every patient.
+          </p>
+          <div class="tech-exclusive-banner">
+            <mat-icon class="tech-exclusive-icon">verified</mat-icon>
+            <span>Only dental clinic in the <strong>KBK districts of Odisha</strong> equipped with both VATECH OPG & MEDIT i900 Scanner</span>
+          </div>
+        </div>
+
+        <!-- Two Machine Cards -->
+        <div class="tech-cards-grid">
+          <!-- VATECH OPG Card -->
+          <div class="tech-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+            <div class="tech-card-img">
+              <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&h=340&fit=crop" alt="Digital X-Ray Machine" loading="lazy">
+            </div>
+            <div class="tech-card-body">
+              <div class="tech-card-icon gold">
+                <mat-icon>settings_overscan</mat-icon>
+              </div>
+              <div class="tech-card-badge">In-House OPG</div>
+              <h3 class="tech-card-title">VATECH Digital X-Ray</h3>
+              <p class="tech-card-desc">We use the VATECH Digital X-Ray Imaging System for clear 2D scan and accurate diagnosis.</p>
+              <ul class="tech-card-features">
+                <li><mat-icon class="check-tick">check_circle</mat-icon>Full mouth panoramic X-ray in-house</li>
+                <li><mat-icon class="check-tick">check_circle</mat-icon>Crystal clear 2D digital imaging</li>
+                <li><mat-icon class="check-tick">check_circle</mat-icon>Minimal radiation, maximum safety</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- MEDIT i900 Card -->
+          <div class="tech-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
+            <div class="tech-card-img">
+              <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=600&h=340&fit=crop" alt="Intraoral Scanner" loading="lazy">
+            </div>
+            <div class="tech-card-body">
+              <div class="tech-card-icon teal">
+                <mat-icon>view_in_ar</mat-icon>
+              </div>
+              <div class="tech-card-badge">Digital Scanner</div>
+              <h3 class="tech-card-title">MEDIT i900 Intraoral Scanner</h3>
+              <p class="tech-card-desc">Quick, comfortable digital impressions for precise crowns, bridges and implant planning.</p>
+              <ul class="tech-card-features">
+                <li><mat-icon class="check-tick">check_circle</mat-icon>3D intraoral scanning — no messy moulds</li>
+                <li><mat-icon class="check-tick">check_circle</mat-icon>Instant results, accurate diagnosis</li>
+                <li><mat-icon class="check-tick">check_circle</mat-icon>Precise crowns, bridges & implants</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 32px;">
+          <button class="tech-cta-btn" (click)="openTemplateSheetMenu()">
+            Book a Consultation <mat-icon class="!text-base">arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <!-- SECTION 3A: ANNOUNCEMENTS & OFFERS -->
-    <section class="offers-section">
+    <section class="offers-section" id="sec-offers">
       <div class="offers-inner">
         <div class="offers-header scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
           <span class="section-label">Offers & Announcements</span>
@@ -299,22 +486,18 @@
                 Limited Time
               </div>
               <h3 class="offer-hero-title">FREE X-Ray for New Patients</h3>
-              <p class="offer-hero-desc">Get a complimentary dental X-ray on your first visit. Early detection leads to better outcomes.</p>
+              <p class="offer-hero-desc">Book your appointment online through this site and get a complimentary dental X-ray online booking. This exclusive offer is only available for online bookings.</p>
               <div class="offer-hero-actions">
                 <button class="btn-hero-claim" (click)="openTemplateSheetMenu()">
-                  Claim Offer <mat-icon class="!text-base">arrow_forward</mat-icon>
+                  Book to Claim <mat-icon class="!text-base">arrow_forward</mat-icon>
                 </button>
-                <span class="offer-hero-validity">
-                  <mat-icon class="!text-sm">schedule</mat-icon>
-                  Valid till March 31, 2026
-                </span>
               </div>
             </div>
             <div class="offer-hero-right">
               <div class="offer-hero-savings">
                 <span class="offer-hero-savings-label">Save up to</span>
                 <span class="offer-hero-savings-amount">&#8377;500</span>
-                <span class="offer-hero-savings-sub">on your first visit</span>
+                <span class="offer-hero-savings-sub">on every online booking</span>
               </div>
             </div>
           </div>
@@ -353,135 +536,37 @@
           </div>
         </div>
 
-        <!-- More Offers (hidden by default) -->
-        <div class="offers-more" *ngIf="showAllOffers">
-          <div class="offers-grid">
-            <div class="offer-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
-              <div class="offer-icon-wrap">
-                <mat-icon class="!text-2xl">family_restroom</mat-icon>
-              </div>
-              <h3>Family Dental Check-up Package</h3>
-              <p>Bring the whole family! Get comprehensive dental check-ups for 4 members at a bundled price.</p>
-              <div class="offer-cta">
-                <span class="offer-tag">Family Plan</span>
-                <button class="btn-offer" (click)="openTemplateSheetMenu()">
-                  Learn More <mat-icon class="!text-base">arrow_forward</mat-icon>
-                </button>
-              </div>
-            </div>
-
-            <div class="offer-card offer-announcement scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
-              <div class="offer-badge-new">New</div>
-              <div class="offer-icon-wrap">
-                <mat-icon class="!text-2xl">schedule</mat-icon>
-              </div>
-              <h3>Extended Evening Hours</h3>
-              <p>Now open till 8 PM on weekdays! Visit us after work for all dental needs.</p>
-              <div class="offer-cta">
-                <span class="offer-tag">Update</span>
-                <button class="btn-offer" (click)="openTemplateSheetMenu()">
-                  Book Evening Slot <mat-icon class="!text-base">arrow_forward</mat-icon>
-                </button>
-              </div>
-            </div>
-
-            <div class="offer-card offer-discount scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
-              <div class="offer-discount-pct">Flat &#8377;2,999</div>
-              <div class="offer-icon-wrap">
-                <mat-icon class="!text-2xl">auto_awesome</mat-icon>
-              </div>
-              <h3>Professional Teeth Whitening</h3>
-              <p>Brighter, more confident smile in just one session. Professional in-clinic whitening.</p>
-              <div class="offer-cta">
-                <span class="offer-tag">Popular</span>
-                <button class="btn-offer" (click)="openTemplateSheetMenu()">
-                  Book Now <mat-icon class="!text-base">arrow_forward</mat-icon>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- View More / View Less toggle -->
-        <div class="offers-toggle-wrap">
-          <button class="btn-view-more" (click)="showAllOffers = !showAllOffers">
-            <span *ngIf="!showAllOffers">View All Offers</span>
-            <span *ngIf="showAllOffers">Show Less</span>
-            <mat-icon class="!text-lg" [style.transform]="showAllOffers ? 'rotate(180deg)' : ''">expand_more</mat-icon>
-          </button>
-          <span class="offers-count" *ngIf="!showAllOffers">+3 more</span>
-        </div>
       </div>
     </section>
 
-
-    <!-- SECTION 3B: PHOTO GALLERY -->
-    <section class="gallery-section">
-      <div class="gallery-inner">
-        <div class="section-brand-label" style="justify-content: center;">
-          <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
-          <p class="section-label" style="text-align: center; margin-bottom: 0;">Inside Our Clinic</p>
+    <!-- SECTION 3C: DENTAL SERVICES -->
+    <section class="services-section" id="sec-services">
+      <div class="services-header">
+        <div>
+          <div class="section-brand-label">
+            <img [src]="clinicLogo" alt="" class="section-brand-icon">
+            <p class="services-label" style="margin-bottom: 0;">Our Services</p>
+          </div>
+          <h2>Complete Orthodontic &<br>Dental Care Under One Roof</h2>
         </div>
-        <h2 class="section-heading" style="text-align: center; margin-bottom: 48px;">
-          A Glimpse of Our Practice
-        </h2>
-        <!-- Carousel mode when animations enabled -->
-        <div class="gallery-carousel" *ngIf="animationsEnabled">
-          <div class="gallery-carousel-track" #galleryTrack>
-            <div class="gallery-carousel-slide" [class.active]="i === activeSlide" *ngFor="let img of [
-              { src: 'assets/images/jasbir/doctor-photo.jpg', alt: 'Our Team', label: 'Our Team', position: 'center 25%' },
-              { src: 'assets/images/jasbir/clinic.jpg', alt: 'Clinic Interior', label: 'Modern Clinic Interior', position: 'center center' },
-              { src: 'assets/images/jasbir/clinic-seat.jpg', alt: 'Dental Chair', label: 'Advanced Equipment', position: 'center center' },
-              { src: 'assets/images/jasbir/catalogue.jpg', alt: 'Services & Treatments', label: 'Our Services', position: 'center top' }
-            ]; let i = index">
-              <img [src]="img.src" [alt]="img.alt" loading="lazy" [style.object-position]="img.position">
-              <div class="gallery-carousel-overlay">
-                <span>{{ img.label }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="gallery-carousel-controls">
-            <button class="gallery-carousel-btn" (click)="prevSlide()">
-              <mat-icon>chevron_left</mat-icon>
-            </button>
-            <div class="gallery-carousel-dots">
-              <span *ngFor="let img of [1,2,3,4]; let i = index"
-                    class="gallery-dot"
-                    [class.active]="i === activeSlide"
-                    (click)="goToSlide(i)"></span>
-            </div>
-            <button class="gallery-carousel-btn" (click)="nextSlide()">
-              <mat-icon>chevron_right</mat-icon>
-            </button>
-          </div>
-        </div>
+        <button class="btn-primary-solid" (click)="openTemplateSheetMenu()">
+          <mat-icon class="!text-lg">calendar_today</mat-icon>
+          Book Now
+        </button>
+      </div>
 
-        <!-- Static grid when animations disabled -->
-        <div class="gallery-grid" *ngIf="!animationsEnabled">
-          <div class="gallery-item gallery-featured">
-            <img src="assets/images/jasbir/doctor-photo.jpg" alt="Dr. Meher's Orthodontic Center & Dental Clinic Team" loading="lazy" style="object-position: center 25%;">
-            <div class="gallery-overlay">
-              <span>Our Team</span>
-            </div>
+      <div class="services-icon-grid">
+        <div *ngFor="let service of services; let i = index"
+          class="service-icon-card scroll-animate"
+          [attr.data-aos]="animationsEnabled ? 'fade-up' : null"
+          [attr.data-aos-delay]="animationsEnabled ? (i % 3) * 100 : null"
+          (click)="openServiceDetail(service)">
+          <div class="dental-icon">
+            <img loading="lazy" [src]="service.icon" [alt]="service.name">
           </div>
-          <div class="gallery-item">
-            <img src="assets/images/jasbir/clinic.jpg" alt="Clinic Interior" loading="lazy">
-            <div class="gallery-overlay">
-              <span>Modern Clinic Interior</span>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <img src="assets/images/jasbir/clinic-seat.jpg" alt="Dental Chair" loading="lazy">
-            <div class="gallery-overlay">
-              <span>Advanced Equipment</span>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <img src="assets/images/jasbir/catalogue.jpg" alt="Services & Treatments" loading="lazy" style="object-position: center top;">
-            <div class="gallery-overlay">
-              <span>Our Services</span>
-            </div>
-          </div>
+          <h3>{{ service.name }}</h3>
+          <p>{{ service.description }}</p>
+          <span class="check-details-link">Check details <mat-icon class="!text-sm !w-3.5 !h-3.5">arrow_forward</mat-icon></span>
         </div>
       </div>
     </section>
@@ -492,59 +577,47 @@
       <div class="marquee-track">
         <ng-container *ngFor="let i of [1,2,3]">
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
-            Emergency Orthodontic Care
-          </span>
-          <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Clear Aligners / Invisalign
           </span>
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Orthodontic Appliances
           </span>
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
-            Adult Orthodontics
-          </span>
-          <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
-            Children Orthodontics
-          </span>
-          <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Root Canal Treatments
           </span>
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Orthodontics
           </span>
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Laser Dentistry Treatment
           </span>
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Tooth Coloured Fillings
           </span>
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Dentures
           </span>
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Braces
           </span>
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Crowns and Bridges Fixing
           </span>
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Teeth Whitening
           </span>
           <span class="marquee-item">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">
+            <img [src]="clinicLogo" alt="" class="marquee-logo">
             Gum Disease Treatment
           </span>
         </ng-container>
@@ -553,6 +626,7 @@
 
 
     <!-- SECTION 5: INLINE BOOKING -->
+    <div id="sec-booking"></div>
     <app-inline-booking
       [doctorName]="profRes?.name || 'Jasbir Meher'"
       [specialisation]="profRes?.specialisation || 'Orthodontist'"
@@ -571,7 +645,7 @@
       <div class="video-tour-inner">
         <div class="video-tour-text">
           <div class="section-brand-label">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+            <img [src]="clinicLogo" alt="" class="section-brand-icon">
             <p class="section-label" style="margin-bottom: 0;">Virtual Tour</p>
           </div>
           <h2 class="section-heading" style="margin-bottom: 16px;">Take a Look Inside<br>Dr. Meher's Clinic</h2>
@@ -620,47 +694,16 @@
     </section>
 
 
-    <!-- SECTION 6: DENTAL SERVICES -->
-    <section class="services-section">
-      <div class="services-header">
-        <div>
-          <div class="section-brand-label">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
-            <p class="services-label" style="margin-bottom: 0;">Our Services</p>
-          </div>
-          <h2>Complete Orthodontic &<br>Dental Care Under One Roof</h2>
-        </div>
-        <button class="btn-primary-solid" (click)="openTemplateSheetMenu()">
-          <mat-icon class="!text-lg">calendar_today</mat-icon>
-          Book Now
-        </button>
-      </div>
-
-      <div class="services-icon-grid">
-        <div *ngFor="let service of services; let i = index"
-          class="service-icon-card scroll-animate"
-          [attr.data-aos]="animationsEnabled ? 'fade-up' : null"
-          [attr.data-aos-delay]="animationsEnabled ? (i % 3) * 100 : null"
-          (click)="openServiceDetail(service)">
-          <div class="dental-icon">
-            <img loading="lazy" [src]="service.icon" [alt]="service.name">
-          </div>
-          <h3>{{ service.name }}</h3>
-          <p>{{ service.description }}</p>
-          <span class="check-details-link">Check details <mat-icon class="!text-sm !w-3.5 !h-3.5">arrow_forward</mat-icon></span>
-        </div>
-      </div>
-    </section>
-
-
     <!-- SECTION 7: DARK MARQUEE -->
     <div class="marquee-section dark">
       <div class="marquee-track" style="animation-direction: reverse;">
         <ng-container *ngFor="let i of [1,2,3,4]">
-          <span class="marquee-item"><img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">Beautiful Smiles Since 2015</span>
-          <span class="marquee-item"><img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">BDS, MDS Qualified</span>
-          <span class="marquee-item"><img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">Dr. Meher's Orthodontic Center</span>
-          <span class="marquee-item"><img src="assets/images/jasbir/clinic-logo.png" alt="" class="marquee-logo">Balangir, Odisha</span>
+          <span class="marquee-item"><img [src]="clinicLogo" alt="" class="marquee-logo">Beautiful Smiles Since 2015</span>
+          <span class="marquee-item"><img [src]="clinicLogo" alt="" class="marquee-logo">BDS, MDS, PhD Qualified</span>
+          <span class="marquee-item"><img [src]="clinicLogo" alt="" class="marquee-logo">Dr. Meher's Orthodontic Center</span>
+          <span class="marquee-item"><img [src]="clinicLogo" alt="" class="marquee-logo">Balangir, Odisha</span>
+          <span class="marquee-item"><img [src]="clinicLogo" alt="" class="marquee-logo">Clinic Regd No: BOL/00051/2022</span>
+          <span class="marquee-item"><img [src]="clinicLogo" alt="" class="marquee-logo">ISO 9001:2015 Certified</span>
         </ng-container>
       </div>
     </div>
@@ -668,7 +711,7 @@
 
     <!-- SECTION 8: BIG NUMBERS -->
     <section class="big-numbers-section">
-      <img src="assets/images/jasbir/clinic-logo.png" alt="" class="big-numbers-watermark">
+      <img [src]="clinicLogo" alt="" class="big-numbers-watermark">
       <div class="big-numbers-inner">
         <div class="big-number-item scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
           <div class="big-num" [attr.data-count-to]="animationsEnabled ? '10' : null" [attr.data-count-suffix]="animationsEnabled ? 'K+' : null">10K+</div>
@@ -693,21 +736,43 @@
     </section>
 
 
-    <!-- SECTION 8C: MEET OUR TEAM -->
-    <section class="team-section">
+    <!-- SECTION 8C: MEET OUR TEAM + GALLERY -->
+    <section class="team-section" id="sec-gallery">
       <div class="team-container">
         <p class="team-label">The People Behind Your Smile</p>
-        <h2 class="team-heading">Meet Our Team</h2>
+        <h2 class="team-heading">Meet Our Team & Clinic</h2>
         <p class="team-subtitle">
           A dedicated team of dental professionals committed to providing you with the highest quality orthodontic and dental care in Balangir.
         </p>
-        <div class="team-image-wrapper scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
-          <img src="assets/images/jasbir/doctor-photo.jpg" alt="Dr. Meher's Orthodontic Center & Dental Clinic Team" loading="lazy">
-          <div class="team-image-overlay">
-            <div class="team-overlay-content">
-              <img src="assets/images/jasbir/clinic-logo.png" alt="Clinic Logo" class="team-logo">
-              <span class="team-clinic-name">Dr. Meher's Orthodontic Center & Dental Clinic</span>
+
+        <div class="glimpse-carousel">
+          <div class="glimpse-carousel-viewport">
+            <div class="glimpse-carousel-track" [style.transform]="'translateX(-' + (activeSlide * 100) + '%)'">
+              <div class="glimpse-slide" *ngFor="let img of [
+                { src: 'assets/images/jasbir/doctor-photo.jpg', alt: 'Dr. Meher Orthodontic Center & Dental Clinic Team', label: 'Dr. Meher\'s Orthodontic Center & Dental Clinic', position: 'center center' },
+                { src: 'assets/images/carousel/SKP00008.JPG', alt: 'Dr. Jasbir Meher at the Clinic', label: 'Dr. Jasbir Meher', position: 'center 20%' },
+                { src: 'assets/images/carousel/SKP00020.JPG', alt: 'Dr. Meher with Equipment', label: 'State-of-the-Art Facility', position: 'center 25%' },
+                { src: 'assets/images/carousel/SKP00055.JPG', alt: 'Patient Treatment in Progress', label: 'Patient Care', position: 'center center' },
+                { src: 'assets/images/jasbir/newClinicBg.jpeg', alt: 'Clinic Interior', label: 'Modern Clinic Interior', position: 'center center' }
+              ]; let i = index">
+                <img [src]="img.src" [alt]="img.alt" loading="lazy" [style.object-position]="img.position">
+                <div class="glimpse-slide-overlay">
+                  <span class="glimpse-slide-label">{{ img.label }}</span>
+                </div>
+              </div>
             </div>
+          </div>
+          <button class="glimpse-nav glimpse-nav--prev" (click)="prevSlide()">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button class="glimpse-nav glimpse-nav--next" (click)="nextSlide()">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+          <div class="glimpse-dots">
+            <span *ngFor="let img of [1,2,3,4,5]; let i = index"
+                  class="glimpse-dot"
+                  [class.active]="i === activeSlide"
+                  (click)="goToSlide(i)"></span>
           </div>
         </div>
       </div>
@@ -715,7 +780,7 @@
 
 
     <!-- SECTION 10: PATIENT TESTIMONIALS -->
-    <section class="testimonials-section">
+    <section class="testimonials-section" id="sec-testimonials">
       <div class="testimonials-inner">
         <p class="section-label" style="text-align: center;">Real Patient Stories</p>
         <h2 class="section-heading" style="text-align: center; margin-bottom: 16px;">
@@ -728,7 +793,7 @@
         <div class="testimonials-grid">
           <div class="testimonial-card featured scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
             <div class="testimonial-quote-icon"><mat-icon class="!text-3xl">format_quote</mat-icon></div>
-            <p class="testimonial-text">"I got my braces done at Dr. Meher's clinic and the transformation is unbelievable. Dr. Meher (BDS, MDS) really knows his orthodontics. The clinic is spotless, the staff is incredibly warm, and the entire 18-month journey was completely comfortable. My smile has never looked better. Cannot recommend this practice enough!"</p>
+            <p class="testimonial-text">"I got my braces done at Dr. Meher's clinic and the transformation is unbelievable. Dr. Meher (BDS, MDS, PhD) really knows his orthodontics. The clinic is spotless, the staff is incredibly warm, and the entire 18-month journey was completely comfortable. My smile has never looked better. Cannot recommend this practice enough!"</p>
             <div class="testimonial-stars">
               <mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon><mat-icon class="star-filled">star</mat-icon>
             </div>
@@ -776,7 +841,7 @@
     <!-- SECTION 11: PRACTICES / CLINICS -->
     <section class="practices-section" *ngIf="profRes.associatedClinics && profRes.associatedClinics.length > 0">
       <div class="section-brand-label">
-        <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+        <img [src]="clinicLogo" alt="" class="section-brand-icon">
         <p class="section-label" style="margin-bottom: 0;">Our Locations</p>
       </div>
       <div class="flex justify-between items-end mb-10">
@@ -788,7 +853,7 @@
         <div class="flex gap-6 items-start">
           <div class="flex-shrink-0">
             <div class="clinic-logo-wrap">
-              <img src="assets/images/jasbir/clinic-logo.png" alt="Clinic Logo" class="clinic-logo-img">
+              <img [src]="clinicLogo" alt="Clinic Logo" class="clinic-logo-img">
             </div>
           </div>
           <div class="flex-1 min-w-0">
@@ -830,7 +895,7 @@
 
 
     <!-- SECTION 11B: CLINIC MAP -->
-    <section class="map-section">
+    <section class="map-section" id="sec-contact">
       <div class="map-inner">
         <div class="map-info">
           <p class="section-label">Find Us</p>
@@ -896,20 +961,26 @@
       <div class="why-grid">
         <div>
           <div class="section-brand-label">
-            <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+            <img [src]="clinicLogo" alt="" class="section-brand-icon">
             <p class="section-label" style="margin-bottom: 0;">Why Choose Dr. Meher</p>
           </div>
           <h2 class="section-heading">The Orthodontic &<br>Dental Care You
             <span style="color: #2563eb;">Deserve</span>
           </h2>
           <p class="text-base text-gray-500 leading-relaxed mb-8">
-            With BDS and MDS qualifications, state-of-the-art equipment, and a decade of
-            experience, Dr. Jasbir Meher provides orthodontic and dental care that makes
+            With BDS, MDS, PhD qualifications, state-of-the-art equipment, and a decade of
+            experience, Prof. Dr. Jasbir Meher provides orthodontic and dental care that makes
             you feel comfortable and confident at every step.
+            Our ideology is Prevention "Not Just Cure" &mdash; to help people understand how simple steps
+            carried out daily can prevent major dental diseases. Even the simplest of habits such as
+            brushing and flossing can make a huge difference in your dental and overall health.
+            Successfully helping people to prevent dental disease as well as curing them with the best
+            treatment across the globe, we take pride in spreading smiles to millions of patients.
+            Right from dentistry for kids to senior citizens, we provide complete family dental solutions.
           </p>
 
           <ul class="benefit-list">
-            <li><mat-icon class="check-tick">check_circle</mat-icon><span>BDS, MDS qualified Orthodontist & Dental Surgeon</span></li>
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>BDS, MDS, PhD qualified Orthodontist & Dental Surgeon</span></li>
             <li><mat-icon class="check-tick">check_circle</mat-icon><span>Advanced laser dentistry for painless treatments</span></li>
             <li><mat-icon class="check-tick">check_circle</mat-icon><span>Invisalign & clear aligner certified provider</span></li>
             <li><mat-icon class="check-tick">check_circle</mat-icon><span>Emergency orthodontic care available</span></li>
@@ -919,7 +990,7 @@
 
         <div class="relative">
           <div class="about-image">
-            <img src="assets/images/jasbir/profile.jpg" alt="Dr. {{ profRes.name }}" loading="lazy"
+            <img src="assets/images/jasbir/SKP00027.JPG.jpeg" alt="Dr. {{ profRes.name }}" loading="lazy"
               style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
           </div>
           <div class="absolute -bottom-4 -left-4 sm:left-4 bg-white rounded-2xl p-5 shadow-xl border border-gray-100"
@@ -946,7 +1017,7 @@
         <div class="flex justify-between items-center mb-8">
           <div>
             <div class="section-brand-label">
-              <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+              <img [src]="clinicLogo" alt="" class="section-brand-icon">
               <p class="section-label" style="margin-bottom: 0;">Academic Background</p>
             </div>
             <h3 class="section-heading" style="margin-bottom: 0;">Education</h3>
@@ -971,13 +1042,13 @@
     </section>
 
 
-    <!-- SECTION 15: EXPERIENCE -->
+    <!-- SECTION 15: EXPERIENCE (hidden for Jasbir, kept as template for demo)
     <section class="detail-section">
       <div class="detail-inner" style="max-width: 1180px; margin: 0 auto;">
         <div class="flex justify-between items-center mb-8">
           <div>
             <div class="section-brand-label">
-              <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+              <img [src]="clinicLogo" alt="" class="section-brand-icon">
               <p class="section-label" style="margin-bottom: 0;">Career Journey</p>
             </div>
             <h3 class="section-heading" style="margin-bottom: 0;">Professional Experience</h3>
@@ -1002,6 +1073,7 @@
         </div>
       </div>
     </section>
+    -->
 
 
     <!-- SECTION 16: HONORS & AWARDS -->
@@ -1010,7 +1082,7 @@
         <div class="flex justify-between items-center mb-8">
           <div>
             <div class="section-brand-label">
-              <img src="assets/images/jasbir/clinic-logo.png" alt="" class="section-brand-icon">
+              <img [src]="clinicLogo" alt="" class="section-brand-icon">
               <p class="section-label" style="margin-bottom: 0;">Achievements</p>
             </div>
             <h3 class="section-heading" style="margin-bottom: 0;">Honors & Awards</h3>
@@ -1039,7 +1111,7 @@
       <div class="final-cta-content">
         <div class="final-cta-logo-wrap">
           <div class="final-cta-logo-ring"></div>
-          <img src="assets/images/jasbir/clinic-logo.png" alt="Dr. Meher's Clinic" class="final-cta-logo">
+          <img [src]="clinicLogo" alt="Dr. Meher's Clinic" class="final-cta-logo">
         </div>
         <div class="final-cta-badge">
           <mat-icon class="!text-sm">favorite</mat-icon>
@@ -1055,7 +1127,7 @@
         <p>
           Take the first step towards a healthier, brighter smile. Book a consultation
           at Dr. Meher's Orthodontic Center & Dental Clinic, Balangir.
-          BDS, MDS qualified care since 2015.
+          BDS, MDS, PhD qualified care since 2015.
         </p>
         <div class="final-cta-buttons">
           <button class="btn-primary" (click)="openTemplateSheetMenu()">
