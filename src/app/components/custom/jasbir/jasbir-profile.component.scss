@@ -816,7 +816,12 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 100px;
-    animation: profile-fade-in 0.5s ease 0.1s both;
+    animation: profile-fade-in 0.5s ease 0.1s both, blink-border 2.2s ease-in-out 2s infinite;
+    // link resets
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    &:hover { opacity: 0.9; }
 
     .hero-logo-ring {
       position: relative;
@@ -911,7 +916,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 100px;
-    animation: profile-fade-in 0.5s ease 0.2s both;
+    animation: profile-fade-in 0.5s ease 0.2s both, blink-border 2.2s ease-in-out 2.3s infinite;
     align-self: stretch;
 
     .hero-sponsor-img {
@@ -1159,9 +1164,11 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     }
 
     @media (max-width: 767px) {
-      bottom: 35px;
-      right: -8px;
-      .iso-stamp-img { width: 62px; }
+      // Move to top-right corner of image so it never covers footer text
+      bottom: auto;
+      top: 8px;
+      right: 8px;
+      .iso-stamp-img { width: 58px; }
     }
   }
 
@@ -2042,6 +2049,20 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     strong {
       color: #fff;
       font-weight: 800;
+    }
+  }
+
+  .kbk-claim {
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(90deg, rgba(37, 99, 235, 0.4), rgba(14, 165, 233, 0.35));
+    padding: 1px 8px;
+    border-radius: 6px;
+    animation: kbk-blink 1.8s ease-in-out infinite;
+
+    strong {
+      color: #7dd3fc;
+      font-weight: 900;
     }
   }
 
@@ -8148,6 +8169,34 @@ $dark-text-muted: #6b7790;
   .offer-card {
     transition: none !important;
     &:hover { transform: none !important; box-shadow: inherit !important; }
+  }
+
+  .hero-clinic-brand,
+  .hero-sponsor-pill,
+  .kbk-claim { animation: none !important; }
+}
+
+// --- Blink border: top hero buttons ---
+@keyframes blink-border {
+  0%, 100% {
+    border-color: rgba(255, 255, 255, 0.10);
+    box-shadow: none;
+  }
+  50% {
+    border-color: rgba(53, 200, 235, 0.75);
+    box-shadow: 0 0 14px rgba(53, 200, 235, 0.45), 0 0 28px rgba(53, 200, 235, 0.2);
+  }
+}
+
+// --- KBK claim blink/highlight ---
+@keyframes kbk-blink {
+  0%, 100% {
+    background: linear-gradient(90deg, rgba(37, 99, 235, 0.4), rgba(14, 165, 233, 0.35));
+    text-shadow: none;
+  }
+  50% {
+    background: linear-gradient(90deg, rgba(37, 99, 235, 0.75), rgba(14, 165, 233, 0.65));
+    text-shadow: 0 0 10px rgba(125, 211, 252, 0.6);
   }
 }
 
