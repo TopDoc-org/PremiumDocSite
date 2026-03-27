@@ -101,9 +101,11 @@
         <!-- Text Side -->
         <div class="hero-text">
           <div class="hero-brands-row">
-            <a class="hero-clinic-brand" routerLink="/" aria-label="Visit Dr. Meher's Orthodontic Center homepage">
+            <a class="hero-clinic-brand" (click)="scrollToTop()" role="button" style="cursor:pointer" aria-label="Back to top — Dr. Meher's Orthodontic Center">
               <div class="hero-logo-ring">
-                <img [src]="clinicLogo" alt="Dr. Meher's Clinic Logo" class="hero-clinic-logo">
+                <div class="hero-logo-clip">
+                  <img [src]="clinicLogo" alt="Dr. Meher's Clinic Logo" class="hero-clinic-logo">
+                </div>
               </div>
               <div class="hero-brand-text">
                 <span class="hero-clinic-name">Dr. Meher's Orthodontic Center</span>
@@ -311,7 +313,9 @@
         <!-- Content Column -->
         <div class="about-content" [attr.data-aos]="animationsEnabled ? 'fade-left' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null">
           <div class="about-brand-row">
-            <img [src]="clinicLogo" alt="Clinic Logo" class="about-clinic-logo">
+            <div class="about-logo-clip">
+              <img [src]="clinicLogo" alt="Clinic Logo" class="about-clinic-logo">
+            </div>
             <p class="about-label">About the Doctor</p>
           </div>
           <h2>

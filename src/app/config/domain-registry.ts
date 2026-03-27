@@ -11,7 +11,8 @@ export interface TenantEntry {
  */
 export const DOMAIN_REGISTRY: Record<string, TenantEntry> = {
   // Production domains
-  'premiumdoc.knocdoc.in':          { doctorId: '0e828c42-82da-4c56-bf35-a3e205161b92',       component: 'custom-jasbir' },
+  'drmeherdentalclinic.com':          { doctorId: '0e828c42-82da-4c56-bf35-a3e205161b92',       component: 'custom-jasbir' },
+  'www.drmeherdentalclinic.com':          { doctorId: '0e828c42-82da-4c56-bf35-a3e205161b92',       component: 'custom-jasbir' },
   'premium-doc-site.vercel.app':    { doctorId: 'sachin',       component: 'custom-sachin' },
 
   // Dev / fallback

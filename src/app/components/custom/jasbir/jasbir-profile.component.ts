@@ -132,6 +132,9 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   ) {}
 
   ngOnInit(): void {
+    // Force-clear any stale animation preference — animations must be on by default
+    localStorage.removeItem('premiumAnimations');
+
     this.unregForm = this.fb.group({
       name: ['', [Validators.required]],
       mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
@@ -241,9 +244,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
           this.profRes.reviewList = Object.keys(sortMap);
         }
         const savedPref = localStorage.getItem('premiumAnimations');
-        // Always enable animations when the profile has premiumAnimations:true.
-        // Only honour a saved 'false' if the profile itself also has it disabled.
-        this.animationsEnabled = !!this.profRes.premiumAnimations || savedPref === 'true';
+        this.animationsEnabled = true; // Always on — premium profile always has animations
         this.timelineFetchStatus = 'done';
         this.initAOS();
         this.initCounterAnimations();
@@ -332,6 +333,10 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   toggleDarkMode(): void {
     this.darkMode = !this.darkMode;
     localStorage.setItem('jasbirDarkMode', String(this.darkMode));
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   toggleAnimations(): void {
