@@ -75,6 +75,18 @@
         <img src="assets/images/jasbir/newClinicBg.jpeg" alt="Dr. Meher's Orthodontic Center & Dental Clinic" loading="eager">
       </div>
 
+      <!-- Floating particles -->
+      <div class="hero-particles" aria-hidden="true">
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+        <span class="hero-particle"></span>
+      </div>
+
       <div class="hero-star star-1">
         <mat-icon>auto_awesome</mat-icon>
       </div>
@@ -184,10 +196,18 @@
           </div>
         </div>
       </div>
+
+      <!-- Scroll down indicator -->
+      <button class="hero-scroll-indicator" (click)="scrollToSection('sec-about')" aria-label="Scroll to about section">
+        <span class="hero-scroll-indicator__label">Scroll</span>
+        <span class="hero-scroll-indicator__line"></span>
+        <span class="hero-scroll-indicator__arrow">
+          <mat-icon>arrow_downward</mat-icon>
+        </span>
+      </button>
     </section>
 
     <!-- MAIN CONTENT -->
-    <div class="profile-main-content">
 
     <!-- SECTION 2: QUICK APPOINTMENT BAR -->
     <div class="appointment-bar" *ngIf="!isMobileOrTabView">
@@ -1102,8 +1122,6 @@
       </div>
     </section>
 
-
-    </div><!-- END .profile-main-content -->
 
     <!-- FINAL CTA SECTION -->
     <section class="final-cta-section">
