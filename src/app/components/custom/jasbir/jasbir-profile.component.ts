@@ -36,7 +36,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   private scrollListener: (() => void) | null = null;
 
   get clinicLogo(): string {
-    return this.darkMode ? 'assets/images/jasbir/logo-light.png' : 'assets/images/jasbir/logo-dark.png';
+    return 'assets/images/jasbir/ClinicLogo.jpeg';
   }
   activeTechSlide = 0;
   showSidhantFull = false;
@@ -237,6 +237,11 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.bookingService.fetchDoctorProfile(this.doctorId).subscribe(
       (data: any) => {
         this.profRes = data?.results?.[0] || this.getDefaultProfile();
+        if (this.profRes.name) {
+          // Strip any existing prefixes (Dr., Prof., Prof. Dr., etc.) then add canonical prefix
+          const cleanName = this.profRes.name.replace(/^(Prof\.\s*)?Dr\.\s*/i, '').replace(/^Prof\.\s*/i, '');
+          this.profRes.name = 'Prof. Dr. ' + cleanName;
+        }
         if (this.profRes.reviewTags) {
           const sortMap = Object.fromEntries(
             Object.entries(this.profRes.reviewTags).sort((a: any, b: any) => a[1] - b[1])
@@ -271,10 +276,10 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private getDefaultProfile(): any {
     return {
-      name: 'Jasbir Meher',
+      name: 'Prof. Dr. Jasbir Meher',
       city: 'Balangir',
       state: 'Odisha',
-      specialization: 'Orthodontist & Dental Surgeon',
+      specialization: 'Dentist',
       yearsOfExperience: '13',
       languages: ['English', 'Hindi', 'Odia'],
       averageRating: 4.9,
@@ -391,7 +396,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     const isDecimal = raw.includes('.');
     const isPlain = el.hasAttribute('data-count-plain');
     const target = parseFloat(raw);
-    const duration = 1600;
+    const duration = 2800;
     const startTime = performance.now();
     const formatNum = (n: number) => {
       if (isDecimal) return n.toFixed(1);
@@ -414,12 +419,12 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   nextSlide(): void {
-    this.activeSlide = (this.activeSlide + 1) % 4;
+    this.activeSlide = (this.activeSlide + 1) % 6;
     this.resetCarouselAutoplay();
   }
 
   prevSlide(): void {
-    this.activeSlide = (this.activeSlide - 1 + 4) % 4;
+    this.activeSlide = (this.activeSlide - 1 + 6) % 6;
     this.resetCarouselAutoplay();
   }
 
@@ -431,7 +436,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   private startCarouselAutoplay(): void {
     if (!this.animationsEnabled) return;
     this.carouselInterval = setInterval(() => {
-      this.activeSlide = (this.activeSlide + 1) % 4;
+      this.activeSlide = (this.activeSlide + 1) % 6;
     }, 4000);
   }
 
@@ -656,7 +661,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       appointmentType: 'Inperson',
       slotDay,
       userType: 'unRegistered',
-      doctorName: this.profRes?.name || 'Jasbir Meher',
+      doctorName: this.profRes?.name || 'Prof. Dr. Jasbir Meher',
       bookingTimeStamp: new Date().toISOString(),
       appointmentDate,
       userName: this.unregForm.value.name,
@@ -762,8 +767,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
 
   shareProfile(): void {
     const shareData = {
-      title: this.profRes?.name || 'Dr. Jasbir Meher',
-      text: `Book an appointment with ${this.profRes?.name || 'Dr. Jasbir Meher'} - ${this.profRes?.specialization || 'Orthodontist & Dental Surgeon'}`,
+      title: this.profRes?.name || 'Prof. Dr. Jasbir Meher',
+      text: `Book an appointment with ${this.profRes?.name || 'Prof. Dr. Jasbir Meher'} - ${this.profRes?.specialization || 'Dentist'}`,
       url: window.location.href
     };
     if (navigator.share) {

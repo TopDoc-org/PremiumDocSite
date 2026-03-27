@@ -17,7 +17,7 @@
           </div>
           <div>
             <p class="ib-form-subtitle">Book Appointment</p>
-            <h4 class="ib-doctor-name">Dr. {{ doctorName }}, {{ specialisation }}</h4>
+            <h4 class="ib-doctor-name"> {{ doctorName }}</h4>
           </div>
         </div>
         <form [formGroup]="form" class="ib-form-fields" *ngIf="form">
@@ -51,7 +51,7 @@
           <div class="ib-field" *ngIf="clinicNames.length > 0">
             <label>Clinic</label>
             <select class="ib-input" [(ngModel)]="selectedClinic" [ngModelOptions]="{standalone: true}">
-              <option value="">All Clinics</option>
+              <option value="">Select Clinic</option>
               <option *ngFor="let c of clinicNames" [value]="c">{{ c }}</option>
             </select>
           </div>

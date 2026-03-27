@@ -46,7 +46,8 @@ export class InlineBookingComponent {
     const mobile = this.form.get('mobile')?.value?.trim();
     const gender = this.form.get('gender')?.value;
     const reason = this.form.get('reasonForVisit')?.value;
-    return !!name && !!mobile && !!gender && !!reason;
+    const clinicOk = this.clinicNames.length === 0 || !!this.selectedClinic;
+    return !!name && !!mobile && !!gender && !!reason && clinicOk;
   }
 
   getFilteredSessions(sessions: any[]): any[] {

@@ -30,7 +30,10 @@
       "Bash(grep -n \"background.*#fff\\\\|background.*white\\\\|background:.*$slate-50\\\\|color.*$navy-950\\\\|color.*$slate-900\\\\|\\\\.alt-bg\\\\|\\\\.profile-landing\" \"C:\\\\Sarthak\\\\doctor-sites\\\\src\\\\app\\\\components\\\\custom\\\\jasbir\\\\jasbir-profile.component.scss\")",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(find /c/Sarthak/doctor-sites/src -type f -name *hero* -o -name *header* -o -name *navbar* -o -name *jasbir*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)"
     ]
   }
 }
