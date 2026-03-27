@@ -1,4 +1,6 @@
 {
+  "buildCommand": "ng build --configuration production",
+  "outputDirectory": "dist/doctor-sites",
   "rewrites": [
     { "source": "/((?!assets|icons|images|favicon).*)", "destination": "/index.html" }
   ],
