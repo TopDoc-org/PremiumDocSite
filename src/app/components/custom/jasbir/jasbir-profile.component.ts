@@ -36,7 +36,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   private scrollListener: (() => void) | null = null;
 
   get clinicLogo(): string {
-    return this.darkMode ? 'assets/images/jasbir/logo-dark.png' : 'assets/images/jasbir/logo-light.png';
+    return this.darkMode ? 'assets/images/jasbir/logo-light.png' : 'assets/images/jasbir/logo-dark.png';
   }
   activeTechSlide = 0;
   showSidhantFull = false;
@@ -132,6 +132,9 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   ) {}
 
   ngOnInit(): void {
+    // Force-clear any stale animation preference — animations must be on by default
+    localStorage.removeItem('premiumAnimations');
+
     this.unregForm = this.fb.group({
       name: ['', [Validators.required]],
       mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
@@ -241,7 +244,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
           this.profRes.reviewList = Object.keys(sortMap);
         }
         const savedPref = localStorage.getItem('premiumAnimations');
-        this.animationsEnabled = savedPref !== null ? savedPref === 'true' : !!this.profRes.premiumAnimations;
+        this.animationsEnabled = true; // Always on — premium profile always has animations
         this.timelineFetchStatus = 'done';
         this.initAOS();
         this.initCounterAnimations();
@@ -332,10 +335,15 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     localStorage.setItem('jasbirDarkMode', String(this.darkMode));
   }
 
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   toggleAnimations(): void {
     this.animationsEnabled = !this.animationsEnabled;
-    localStorage.setItem('premiumAnimations', String(this.animationsEnabled));
+    // Only persist 'true' so a reload always re-enables animations
     if (this.animationsEnabled) {
+      localStorage.removeItem('premiumAnimations');
       window.location.reload();
     } else {
       AOS.refreshHard();
@@ -345,6 +353,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   initAOS(): void {
     if (this.animationsEnabled) {
       const isMobile = window.innerWidth < 768;
+      // Delay long enough for Angular change detection to flush [attr.data-aos] bindings into the DOM
       setTimeout(() => {
         AOS.init({
           duration: isMobile ? 500 : 800,
@@ -353,7 +362,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
           offset: isMobile ? 20 : 80,
           delay: isMobile ? 0 : undefined
         });
-      });
+        AOS.refresh();
+      }, 200);
     }
   }
 
