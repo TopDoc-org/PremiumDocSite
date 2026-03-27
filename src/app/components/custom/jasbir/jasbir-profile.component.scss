@@ -1158,7 +1158,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     bottom: 50px;
     right: -25px;
     z-index: 10;
-    animation: stamp-slam 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
+    animation: stamp-slam-repeat 5s cubic-bezier(0.22, 1, 0.36, 1) 0.8s infinite;
 
     .iso-stamp-img {
       width: 95px;
@@ -1194,6 +1194,17 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     60% { opacity: 1; transform: scale(0.9) rotate(2deg); }
     80% { transform: scale(1.05) rotate(-1deg); }
     100% { transform: scale(1) rotate(0deg); }
+  }
+
+  // Repeating version: slam in during first ~12% (≈0.6s of 5s), hold, then reset
+  @keyframes stamp-slam-repeat {
+    0%   { opacity: 0; transform: scale(2.5) rotate(-20deg); }
+    7%   { opacity: 1; transform: scale(0.9) rotate(2deg); }
+    10%  { transform: scale(1.05) rotate(-1deg); }
+    12%  { transform: scale(1) rotate(0deg); opacity: 1; }
+    92%  { transform: scale(1) rotate(0deg); opacity: 1; }
+    99%  { opacity: 0; transform: scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: scale(2.5) rotate(-20deg); }
   }
 
   .hero-image-footer {
@@ -1985,7 +1996,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
 .tech-showcase-section {
   padding: 80px 24px;
-  background: linear-gradient(170deg, #050d18 0%, #0a1628 30%, #0c1e30 60%, #091520 100%);
+  background: linear-gradient(170deg, #f0f6ff 0%, #e8f2fc 30%, #f4f8fd 60%, #edf4fb 100%);
   position: relative;
   overflow: hidden;
   border-top: 1px solid rgba($teal-400, 0.15);
@@ -2013,7 +2024,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     transform: translate(-50%, -50%);
     width: 800px;
     height: 800px;
-    background: radial-gradient(circle, rgba($teal-400, 0.04) 0%, transparent 50%);
+    background: radial-gradient(circle, rgba($teal-400, 0.06) 0%, transparent 50%);
     pointer-events: none;
     animation: tech-orb-breathe 6s ease-in-out infinite;
   }
@@ -2065,14 +2076,14 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   margin-bottom: 56px;
 
   .section-heading {
-    color: white;
+    color: $navy-900;
     font-size: 2.6rem;
     margin-top: 8px;
-    text-shadow: 0 0 40px rgba($teal-400, 0.15);
+    text-shadow: none;
   }
 
   .section-label {
-    color: $teal-300 !important;
+    color: $teal-600 !important;
   }
 }
 
@@ -2094,7 +2105,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 .tech-showcase-subtitle {
   font-family: var(--font-body), sans-serif;
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.55);
+  color: $slate-600;
   max-width: 600px;
   margin: 12px auto 0;
   line-height: 1.6;
@@ -2114,25 +2125,25 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   span {
     font-family: var(--font-body), sans-serif;
     font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: $slate-700;
     line-height: 1.4;
 
     strong {
-      color: #fff;
+      color: $navy-900;
       font-weight: 800;
     }
   }
 
   .kbk-claim {
     font-weight: 800;
-    color: #fff;
-    background: linear-gradient(90deg, rgba(37, 99, 235, 0.4), rgba(14, 165, 233, 0.35));
+    color: $navy-900;
+    background: linear-gradient(90deg, rgba(37, 99, 235, 0.15), rgba(14, 165, 233, 0.12));
     padding: 1px 8px;
     border-radius: 6px;
     animation: kbk-blink 1.8s ease-in-out infinite;
 
     strong {
-      color: #7dd3fc;
+      color: $teal-700;
       font-weight: 900;
     }
   }
@@ -2172,16 +2183,17 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 }
 
 .tech-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #fff;
+  border: 1px solid $slate-200;
   border-radius: 20px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 12px rgba($navy-900, 0.06);
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 40px rgba($navy-900, 0.12);
+    border-color: rgba($teal-400, 0.35);
 
     .tech-card-img img { transform: scale(1.06); }
   }
@@ -2254,7 +2266,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   font-family: var(--font-heading), sans-serif;
   font-size: 1.15rem;
   font-weight: 800;
-  color: #fff;
+  color: $navy-900;
   margin: 0 0 10px;
   line-height: 1.3;
 }
@@ -2262,7 +2274,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 .tech-card-desc {
   font-family: var(--font-body), sans-serif;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: $slate-600;
   line-height: 1.6;
   margin: 0 0 16px;
 }
@@ -2281,13 +2293,13 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     gap: 8px;
     font-family: var(--font-body), sans-serif;
     font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.75);
+    color: $slate-600;
 
     .check-tick {
       font-size: 16px !important;
       width: 16px !important;
       height: 16px !important;
-      color: $teal-400;
+      color: $teal-500;
     }
   }
 }
@@ -7446,6 +7458,32 @@ $dark-text-muted: #6b7790;
       background: linear-gradient(180deg, transparent 60%, rgba($dark-bg, 0.3) 100%);
     }
   }
+
+  // ---- Tech Showcase ----
+  .tech-showcase-section {
+    background: linear-gradient(170deg, #050d18 0%, #0a1628 30%, #0c1e30 60%, #091520 100%);
+    &::after {
+      background: radial-gradient(circle, rgba($teal-400, 0.04) 0%, transparent 50%);
+    }
+  }
+  .tech-showcase-header {
+    .section-heading { color: #fff; text-shadow: 0 0 40px rgba($teal-400, 0.15); }
+    .section-label { color: $teal-300 !important; }
+  }
+  .tech-showcase-subtitle { color: rgba(255, 255, 255, 0.55); }
+  .tech-exclusive-banner {
+    span { color: rgba(255, 255, 255, 0.9); strong { color: #fff; } }
+    .kbk-claim { color: #fff; background: linear-gradient(90deg, rgba(37, 99, 235, 0.4), rgba(14, 165, 233, 0.35)); strong { color: #7dd3fc; } }
+  }
+  .tech-card {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    &:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3); border-color: rgba(255, 255, 255, 0.18); }
+  }
+  .tech-card-title { color: #fff; }
+  .tech-card-desc { color: rgba(255, 255, 255, 0.65); }
+  .tech-card-features li { color: rgba(255, 255, 255, 0.75); .check-tick { color: $teal-400; } }
 
   // ---- Languages Strip ----
   .languages-strip {
