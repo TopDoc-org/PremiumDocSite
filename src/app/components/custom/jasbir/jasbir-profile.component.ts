@@ -550,7 +550,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     return '';
   }
 
-  openTemplateSheetMenu(): void {
+  openTemplateSheetMenu(procedure: string = ''): void {
+    this.unregForm.patchValue({ reasonForVisit: procedure });
     this.bottomSheet.open(this.TemplateBottomSheet, {
       panelClass: 'custom-bottom-sheet-content'
     });
@@ -752,12 +753,10 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   bookFromService(): void {
-    if (this.selectedService) {
-      this.unregForm.patchValue({ reasonForVisit: this.selectedService.name });
-    }
+    const procedure = this.selectedService?.name || '';
     this.bottomSheet.dismiss();
     setTimeout(() => {
-      this.openTemplateSheetMenu();
+      this.openTemplateSheetMenu(procedure);
     }, 300);
   }
 
