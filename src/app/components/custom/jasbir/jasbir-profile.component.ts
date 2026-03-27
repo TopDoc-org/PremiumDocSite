@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { BookingService } from '../../../services/booking.service';
 import { DoctorConfigService } from '../../../services/doctor-config.service';
+import { TenantService } from '../../../services/tenant.service';
 
 @Component({
   selector: 'app-jasbir-profile',
@@ -126,7 +127,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     private fb: FormBuilder,
     private activated: ActivatedRoute,
     private bookingService: BookingService,
-    private doctorConfigService: DoctorConfigService
+    private doctorConfigService: DoctorConfigService,
+    private tenantService: TenantService
   ) {}
 
   ngOnInit(): void {
@@ -153,7 +155,9 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // Get doctorId from query params or use default
     this.activated.queryParamMap.subscribe(queryMap => {
-      this.doctorId = queryMap.get('doctorId') || queryMap.get('id') || '0e828c42-82da-4c56-bf35-a3e205161b92';
+      this.doctorId = queryMap.get('doctorId') || queryMap.get('id')
+        || this.tenantService.doctorId
+        || '0e828c42-82da-4c56-bf35-a3e205161b92';
       this.referredBy = queryMap.get('referredBy') || null;
       if (queryMap.has('book')) {
         this.openBookByDefault = true;

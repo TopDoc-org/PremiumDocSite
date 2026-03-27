@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DOMAIN_REGISTRY, TenantEntry, ComponentType } from '../config/domain-registry';
 import { IDoctorSiteConfig } from '../models/doctor-site-config.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TenantService {
@@ -15,6 +16,12 @@ export class TenantService {
 
   setConfig(config: IDoctorSiteConfig | null): void {
     this._config = config;
+  }
+
+  setDevFallback(doctorId: string, component: ComponentType): void {
+    if (!environment.production && !this._tenant?.doctorId) {
+      this._tenant = { doctorId, component };
+    }
   }
 
   initialize(): void {

@@ -14,6 +14,7 @@ export class TenantGuard implements CanActivate {
 
     // Dev mode: redirect to jasbir as default profile
     if (!environment.production) {
+      this.tenantService.setDevFallback('0e828c42-82da-4c56-bf35-a3e205161b92', 'custom-jasbir');
       this.router.navigate(['/jasbir']);
       return false;
     }
