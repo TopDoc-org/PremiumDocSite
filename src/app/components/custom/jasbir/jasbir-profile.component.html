@@ -299,7 +299,7 @@
     <section class="about-section" id="sec-about">
       <div class="about-grid">
         <!-- Image Column -->
-        <div class="about-image">
+        <div class="about-image" [attr.data-aos]="animationsEnabled ? 'fade-right' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null">
           <img
             src="assets/images/jasbir/SKP00027.JPG.jpeg"
             alt="Dr. {{ profRes.name }}"
@@ -309,7 +309,7 @@
         </div>
 
         <!-- Content Column -->
-        <div class="about-content">
+        <div class="about-content" [attr.data-aos]="animationsEnabled ? 'fade-left' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null">
           <div class="about-brand-row">
             <img [src]="clinicLogo" alt="Clinic Logo" class="about-clinic-logo">
             <p class="about-label">About the Doctor</p>
@@ -663,7 +663,7 @@
     <!-- SECTION 8B: VIDEO TOUR -->
     <section class="video-tour-section">
       <div class="video-tour-inner">
-        <div class="video-tour-text">
+        <div class="video-tour-text" [attr.data-aos]="animationsEnabled ? 'fade-right' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null">
           <div class="section-brand-label">
             <img [src]="clinicLogo" alt="" class="section-brand-icon">
             <p class="section-label" style="margin-bottom: 0;">Virtual Tour</p>
@@ -694,7 +694,7 @@
             </li>
           </ul>
         </div>
-        <div class="video-tour-embed">
+        <div class="video-tour-embed" [attr.data-aos]="animationsEnabled ? 'fade-left' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
           <div class="video-wrapper">
             <iframe
               src="https://www.youtube.com/embed/-IlvqRKH_Ds?rel=0"
@@ -759,9 +759,9 @@
     <!-- SECTION 8C: MEET OUR TEAM + GALLERY -->
     <section class="team-section" id="sec-gallery">
       <div class="team-container">
-        <p class="team-label">The People Behind Your Smile</p>
-        <h2 class="team-heading">Meet Our Team & Clinic</h2>
-        <p class="team-subtitle">
+        <p class="team-label" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">The People Behind Your Smile</p>
+        <h2 class="team-heading" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '80' : null">Meet Our Team & Clinic</h2>
+        <p class="team-subtitle" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '160' : null">
           A dedicated team of dental professionals committed to providing you with the highest quality orthodontic and dental care in Balangir.
         </p>
 
@@ -917,7 +917,7 @@
     <!-- SECTION 11B: CLINIC MAP -->
     <section class="map-section" id="sec-contact">
       <div class="map-inner">
-        <div class="map-info">
+        <div class="map-info" [attr.data-aos]="animationsEnabled ? 'fade-right' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null">
           <p class="section-label">Find Us</p>
           <h2 class="section-heading" style="margin-bottom: 16px;">Visit Our Clinic</h2>
           <div class="map-address-card">
@@ -960,7 +960,7 @@
             Book Appointment
           </button>
         </div>
-        <div class="map-embed">
+        <div class="map-embed" [attr.data-aos]="animationsEnabled ? 'fade-left' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
           <iframe
             src="https://maps.google.com/maps?q=Balangir,+Odisha,+India&t=&z=14&ie=UTF8&iwloc=&output=embed"
             width="100%"
@@ -979,7 +979,7 @@
     <!-- SECTION 12: WHY CHOOSE THIS DOCTOR -->
     <section class="why-choose-section">
       <div class="why-grid">
-        <div>
+        <div [attr.data-aos]="animationsEnabled ? 'fade-right' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null">
           <div class="section-brand-label">
             <img [src]="clinicLogo" alt="" class="section-brand-icon">
             <p class="section-label" style="margin-bottom: 0;">Why Choose Dr. Meher</p>
@@ -1008,7 +1008,7 @@
           </ul>
         </div>
 
-        <div class="relative">
+        <div class="relative" [attr.data-aos]="animationsEnabled ? 'fade-left' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
           <div class="about-image">
             <img src="assets/images/jasbir/SKP00027.JPG.jpeg" alt="Dr. {{ profRes.name }}" loading="lazy"
               style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
@@ -1126,7 +1126,7 @@
     <!-- FINAL CTA SECTION -->
     <section class="final-cta-section">
       <div class="final-cta-glow"></div>
-      <div class="final-cta-content">
+      <div class="final-cta-content" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null">
         <div class="final-cta-logo-wrap">
           <div class="final-cta-logo-ring"></div>
           <img [src]="clinicLogo" alt="Dr. Meher's Clinic" class="final-cta-logo">

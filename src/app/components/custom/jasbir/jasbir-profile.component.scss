@@ -1189,8 +1189,8 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
     .hero-highlight-tag {
       display: inline-block;
-      padding: 8px 20px;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      padding: 8px 22px;
+      background: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #0e7490 100%);
       color: #fff;
       font-family: var(--font-heading), sans-serif;
       font-size: 0.72rem;
@@ -1199,7 +1199,37 @@ mat-sidenav-container { height: calc(100vh - 85px); }
       text-transform: uppercase;
       border-radius: 100px;
       text-align: center;
-      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.5);
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      box-shadow:
+        0 4px 16px rgba(13, 148, 136, 0.55),
+        0 0 0 0 rgba(13, 148, 136, 0.4);
+      animation: tag-glow-pulse 2.4s ease-in-out infinite;
+      transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1),
+                  box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px) scale(1.03);
+      }
+
+      // Shimmer sweep — identical to .btn-primary
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          105deg,
+          transparent 30%,
+          rgba(255, 255, 255, 0.22) 50%,
+          transparent 70%
+        );
+        background-size: 250% 100%;
+        background-position: -100% 0;
+        animation: btn-shimmer-x 2.8s ease-in-out 1.2s infinite;
+        pointer-events: none;
+        border-radius: inherit;
+      }
     }
 
     .hero-reg-number {
@@ -1212,7 +1242,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
     @media (max-width: 767px) {
       margin-top: 4px;
-      .hero-highlight-tag { font-size: 0.62rem; padding: 6px 14px; }
+      .hero-highlight-tag { font-size: 0.62rem; padding: 6px 16px; }
       .hero-reg-number { font-size: 0.6rem; }
     }
   }
@@ -1220,6 +1250,19 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   @keyframes highlight-glow {
     0%, 100% { box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15); }
     50% { box-shadow: 0 2px 20px rgba(0, 0, 0, 0.25); }
+  }
+
+  @keyframes tag-glow-pulse {
+    0%, 100% {
+      box-shadow:
+        0 4px 16px rgba(13, 148, 136, 0.55),
+        0 0 0 0 rgba(13, 148, 136, 0);
+    }
+    50% {
+      box-shadow:
+        0 6px 28px rgba(13, 148, 136, 0.75),
+        0 0 20px 6px rgba(13, 148, 136, 0.25);
+    }
   }
 
   .hero-avatar-fallback {
@@ -6561,7 +6604,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   }
 
   .hero-clinic-brand {
-    animation-duration: 0.35s !important;
+    // do not override animation-duration — it would break the blink timing
   }
 
   .hero-quote {
@@ -6665,13 +6708,19 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   // --- Hero entrance animations ---
   .hero-text,
-  .hero-clinic-brand,
   .hero-subtitle,
   .hero-ctas,
   .trust-badges {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  // hero-clinic-brand: suppress entrance animation but NOT the blink
+  .hero-clinic-brand {
+    opacity: 1 !important;
+    transform: none !important;
+    // blink-border keeps running — do NOT set animation:none here
   }
 
   // --- Text slide-in animations ---
@@ -8171,8 +8220,6 @@ $dark-text-muted: #6b7790;
     &:hover { transform: none !important; box-shadow: inherit !important; }
   }
 
-  .hero-clinic-brand,
-  .hero-sponsor-pill,
   .kbk-claim { animation: none !important; }
 }
 
@@ -8199,4 +8246,400 @@ $dark-text-muted: #6b7790;
     text-shadow: 0 0 10px rgba(125, 211, 252, 0.6);
   }
 }
+
+// ============================================================
+//  ALWAYS-ON BLINK: these must come LAST so nothing overrides
+// ============================================================
+.hero-clinic-brand {
+  animation: blink-border 2.2s ease-in-out 2s infinite !important;
+}
+
+.hero-sponsor-pill {
+  animation: blink-border 2.2s ease-in-out 2.3s infinite !important;
+}
+
+.kbk-claim {
+  animation: kbk-blink 1.8s ease-in-out infinite !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-clinic-brand,
+  .hero-sponsor-pill,
+  .kbk-claim {
+    animation: none !important;
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  MOBILE RESPONSIVE MASTER OVERRIDES (≤767px)
+//  Single consolidated block — placed last to win all specificity
+// ═══════════════════════════════════════════════════════════════
+
+@media (max-width: 767px) {
+
+  // ── Global section spacing ──────────────────────────────────
+  .about-section,
+  .why-choose-section,
+  .detail-section,
+  .tech-showcase-section,
+  .video-tour-section,
+  .map-section,
+  .final-cta-section,
+  .testimonials-section,
+  .team-section,
+  .practices-section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  // ── Section headings ───────────────────────────────────────
+  .section-heading {
+    font-size: 1.5rem !important;
+    letter-spacing: -0.025em !important;
+    margin-bottom: 20px !important;
+    line-height: 1.2 !important;
+  }
+
+  .section-label {
+    font-size: 0.7rem !important;
+  }
+
+  // ── Hero section ───────────────────────────────────────────
+  .hero-landing {
+    min-height: auto !important;
+    padding-bottom: 56px !important;
+  }
+
+  .hero-content {
+    flex-direction: column !important;
+    padding: 20px 16px 0 !important;
+    gap: 24px !important;
+    align-items: center !important;
+  }
+
+  .hero-text {
+    order: 2 !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .hero-image-wrapper {
+    order: 1 !important;
+    width: 100% !important;
+  }
+
+  // Hero h1 — clamp already handles it but enforce a max
+  .hero-landing h1 {
+    font-size: clamp(1.75rem, 6.5vw, 2.4rem) !important;
+    margin-bottom: 14px !important;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 24px !important;
+  }
+
+  // Hero brands row: stack vertically on very small screens
+  .hero-brands-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: center !important;
+    margin-bottom: 16px !important;
+  }
+
+  .hero-clinic-brand {
+    width: 100% !important;
+    max-width: 320px !important;
+    justify-content: center !important;
+    padding: 8px 16px 8px 8px !important;
+    border-radius: 20px !important;
+  }
+
+  .hero-sponsor-pill {
+    width: 100% !important;
+    max-width: 320px !important;
+  }
+
+  .hero-badge {
+    margin: 0 auto 16px !important;
+  }
+
+  .hero-social-links {
+    justify-content: center !important;
+  }
+
+  .hero-image-container {
+    width: 180px !important;
+    height: 230px !important;
+  }
+
+  // Hero image footer (highlight tag) — fix width
+  .hero-image-footer {
+    width: 100% !important;
+    align-items: center !important;
+    margin-top: 8px !important;
+  }
+
+  .hero-highlight-tag {
+    font-size: 0.6rem !important;
+    padding: 6px 14px !important;
+    max-width: 220px !important;
+    white-space: normal !important;
+    text-align: center !important;
+  }
+
+  // ── About section ──────────────────────────────────────────
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .about-image {
+    max-height: 280px !important;
+    aspect-ratio: 16/9 !important;
+  }
+
+  .about-content h2 {
+    font-size: 1.5rem !important;
+  }
+
+  .about-stats {
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+  }
+
+  // ── Tech section ───────────────────────────────────────────
+  .tech-showcase-inner {
+    padding: 0 !important;
+  }
+
+  .tech-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .tech-exclusive-banner {
+    border-radius: 14px !important;
+    text-align: center !important;
+  }
+
+  // ── Services section ───────────────────────────────────────
+  .services-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    margin-bottom: 24px !important;
+
+    button {
+      width: 100% !important;
+    }
+  }
+
+  .services-icon-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .service-icon-card {
+    padding: 16px 12px !important;
+
+    h3 { font-size: 0.8rem !important; }
+    p  { font-size: 0.72rem !important; display: none; }
+    .check-details-link { font-size: 0.7rem !important; }
+  }
+
+  // ── Video Tour ─────────────────────────────────────────────
+  .video-tour-inner {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .video-tour-text {
+    order: 1 !important;
+  }
+
+  .video-tour-embed {
+    order: 2 !important;
+  }
+
+  .video-tour-section h2.section-heading {
+    font-size: 1.4rem !important;
+    margin-bottom: 12px !important;
+  }
+
+  .video-wrapper {
+    border-radius: 14px !important;
+  }
+
+  // ── Big Numbers ────────────────────────────────────────────
+  .big-numbers-inner {
+    flex-direction: column !important;
+    gap: 24px !important;
+    align-items: center !important;
+  }
+
+  .big-number-divider {
+    display: none !important;
+  }
+
+  .big-num {
+    font-size: clamp(2.2rem, 11vw, 3.2rem) !important;
+  }
+
+  // ── Team / Carousel ────────────────────────────────────────
+  .team-container {
+    padding: 0 !important;
+  }
+
+  .glimpse-carousel-viewport {
+    border-radius: 16px !important;
+  }
+
+  // ── Testimonials ───────────────────────────────────────────
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .testimonial-card.featured {
+    grid-column: auto !important;
+  }
+
+  // ── Map section ────────────────────────────────────────────
+  .map-inner {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .map-embed {
+    height: 280px !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+
+    iframe {
+      border-radius: 16px !important;
+    }
+  }
+
+  // ── Why Choose ─────────────────────────────────────────────
+  .why-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  // Fix floating stats card position on mobile
+  .why-choose-section .relative {
+    .about-image {
+      max-height: 260px !important;
+      aspect-ratio: 16/9 !important;
+    }
+
+    // Floating stats widget — anchor inside, no overflow
+    .absolute {
+      position: relative !important;
+      bottom: auto !important;
+      left: auto !important;
+      margin-top: 16px !important;
+      width: 100% !important;
+      border-radius: 16px !important;
+      padding: 16px !important;
+    }
+  }
+
+  // ── Detail sections (Education / Awards) ──────────────────
+  .detail-section .detail-inner > .flex.justify-between {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .edu-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .awards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  // ── Offer section ──────────────────────────────────────────
+  .offer-hero {
+    flex-direction: column !important;
+    gap: 20px !important;
+    padding: 24px 16px !important;
+  }
+
+  .offer-hero-savings {
+    align-self: center !important;
+  }
+
+  .offers-cards-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  // ── Final CTA ──────────────────────────────────────────────
+  .final-cta-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 16px !important;
+    width: 100% !important;
+
+    .btn-primary {
+      width: 100% !important;
+      justify-content: center !important;
+    }
+  }
+
+  // ── Practices / Clinics ────────────────────────────────────
+  .clinic-card {
+    padding: 20px 16px !important;
+  }
+
+  // ── Appointment bar (hidden on mobile anyway) ─────────────
+  .appointment-bar { display: none !important; }
+}
+
+// ── 480px and below: extra small ──────────────────────────────
+@media (max-width: 480px) {
+  .hero-landing h1 {
+    font-size: 1.6rem !important;
+  }
+
+  .services-icon-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .big-numbers-inner {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important;
+
+    .big-number-divider { display: none !important; }
+  }
+
+  .hero-image-container {
+    width: 160px !important;
+    height: 200px !important;
+  }
+
+  .hero-clinic-brand {
+    .hero-logo-ring {
+      width: 48px !important;
+      height: 48px !important;
+    }
+    .hero-clinic-logo {
+      width: 42px !important;
+      height: 42px !important;
+    }
+    .hero-clinic-name { font-size: 0.8rem !important; }
+    .hero-clinic-tagline { font-size: 0.7rem !important; }
+    .hero-clinic-regn { font-size: 0.65rem !important; }
+  }
+}
+
 
