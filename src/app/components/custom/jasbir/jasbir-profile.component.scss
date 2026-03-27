@@ -1164,11 +1164,18 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     }
 
     @media (max-width: 767px) {
-      // Move to top-right corner of image so it never covers footer text
+      // Half-inside half-outside the top-right corner of the photo.
+      // Wrapper is flex-column, align-items:center, so image (180px wide)
+      // is centred → right edge = calc(50% + 90px) from wrapper left.
+      // Stamp is 58px wide (half = 29px). Place centre of stamp on that edge:
+      //   right = calc(50% - 90px - 29px) = calc(50% - 119px)
       bottom: auto;
-      top: 8px;
-      right: 8px;
-      .iso-stamp-img { width: 58px; }
+      top: -28px;
+      right: calc(50% - 119px);
+      .iso-stamp-img {
+        width: 58px;
+        transform: rotate(10deg);
+      }
     }
   }
 
@@ -8308,6 +8315,8 @@ $dark-text-muted: #6b7790;
   // ── Hero section ───────────────────────────────────────────
   .hero-landing {
     min-height: auto !important;
+    // Push content below the fixed navbar (~72px tall on mobile)
+    padding-top: calc(env(safe-area-inset-top, 0px) + 72px) !important;
     padding-bottom: 56px !important;
   }
 
