@@ -36,7 +36,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   private scrollListener: (() => void) | null = null;
 
   get clinicLogo(): string {
-    return this.darkMode ? 'assets/images/jasbir/logo-dark.png' : 'assets/images/jasbir/logo-light.png';
+    return this.darkMode ? 'assets/images/jasbir/logo-light.png' : 'assets/images/jasbir/logo-dark.png';
   }
   activeTechSlide = 0;
   showSidhantFull = false;

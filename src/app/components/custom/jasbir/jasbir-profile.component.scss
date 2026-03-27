@@ -853,8 +853,8 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     }
 
     .hero-clinic-logo {
-      width: 58px;
-      height: 58px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       object-fit: cover;
       box-shadow:
@@ -900,7 +900,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
       gap: 8px;
 
       .hero-logo-ring { width: 36px; height: 36px; }
-      .hero-clinic-logo { width: 32px; height: 32px; }
+      .hero-clinic-logo { width: 36px; height: 36px; }
       .hero-clinic-name { font-size: 0.68rem; }
       .hero-clinic-tagline { font-size: 0.55rem; }
       .hero-clinic-regn { font-size: 0.5rem; }
@@ -3817,7 +3817,6 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   @media (max-width: 767px) {
     width: 120px;
     height: 120px;
-    padding: 14px;
     box-shadow:
       0 6px 32px rgba(53, 137, 214, 0.25),
       0 0 60px rgba(53, 137, 214, 0.1);
@@ -8642,8 +8641,8 @@ $dark-text-muted: #6b7790;
       height: 48px !important;
     }
     .hero-clinic-logo {
-      width: 42px !important;
-      height: 42px !important;
+      width: 48px !important;
+      height: 48px !important;
     }
     .hero-clinic-name { font-size: 0.8rem !important; }
     .hero-clinic-tagline { font-size: 0.7rem !important; }
