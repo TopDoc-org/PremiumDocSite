@@ -241,7 +241,9 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
           this.profRes.reviewList = Object.keys(sortMap);
         }
         const savedPref = localStorage.getItem('premiumAnimations');
-        this.animationsEnabled = savedPref !== null ? savedPref === 'true' : !!this.profRes.premiumAnimations;
+        // Always enable animations when the profile has premiumAnimations:true.
+        // Only honour a saved 'false' if the profile itself also has it disabled.
+        this.animationsEnabled = !!this.profRes.premiumAnimations || savedPref === 'true';
         this.timelineFetchStatus = 'done';
         this.initAOS();
         this.initCounterAnimations();
@@ -334,8 +336,9 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
 
   toggleAnimations(): void {
     this.animationsEnabled = !this.animationsEnabled;
-    localStorage.setItem('premiumAnimations', String(this.animationsEnabled));
+    // Only persist 'true' so a reload always re-enables animations
     if (this.animationsEnabled) {
+      localStorage.removeItem('premiumAnimations');
       window.location.reload();
     } else {
       AOS.refreshHard();
