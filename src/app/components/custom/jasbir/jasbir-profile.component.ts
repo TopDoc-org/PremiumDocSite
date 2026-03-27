@@ -345,6 +345,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   initAOS(): void {
     if (this.animationsEnabled) {
       const isMobile = window.innerWidth < 768;
+      // Delay long enough for Angular change detection to flush [attr.data-aos] bindings into the DOM
       setTimeout(() => {
         AOS.init({
           duration: isMobile ? 500 : 800,
@@ -353,7 +354,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
           offset: isMobile ? 20 : 80,
           delay: isMobile ? 0 : undefined
         });
-      });
+        AOS.refresh();
+      }, 200);
     }
   }
 
