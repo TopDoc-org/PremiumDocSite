@@ -759,8 +759,9 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   margin: 0 auto;
   padding: 80px 48px 60px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 60px;
+  gap: 24px 60px;
 
   @media (max-width: 1024px) {
     padding: 60px 32px 48px;
@@ -775,178 +776,221 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   }
 }
 
-.hero-text {
-  flex: 1;
-  animation: profile-fade-up 0.6s ease both;
+.hero-top-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0;
+  animation: profile-fade-in 0.5s ease 0.1s both;
 
-  .hero-brands-row {
-    display: flex;
-    align-items: stretch;
-    gap: 12px;
-    margin-bottom: 24px;
+  .hero-iso-inline {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: stamp-slam 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
 
-    .hero-clinic-brand,
-    .hero-sponsor-pill {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .hero-clinic-brand {
-      margin-bottom: 0;
-    }
-
-    @media (max-width: 767px) {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-
-      .hero-clinic-brand,
-      .hero-sponsor-pill {
-        justify-content: center;
-      }
+    .iso-inline-img {
+      height: 90px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5));
+      animation: stamp-slam-repeat 5s cubic-bezier(0.22, 1, 0.36, 1) 2s infinite;
     }
   }
 
+  @media (max-width: 767px) {
+    gap: 4px;
+
+    .hero-iso-inline {
+      position: static;
+      transform: none;
+      margin-left: auto;
+      flex-shrink: 0;
+
+      .iso-inline-img { height: 36px; }
+    }
+  }
+}
+
+.hero-brands-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px 10px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  backdrop-filter: blur(12px);
+
   .hero-clinic-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-    padding: 10px 24px 10px 10px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 100px;
-    animation: profile-fade-in 0.5s ease 0.1s both, blink-border 2.2s ease-in-out 2s infinite;
-    // link resets
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-    &:hover { opacity: 0.9; }
+    margin-bottom: 0;
+  }
 
-    .hero-logo-ring {
-      position: relative;
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-
-      &::before {
-        content: '';
-        position: absolute;
-        inset: -4px;
-        border-radius: 50%;
-        border: 2px solid rgba($teal-300, 0.6);
-        animation: ring-glow 2s ease-in-out infinite;
-      }
-
-      &::after {
-        content: '';
-        position: absolute;
-        inset: -10px;
-        border-radius: 50%;
-        border: 1px solid rgba($teal-400, 0.15);
-        animation: ring-glow 2s ease-in-out 0.6s infinite;
-      }
-    }
-
-    // Inner clip div: provides overflow:hidden circle WITHOUT clipping ring glow pseudo-elements
-    .hero-logo-clip {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      overflow: hidden;
-      position: relative;
-      z-index: 1;
-      flex-shrink: 0;
-    }
-
-    .hero-clinic-logo {
-      // cover fills the circle; scale(1.2) pushes PNG outer padding outside clip
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      transform: scale(1.2);
-      transform-origin: center center;
-      animation: logo-breathe 3s ease-in-out infinite;
-    }
-
-    .hero-brand-text {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .hero-clinic-name {
-      font-family: var(--font-heading), sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      color: white;
-      letter-spacing: 0.01em;
-    }
-
-    .hero-clinic-tagline {
-      font-family: var(--font-body), sans-serif;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: $teal-300;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .hero-clinic-regn {
-      font-family: var(--font-body), sans-serif;
-      font-size: 0.6rem;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.5);
-      letter-spacing: 0.04em;
-    }
-
-    @media (max-width: 767px) {
-      padding: 8px 10px;
-      gap: 8px;
-
-      .hero-logo-ring { width: 36px; height: 36px; }
-      .hero-logo-clip { width: 36px; height: 36px; }
-      .hero-clinic-name { font-size: 0.68rem; }
-      .hero-clinic-tagline { font-size: 0.55rem; }
-      .hero-clinic-regn { font-size: 0.5rem; }
-    }
-
+  // Vertical divider between brand and sponsor
+  .hero-brand-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.12);
+    flex-shrink: 0;
   }
 
   .hero-sponsor-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 100px;
-    animation: profile-fade-in 0.5s ease 0.2s both, blink-border 2.2s ease-in-out 2.3s infinite;
-    align-self: stretch;
+    flex-shrink: 0;
+    min-width: 0;
 
     .hero-sponsor-img {
-      height: 44px;
+      height: 30px;
       width: auto;
       object-fit: contain;
       filter: brightness(1.1);
       animation: sponsor-pulse 2.5s ease-in-out infinite;
     }
+  }
 
-    @media (max-width: 767px) {
-      padding: 8px 16px;
-      .hero-sponsor-img { height: 34px; }
+  @media (max-width: 767px) {
+    gap: 6px;
+    padding: 6px 8px 6px 6px;
+    flex-shrink: 1;
+    min-width: 0;
+
+    .hero-brand-divider { height: 24px; }
+    .hero-sponsor-pill .hero-sponsor-img { height: 18px; }
+  }
+}
+
+// ── Hero clinic brand (inside .hero-top-row > .hero-brands-row) ──
+.hero-clinic-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  &:hover { opacity: 0.9; }
+
+  .hero-logo-ring {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(212, 175, 55, 0.5);
+      animation: ring-glow 2s ease-in-out infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px solid rgba(212, 175, 55, 0.12);
+      animation: ring-glow 2s ease-in-out 0.6s infinite;
     }
   }
 
-  @keyframes sponsor-pulse {
-    0%, 100% { filter: brightness(1.1) drop-shadow(0 0 4px rgba(53, 137, 214, 0.3)); }
-    50% { filter: brightness(1.3) drop-shadow(0 0 12px rgba(53, 137, 214, 0.6)); }
+  .hero-clinic-logo {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 50%;
+    scale: 1.18;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    box-shadow:
+      0 2px 16px rgba(212, 175, 55, 0.3),
+      0 0 0 1.5px rgba(212, 175, 55, 0.25);
+    animation: logo-breathe 3s ease-in-out infinite;
   }
+
+  .hero-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    white-space: nowrap;
+  }
+
+  .hero-clinic-name {
+    font-family: var(--font-heading), sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+
+  .hero-clinic-tagline {
+    font-family: var(--font-body), sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: $teal-300;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .hero-clinic-regn {
+    font-family: var(--font-body), sans-serif;
+    font-size: 0.52rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.62);
+    letter-spacing: 0.03em;
+    margin-top: 1px;
+  }
+
+  @media (max-width: 767px) {
+    gap: 8px;
+    min-width: 0;
+    flex-shrink: 1;
+
+    .hero-logo-ring { width: 42px; height: 42px; }
+    .hero-clinic-logo { width: 38px; height: 38px; }
+    .hero-brand-text { min-width: 0; text-align: center; white-space: nowrap; }
+    .hero-clinic-name { font-size: 0.42rem; }
+    .hero-clinic-tagline { font-size: 0.33rem; }
+    .hero-clinic-regn { font-size: 0.34rem; }
+  }
+}
+
+.hero-sponsor-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .hero-sponsor-img {
+    height: 30px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(1.1);
+    animation: sponsor-pulse 2.5s ease-in-out infinite;
+  }
+
+  @media (max-width: 767px) {
+    .hero-sponsor-img { height: 22px; }
+  }
+}
+
+@keyframes sponsor-pulse {
+  0%, 100% { filter: brightness(1.1) drop-shadow(0 0 4px rgba(53, 137, 214, 0.3)); }
+  50% { filter: brightness(1.3) drop-shadow(0 0 12px rgba(53, 137, 214, 0.6)); }
+}
+
+.hero-text {
+  flex: 1;
+  animation: profile-fade-up 0.6s ease both;
 
   .hero-badge {
     display: inline-flex;
@@ -1155,7 +1199,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   .hero-iso-stamp {
     position: absolute;
-    bottom: 50px;
+    top: -15px;
     right: -25px;
     z-index: 10;
     animation: stamp-slam-repeat 5s cubic-bezier(0.22, 1, 0.36, 1) 0.8s infinite;
@@ -1164,36 +1208,27 @@ mat-sidenav-container { height: calc(100vh - 85px); }
       width: 95px;
       height: auto;
       filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
-      transform: rotate(12deg);
+      transform: rotate(0deg);
     }
 
     @media (max-width: 1024px) {
-      bottom: 40px;
+      top: -10px;
       right: -15px;
       .iso-stamp-img { width: 78px; }
     }
 
     @media (max-width: 767px) {
-      // Half-inside half-outside the top-right corner of the photo.
-      // Wrapper is flex-column, align-items:center, so image (180px wide)
-      // is centred → right edge = calc(50% + 90px) from wrapper left.
-      // Stamp is 58px wide (half = 29px). Place centre of stamp on that edge:
-      //   right = calc(50% - 90px - 29px) = calc(50% - 119px)
-      bottom: auto;
-      top: -28px;
-      right: calc(50% - 119px);
-      .iso-stamp-img {
-        width: 58px;
-        transform: rotate(10deg);
-      }
+      top: -8px;
+      right: -8px;
+      .iso-stamp-img { width: 62px; }
     }
   }
 
   @keyframes stamp-slam {
-    0% { opacity: 0; transform: scale(2.5) rotate(-20deg); }
-    60% { opacity: 1; transform: scale(0.9) rotate(2deg); }
-    80% { transform: scale(1.05) rotate(-1deg); }
-    100% { transform: scale(1) rotate(0deg); }
+    0% { opacity: 0; transform: scale(2.5); }
+    60% { opacity: 1; transform: scale(0.9); }
+    80% { transform: scale(1.05); }
+    100% { transform: scale(1); }
   }
 
   // Repeating version: slam in during first ~12% (≈0.6s of 5s), hold, then reset
@@ -1678,6 +1713,36 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     }
   }
 
+  .about-image-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .about-image-caption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    text-align: center;
+
+    .about-image-name {
+      font-family: var(--font-heading), sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: $slate-900;
+      letter-spacing: 0.01em;
+    }
+
+    .about-image-regn {
+      font-family: var(--font-body), sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: $slate-500;
+      letter-spacing: 0.03em;
+    }
+  }
+
   .about-image-fallback {
     width: 100%;
     height: 100%;
@@ -1705,6 +1770,8 @@ mat-sidenav-container { height: calc(100vh - 85px); }
         width: 52px;
         height: 52px;
         border-radius: 50%;
+        object-fit: cover;
+        scale: 1.18;
         overflow: hidden;
         flex-shrink: 0;
         box-shadow:
@@ -1878,6 +1945,8 @@ mat-sidenav-container { height: calc(100vh - 85px); }
       height: 100%;
       object-fit: cover;
       object-position: center top;
+      scale: 1.3;
+      transform-origin: center 25%;
     }
   }
 
@@ -2113,61 +2182,150 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
 .tech-exclusive-banner {
   display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 20px auto 0;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(14, 165, 233, 0.12));
-  border: 1.5px solid rgba(37, 99, 235, 0.35);
-  border-radius: 100px;
-  backdrop-filter: blur(8px);
+  align-items: flex-start;
+  gap: 16px;
+  margin: 28px auto 0;
+  padding: 24px 36px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.25), rgba(14, 165, 233, 0.18));
+  border: 2px solid rgba(96, 165, 250, 0.5);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  animation: tech-banner-pulse 2.5s ease-in-out infinite;
+  box-shadow:
+    0 0 24px rgba(37, 99, 235, 0.2),
+    0 0 60px rgba(37, 99, 235, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
-  span {
-    font-family: var(--font-body), sans-serif;
-    font-size: 0.82rem;
-    color: $slate-700;
-    line-height: 1.4;
-
-    strong {
-      color: $navy-900;
-      font-weight: 800;
-    }
-  }
-
-  .kbk-claim {
-    font-weight: 800;
-    color: $navy-900;
-    background: linear-gradient(90deg, rgba(37, 99, 235, 0.15), rgba(14, 165, 233, 0.12));
-    padding: 1px 8px;
-    border-radius: 6px;
-    animation: kbk-blink 1.8s ease-in-out infinite;
-
-    strong {
-      color: $teal-700;
-      font-weight: 900;
-    }
-  }
-
-  .tech-exclusive-icon {
-    font-size: 20px !important;
-    width: 20px !important;
-    height: 20px !important;
-    color: #60a5fa;
+  .tech-banner-emoji {
+    font-size: 1.8rem;
+    line-height: 1;
     flex-shrink: 0;
+    animation: tech-icon-pulse 2.5s ease-in-out infinite;
+  }
+
+  .tech-banner-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .tech-banner-headline {
+    font-family: var(--font-heading), sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+
+  .tech-banner-sub {
+    font-family: var(--font-body), sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+
+  }
+
+  .tech-highlight-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 14px;
+    border-radius: 100px;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(14, 165, 233, 0.22));
+    border: 1px solid rgba(96, 165, 250, 0.4);
+    overflow: hidden;
+    vertical-align: middle;
+    box-shadow:
+      0 0 12px rgba(37, 99, 235, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    animation: tech-chip-glow 3s ease-in-out infinite;
+  }
+
+  .tech-highlight-text {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-heading), sans-serif;
+    font-weight: 800;
+    font-size: 0.92rem;
+    letter-spacing: 0.03em;
+    background: linear-gradient(90deg, #93c5fd, #60a5fa, #38bdf8, #60a5fa, #93c5fd);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: tech-text-shimmer 4s linear infinite;
+  }
+
+  // Shine sweep across the chip
+  .tech-highlight-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.15) 40%,
+      rgba(255, 255, 255, 0.25) 50%,
+      rgba(255, 255, 255, 0.15) 60%,
+      transparent 100%
+    );
+    animation: tech-shine-sweep 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes tech-text-shimmer {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+
+  @keyframes tech-shine-sweep {
+    0%, 100% { left: -100%; opacity: 0; }
+    15% { opacity: 1; }
+    50% { left: 140%; opacity: 1; }
+    65% { opacity: 0; }
+  }
+
+  @keyframes tech-chip-glow {
+    0%, 100% {
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      border-color: rgba(96, 165, 250, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 22px rgba(37, 99, 235, 0.3), 0 0 44px rgba(56, 189, 248, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border-color: rgba(147, 197, 253, 0.6);
+    }
   }
 
   @media (max-width: 767px) {
-    padding: 10px 16px;
-    gap: 8px;
-    border-radius: 14px;
+    padding: 16px 22px;
+    gap: 12px;
+    border-radius: 16px;
 
-    span { font-size: 0.75rem; }
-    .tech-exclusive-icon {
-      font-size: 18px !important;
-      width: 18px !important;
-      height: 18px !important;
-    }
+    .tech-banner-emoji { font-size: 1.4rem; }
+    .tech-banner-headline { font-size: 0.95rem; }
+    .tech-banner-sub { font-size: 0.78rem; }
   }
+}
+
+@keyframes tech-banner-pulse {
+  0%, 100% {
+    border-color: rgba(96, 165, 250, 0.5);
+    box-shadow: 0 0 24px rgba(37, 99, 235, 0.2), 0 0 60px rgba(37, 99, 235, 0.08);
+  }
+  50% {
+    border-color: rgba(147, 197, 253, 0.7);
+    box-shadow: 0 0 36px rgba(37, 99, 235, 0.35), 0 0 90px rgba(37, 99, 235, 0.12);
+  }
+}
+
+@keyframes tech-icon-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
 }
 
 // Two Machine Cards Grid
@@ -2611,9 +2769,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     height: 28px;
     border-radius: 50%;
     object-fit: cover;
-    transform: scale(1.2);
-    transform-origin: center center;
-    overflow: hidden;
+    scale: 1.18;
     box-shadow: 0 1px 4px rgba(53, 137, 214, 0.1);
     opacity: 0.85;
   }
@@ -2786,11 +2942,13 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     align-items: center;
     justify-content: center;
     margin-bottom: 14px;
+    border-radius: 50%;
+    overflow: hidden;
 
     img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
     }
   }
 
@@ -3116,7 +3274,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   .clinic-logo-wrap {
     width: 72px;
     height: 72px;
-    border-radius: 16px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3129,6 +3287,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
       width: 100%;
       height: 100%;
       object-fit: cover;
+      scale: 1.18;
     }
   }
 
@@ -3337,8 +3496,9 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 .section-nav-logo {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: 50%;
   object-fit: cover;
+  scale: 1.18;
   flex-shrink: 0;
 
   @media (max-width: 767px) {
@@ -3569,8 +3729,9 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 .mobile-nav-logo {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: 50%;
   object-fit: cover;
+  scale: 1.18;
 }
 
 .mobile-nav-clinic-name {
@@ -3845,9 +4006,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   height: 92px;
   border-radius: 50%;
   object-fit: cover;
-  transform: scale(1.2);
-  transform-origin: center center;
-  overflow: hidden;
+  scale: 1.18;
   box-shadow:
     0 4px 24px rgba(53, 137, 214, 0.2),
     0 0 50px rgba(53, 137, 214, 0.08);
@@ -4229,9 +4388,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
-  transform: scale(1.2);
-  transform-origin: center center;
-  overflow: hidden;
+  scale: 1.18;
   box-shadow:
     0 3px 12px rgba(53, 137, 214, 0.15),
     0 0 0 2px rgba(53, 137, 214, 0.06);
@@ -4420,6 +4577,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     height: 96px;
     border-radius: 50%;
     object-fit: cover;
+    scale: 1.18;
     box-shadow:
       0 8px 40px rgba(53, 137, 214, 0.45),
       0 0 60px rgba(53, 137, 214, 0.15),
@@ -7988,6 +8146,172 @@ $dark-text-muted: #6b7790;
     -webkit-appearance: none !important;
     appearance: none !important;
   }
+
+  // ===============================================
+  //  COMPREHENSIVE TEXT READABILITY FIX (DARK MODE)
+  // ===============================================
+
+  // About section caption
+  .about-image-caption {
+    .about-image-name { color: #fff; }
+    .about-image-regn { color: $dark-text-muted; }
+  }
+
+  // About team cards
+  .about-team-card {
+    background: $dark-card;
+    border-color: $dark-border;
+    .about-team-info h3 { color: #fff; }
+    .about-team-info p { color: $dark-text-secondary; }
+    .about-team-info .about-team-role { color: $teal-400; }
+    .about-team-speciality { color: $dark-text-secondary; }
+  }
+
+  // Service cards
+  .service-icon-card {
+    .service-icon-name { color: #fff; }
+    .service-icon-desc { color: $dark-text-secondary; }
+    .dental-icon-label { color: $dark-text-secondary; }
+    h3 { color: #fff; }
+    p { color: $dark-text-secondary; }
+  }
+
+  // Check details link
+  .check-details-link { color: $teal-400; }
+
+  // Tech banner new structure
+  .tech-exclusive-banner {
+    .tech-banner-headline { color: #fff; }
+    .tech-banner-sub { color: rgba(255, 255, 255, 0.7); }
+  }
+
+  // Sidhant / visiting doctor card
+  .about-sidhant-card {
+    background: $dark-card;
+    border-color: $dark-border;
+    h3 { color: #fff; }
+    p { color: $dark-text-secondary; }
+    .visiting-tag { color: $teal-400; }
+    .about-sidhant-desc { color: $dark-text-secondary; }
+  }
+
+  // Big numbers
+  .big-numbers-section {
+    .big-num-suffix { color: $dark-text-muted; }
+  }
+
+  // Footer clinic card
+  .clinic-card {
+    .clinic-card-name { color: #fff; }
+    .clinic-card-address { color: $dark-text-secondary; }
+    .clinic-phone, .clinic-email { color: $dark-text-secondary; }
+  }
+
+  // Video tour
+  .video-tour-section {
+    h3 { color: #fff; }
+  }
+
+  // Gallery / Glimpse captions
+  .glimpse-slide-label { color: #fff; }
+  .glimpse-caption { color: $dark-text-secondary; }
+
+  // Map section
+  .map-section {
+    .map-label { color: $teal-400; }
+    p { color: $dark-text-secondary; }
+  }
+
+  // Why choose section — benefits
+  .why-choose-section {
+    .benefit-list li {
+      .check-tick { color: $teal-400; }
+      span { color: $dark-text-secondary; }
+    }
+    .benefit-list li span { color: $dark-text-secondary; }
+    h3 { color: #fff; }
+  }
+
+  // Education / Experience / Awards detail sections
+  .detail-section {
+    h2 { color: #fff; }
+    .section-label { color: $teal-400; }
+  }
+
+  // Final CTA
+  .final-cta-section {
+    .final-cta-clinic-name { color: #fff; }
+    .final-cta-tagline { color: $dark-text-secondary; }
+    .final-cta-knocdoc-btn {
+      &--wa { color: #fff !important; }
+      &--call { color: #fff !important; border-color: rgba(255, 255, 255, 0.25); }
+    }
+  }
+
+  // Powered by KnocDoc
+  .powered-by-knocdoc {
+    p { color: $dark-text-secondary; }
+  }
+
+  // Languages strip
+  .languages-strip {
+    .lang-chip-light { color: $dark-text; }
+  }
+
+  // Testimonials
+  .testimonials-section {
+    h2 { color: #fff; }
+    .testimonial-card {
+      .testimonial-rating { color: #fbbf24; }
+    }
+  }
+
+  // Offers section
+  .offers-section {
+    .section-label { color: $teal-400; }
+    h2 { color: #fff; }
+  }
+
+  // ---- Catch-all: any remaining dark text on dark bg ----
+  // Headings
+  h1, h2, h3, h4 {
+    color: #fff;
+  }
+
+  // Body text that uses slate dark colors
+  .section-heading { color: #fff !important; }
+  .section-label { color: $teal-400; }
+
+  // Confirmation modal
+  .confirmation-label { color: $dark-text-muted; }
+  .confirmation-value { color: $dark-text; }
+  .confirmation-card {
+    background: $dark-card;
+    border-color: $dark-border;
+  }
+
+  // Schedule empty state
+  .ib-empty-msg, .center-block {
+    color: $dark-text-secondary;
+  }
+
+  // Marquee section heading
+  .marquee-section {
+    h2 { color: #fff; }
+  }
+
+  // Service detail bottom sheet
+  .service-detail-heading { color: #fff; }
+  .service-detail-desc { color: $dark-text-secondary; }
+  .service-detail-icon { color: $teal-400; }
+
+  // Check tick icons throughout
+  .check-tick { color: $teal-400; }
+
+  // Strong tags with hardcoded dark colors
+  strong {
+    color: inherit;
+  }
 }
 
 
@@ -8393,14 +8717,19 @@ $dark-text-muted: #6b7790;
     align-items: center !important;
   }
 
-  .hero-text {
-    order: 2 !important;
-    text-align: center !important;
+  .hero-top-row {
+    order: 1 !important;
     width: 100% !important;
   }
 
   .hero-image-wrapper {
-    order: 1 !important;
+    order: 2 !important;
+    width: 100% !important;
+  }
+
+  .hero-text {
+    order: 3 !important;
+    text-align: center !important;
     width: 100% !important;
   }
 
@@ -8416,26 +8745,8 @@ $dark-text-muted: #6b7790;
     margin-bottom: 24px !important;
   }
 
-  // Hero brands row: stack vertically on very small screens
-  .hero-brands-row {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    align-items: center !important;
-    margin-bottom: 16px !important;
-  }
-
   .hero-clinic-brand {
-    width: 100% !important;
-    max-width: 320px !important;
-    justify-content: center !important;
-    padding: 8px 16px 8px 8px !important;
-    border-radius: 20px !important;
-  }
-
-  .hero-sponsor-pill {
-    width: 100% !important;
-    max-width: 320px !important;
+    gap: 8px !important;
   }
 
   .hero-badge {
