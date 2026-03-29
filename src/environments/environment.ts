@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
- serverUrl: 'https://backend.knocdoc.in',
+ serverUrl: 'http://localhost:3000',
   frontendUrl: 'http://localhost:4300'
 };

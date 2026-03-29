@@ -540,17 +540,17 @@
 
         <!-- Secondary cards row -->
         <div class="offers-featured-row">
-          <div class="offer-card offer-announcement scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
-            <div class="offer-badge-new">New</div>
+          <div class="offer-card offer-discount scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
+            <div class="offer-discount-pct">15% OFF</div>
             <div class="offer-icon-wrap">
-              <mat-icon class="!text-2xl">bolt</mat-icon>
+              <mat-icon class="!text-2xl">medical_services</mat-icon>
             </div>
-            <h3>Advanced Laser Dentistry Now Available</h3>
-            <p>We've upgraded to the latest laser dentistry equipment for painless, precision treatments.</p>
+            <h3>Dental Implants</h3>
+            <p>Improve your confidence and overall smile with dental implants.</p>
             <div class="offer-cta">
-              <span class="offer-tag">Announcement</span>
-              <button class="btn-offer" (click)="openTemplateSheetMenu('Laser Dentistry')">
-                Know More <mat-icon class="!text-base">arrow_forward</mat-icon>
+              <span class="offer-tag">Implantology</span>
+              <button class="btn-offer" (click)="openTemplateSheetMenu('Dental Implants')">
+                Book Now <mat-icon class="!text-base">arrow_forward</mat-icon>
               </button>
             </div>
           </div>
@@ -875,46 +875,62 @@
 
 
     <!-- SECTION 11: PRACTICES / CLINICS -->
-    <section class="practices-section" *ngIf="profRes.associatedClinics && profRes.associatedClinics.length > 0">
+    <section class="practices-section">
       <div class="section-brand-label">
         <img [src]="clinicLogo" alt="" class="section-brand-icon">
         <p class="section-label" style="margin-bottom: 0;">Our Locations</p>
       </div>
-      <div class="flex justify-between items-end mb-10">
+      <div class="practices-heading-row">
         <h2 class="section-heading" style="margin-bottom: 0;">Visit Our Dental Clinic</h2>
       </div>
 
-      <div *ngFor="let clinic of profRes.associatedClinics; let i = index"
-           class="clinic-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
-        <div class="flex gap-6 items-start">
-          <div class="flex-shrink-0">
-            <div class="clinic-logo-wrap">
-              <img [src]="clinicLogo" alt="Clinic Logo" class="clinic-logo-img">
-            </div>
+      <!-- PRIMARY CLINIC CARD -->
+      <div class="clinic-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
+        <div class="clinic-card-inner">
+          <div class="clinic-logo-wrap">
+            <img [src]="clinicLogo" alt="Clinic Logo" class="clinic-logo-img">
           </div>
           <div class="flex-1 min-w-0">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+            <div class="clinic-card-header-row">
               <div>
-                <h4 class="clinic-card-name">{{ clinic.clinicName }}</h4>
-                <p class="clinic-card-address" *ngIf="clinic.clinicLocation">
+                <h4 class="clinic-card-name">Meher Dental Clinic</h4>
+                <p class="clinic-card-address">
                   <mat-icon class="!text-sm !w-4 !h-4">location_on</mat-icon>
-                  {{ clinic.clinicLocation }}
+                  Hotel Sai Palace, Kacheri Chowk, In front of Priyadarshani Cinema Hall, Balangir, Odisha
                 </p>
-                <div class="flex items-center gap-2 mt-1.5 flex-wrap">
-                  <span class="chip chip-teal text-xs !py-1 !px-3" *ngFor="let tag of clinic.tagReceived">{{ tag }}</span>
-                </div>
-                <a class="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-semibold mt-3 hover:underline"
-                   target="_blank" href="{{ getGoogleMapsLink(clinic.geoPoint) }}">
+                <a class="clinic-directions-link"
+                   target="_blank" href="https://maps.google.com/maps?q=Balangir,+Odisha,+India">
                   <mat-icon class="!text-base !w-4 !h-4">near_me</mat-icon>
                   Get directions
                 </a>
               </div>
-              <div class="mt-4 sm:mt-0 sm:ml-8 flex flex-col items-end gap-3" *ngIf="!isMobileOrTabView">
+              <div class="clinic-card-book-btn">
                 <button class="btn-sm" (click)="openTemplateSheetMenu()">Book Now</button>
               </div>
             </div>
-            <div *ngIf="isMobileOrTabView" class="mt-4 flex items-center justify-end">
-              <button class="btn-sm" (click)="openTemplateSheetMenu()">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MONTHLY VISITS -->
+      <div class="monthly-visits-block" style="margin-top: 20px;">
+        <div class="monthly-visits-header">
+          <mat-icon class="monthly-visits-icon">event_repeat</mat-icon>
+          <span>Doctor also visits monthly at</span>
+        </div>
+        <div class="monthly-visits-items">
+          <div class="monthly-visit-item">
+            <mat-icon class="monthly-pin-icon">place</mat-icon>
+            <div>
+              <p class="monthly-clinic-name">Jaiprakash Hospital Rourkela <span class="monthly-sitting-tag">(Monthly sitting)</span></p>
+              <p class="monthly-clinic-note">Jaiprakash Hospital &amp; Research Center Pvt Ltd., Dayanand Nagar, Dandiapali, Rourkela, Odisha 769004</p>
+            </div>
+          </div>
+          <div class="monthly-visit-item">
+            <mat-icon class="monthly-pin-icon">place</mat-icon>
+            <div>
+              <p class="monthly-clinic-name">Sambalpur Clinic <span class="monthly-sitting-tag">(Monthly sitting)</span></p>
+              <p class="monthly-clinic-note">Near VSS Medical College Road, Burla, Sambalpur, Odisha 768017</p>
             </div>
           </div>
         </div>
@@ -928,25 +944,18 @@
         <div class="map-info" [attr.data-aos]="animationsEnabled ? 'fade-right' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null">
           <p class="section-label">Find Us</p>
           <h2 class="section-heading" style="margin-bottom: 16px;">Visit Our Clinic</h2>
+
+          <!-- PRIMARY CLINIC -->
           <div class="map-address-card">
             <div class="map-address-icon">
               <mat-icon class="!text-2xl text-blue-600">location_on</mat-icon>
             </div>
             <div>
-              <h4 class="map-address-title">
-                <span *ngIf="profRes.associatedClinics && profRes.associatedClinics.length > 0">{{ profRes.associatedClinics[0].clinicName }}</span>
-                <span *ngIf="!profRes.associatedClinics || profRes.associatedClinics.length === 0">Dr. Meher's Orthodontic Center & Dental Clinic</span>
-              </h4>
-              <p class="map-address-text">
-                <span *ngIf="profRes.associatedClinics && profRes.associatedClinics.length > 0 && profRes.associatedClinics[0].clinicLocation">
-                  {{ profRes.associatedClinics[0].clinicLocation }}
-                </span>
-                <span *ngIf="!profRes.associatedClinics || profRes.associatedClinics.length === 0 || !profRes.associatedClinics[0].clinicLocation">
-                  {{ profRes.city || 'Balangir' }}, {{ profRes.state || 'Odisha' }}
-                </span>
-              </p>
+              <h4 class="map-address-title">Meher Dental Clinic</h4>
+              <p class="map-address-text">Hotel Sai Palace, Kacheri Chowk,<br>In front of Priyadarshani Cinema Hall,<br>Balangir, Odisha</p>
             </div>
           </div>
+
           <div class="map-details-row">
             <div class="map-detail">
               <mat-icon class="!text-lg text-blue-500">schedule</mat-icon>
@@ -963,14 +972,39 @@
               </div>
             </div>
           </div>
+
           <button class="btn-primary" style="margin-top: 24px;" (click)="openTemplateSheetMenu()">
             <mat-icon class="!text-xl">calendar_today</mat-icon>
             Book Appointment
           </button>
+
+          <!-- MONTHLY VISITS -->
+          <div class="monthly-visits-block">
+            <div class="monthly-visits-header">
+              <mat-icon class="monthly-visits-icon">event_repeat</mat-icon>
+              <span>Doctor also visits monthly at</span>
+            </div>
+            <div class="monthly-visits-items">
+              <div class="monthly-visit-item">
+                <mat-icon class="monthly-pin-icon">place</mat-icon>
+                <div>
+                  <p class="monthly-clinic-name">Jaiprakash Hospital Rourkela <span class="monthly-sitting-tag">(Monthly sitting)</span></p>
+                  <p class="monthly-clinic-note">Jaiprakash Hospital &amp; Research Center Pvt Ltd., Dayanand Nagar, Dandiapali, Rourkela, Odisha 769004</p>
+                </div>
+              </div>
+              <div class="monthly-visit-item">
+                <mat-icon class="monthly-pin-icon">place</mat-icon>
+                <div>
+                  <p class="monthly-clinic-name">Sambalpur Clinic <span class="monthly-sitting-tag">(Monthly sitting)</span></p>
+                  <p class="monthly-clinic-note">Near VSS Medical College Road, Burla, Sambalpur, Odisha 768017</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="map-embed" [attr.data-aos]="animationsEnabled ? 'fade-left' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
           <iframe
-            src="https://maps.google.com/maps?q=Balangir,+Odisha,+India&t=&z=14&ie=UTF8&iwloc=&output=embed"
+            src="https://maps.google.com/maps?q=Dr.+Meher+Dental+Clinic+%26+Orthodontic+Center,+Kacheri+Chowk,+Balangir,+Odisha&t=&z=16&ie=UTF8&iwloc=&output=embed"
             width="100%"
             height="100%"
             style="border:0; border-radius: 20px;"
@@ -1394,6 +1428,198 @@
   </div>
 </ng-template>
 
+<!-- ================================================ -->
+<!-- BOOKING LIMIT MODAL -->
+<div class="limit-modal-overlay" *ngIf="showLimitModal" [class.dark]="darkMode" (click).self="showLimitModal = false">
+  <div class="limit-modal-card" role="alertdialog" aria-modal="true">
+    <div class="limit-modal-icon-wrap">
+      <div class="limit-modal-icon-ring">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M12 7v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="16" r="1" fill="currentColor"/>
+        </svg>
+      </div>
+    </div>
+    <h2 class="limit-modal-title">Booking Limit Reached</h2>
+    <p class="limit-modal-body">
+      You can book up to <strong>2 appointments per session</strong>.
+      You've already reached this limit for the selected session.
+    </p>
+    <div class="limit-modal-note">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M11 17h2v-6h-2zm0-8h2V7h-2zm1-7C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+      If you need to reschedule, please do it via KnocDoc app or contact the clinic directly.
+    </div>
+    <button class="limit-modal-btn" (click)="showLimitModal = false">Got it</button>
+  </div>
+</div>
+
+<!-- AUTH GATE OVERLAY (shown when booking requires login/signup) -->
+<!-- ================================================ -->
+<div class="auth-gate-overlay" *ngIf="authStep !== 'none'" [class.dark]="darkMode">
+  <div class="auth-gate-card">
+
+    <!-- Back button -->
+    <button class="auth-gate-back" (click)="cancelAuth()">
+      <mat-icon>arrow_back</mat-icon>
+      Back to booking
+    </button>
+
+    <!-- CHECKING STATE -->
+    <ng-container *ngIf="authStep === 'checking'">
+      <div class="auth-gate-checking">
+        <div class="auth-gate-spinner auth-gate-spinner--lg"></div>
+        <p class="auth-gate-checking-text">Checking your account...</p>
+      </div>
+    </ng-container>
+
+    <!-- LOGIN / REGISTER STATE -->
+    <ng-container *ngIf="authStep === 'login' || authStep === 'register'">
+
+      <!-- Header -->
+      <div class="auth-gate-header">
+        <div class="auth-gate-logo-ring">
+          <img [src]="clinicLogo" alt="Clinic" class="auth-gate-logo-img">
+        </div>
+        <div class="auth-gate-mode-badge" [class.auth-gate-mode-badge--new]="authStep === 'register'">
+          <mat-icon>{{ authStep === 'login' ? 'lock_open' : 'person_add' }}</mat-icon>
+          {{ authStep === 'login' ? 'Returning Patient' : 'New Patient' }}
+        </div>
+        <h3 class="auth-gate-title">{{ authStep === 'login' ? 'Welcome Back!' : 'One Last Step' }}</h3>
+        <p class="auth-gate-subtitle">
+          {{ authStep === 'login'
+            ? 'Enter your password to confirm the booking'
+            : 'Create a password to complete your account' }}
+        </p>
+      </div>
+
+      <!-- Pre-filled details summary card -->
+      <div class="auth-gate-prefilled-card">
+        <div class="auth-gate-prefilled-label">
+          <mat-icon class="!text-sm">check_circle</mat-icon>
+          Booking details already captured
+        </div>
+        <div class="auth-gate-prefilled-row">
+          <mat-icon class="!text-sm">phone</mat-icon>
+          <span>{{ unregForm.get('mobile')?.value }}</span>
+        </div>
+        <div class="auth-gate-prefilled-row" *ngIf="unregForm.get('name')?.value">
+          <mat-icon class="!text-sm">person</mat-icon>
+          <span>{{ unregForm.get('name')?.value }}</span>
+        </div>
+        <div class="auth-gate-prefilled-row" *ngIf="unregForm.get('gender')?.value">
+          <mat-icon class="!text-sm">wc</mat-icon>
+          <span>{{ unregForm.get('gender')?.value | titlecase }}</span>
+        </div>
+      </div>
+
+      <!-- FORGOT PASSWORD FORM -->
+      <div class="auth-gate-forgot-panel" *ngIf="showForgotPassword && authStep === 'login'">
+        <p class="auth-gate-forgot-heading">Reset your password</p>
+        <p class="auth-gate-forgot-sub">Enter your registered email and we'll send a reset link.</p>
+
+        <ng-container *ngIf="!forgotPasswordSent">
+          <input type="email" class="auth-gate-input" [(ngModel)]="forgotPasswordEmail"
+            [ngModelOptions]="{standalone: true}"
+            placeholder="Your registered email address">
+          <div class="auth-gate-api-error" *ngIf="forgotPasswordError">
+            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
+            {{ forgotPasswordError }}
+          </div>
+          <button class="auth-gate-submit" (click)="sendForgotPassword()" [disabled]="forgotPasswordLoading">
+            <span class="auth-gate-spinner" *ngIf="forgotPasswordLoading"></span>
+            <mat-icon *ngIf="!forgotPasswordLoading">send</mat-icon>
+            {{ forgotPasswordLoading ? 'Sending...' : 'Send Reset Link' }}
+          </button>
+        </ng-container>
+
+        <div class="auth-gate-forgot-success" *ngIf="forgotPasswordSent">
+          <mat-icon class="text-green-500">check_circle</mat-icon>
+          <p>Reset link sent! Check your email inbox.</p>
+        </div>
+
+        <button class="auth-gate-back-to-login" (click)="showForgotPassword = false">
+          <mat-icon>arrow_back</mat-icon> Back to login
+        </button>
+      </div>
+
+      <!-- MAIN FORM — only password fields needed -->
+      <form [formGroup]="authForm" (ngSubmit)="submitAuth()" class="auth-gate-form" *ngIf="!showForgotPassword">
+
+        <p class="auth-gate-only-field-hint">
+          <mat-icon>info</mat-icon>
+          <span class="auth-gate-hint-text">{{ authStep === 'login' ? 'Only your password is needed' : 'Just set a password to create your account' }}</span>
+        </p>
+
+        <!-- Password -->
+        <div class="auth-gate-field">
+          <label class="auth-gate-label">Password</label>
+          <div class="auth-gate-pwd-wrap">
+            <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+              class="auth-gate-input"
+              [class.auth-gate-input--error]="authForm.get('password')?.invalid && authForm.get('password')?.touched"
+              [placeholder]="authStep === 'login' ? 'Enter your password' : 'Create a strong password'">
+            <button type="button" class="auth-gate-eye-btn" (click)="showPassword = !showPassword" tabindex="-1">
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <div class="auth-gate-field-error" *ngIf="authForm.get('password')?.invalid && authForm.get('password')?.touched">
+            Password is required
+          </div>
+        </div>
+
+        <!-- Confirm Password (register only) -->
+        <div class="auth-gate-field" *ngIf="authStep === 'register'">
+          <label class="auth-gate-label">Confirm Password</label>
+          <div class="auth-gate-pwd-wrap">
+            <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword"
+              class="auth-gate-input"
+              [class.auth-gate-input--error]="authForm.get('confirmPassword')?.invalid && authForm.get('confirmPassword')?.touched"
+              placeholder="Re-enter your password">
+            <button type="button" class="auth-gate-eye-btn" (click)="showConfirmPassword = !showConfirmPassword" tabindex="-1">
+              <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <div class="auth-gate-field-error" *ngIf="authForm.get('confirmPassword')?.invalid && authForm.get('confirmPassword')?.touched">
+            Please confirm your password
+          </div>
+        </div>
+
+        <!-- Forgot password link (login only) -->
+        <div class="auth-gate-forgot-link" *ngIf="authStep === 'login'">
+          <button type="button" class="auth-gate-switch-btn"
+            (click)="showForgotPassword = true; forgotPasswordError = ''; forgotPasswordSent = false; forgotPasswordEmail = ''">
+            Forgot password?
+          </button>
+        </div>
+
+        <!-- API error -->
+        <div class="auth-gate-api-error" *ngIf="authError">
+          <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
+          {{ authError }}
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="auth-gate-submit" [disabled]="authLoading">
+          <span class="auth-gate-spinner" *ngIf="authLoading"></span>
+          <mat-icon *ngIf="!authLoading">{{ authStep === 'login' ? 'lock_open' : 'person_add' }}</mat-icon>
+          {{ authLoading ? 'Please wait...' : (authStep === 'login' ? 'Login & Confirm Booking' : 'Create Account & Book') }}
+        </button>
+      </form>
+
+      <!-- Switch mode note -->
+      <div class="auth-gate-switch" *ngIf="!showForgotPassword">
+        {{ authStep === 'login' ? "Not you? New to us?" : 'Already have an account?' }}
+        <button class="auth-gate-switch-btn" (click)="switchAuthMode(authStep === 'login' ? 'register' : 'login')">
+          {{ authStep === 'login' ? 'Create account instead' : 'Login instead' }}
+        </button>
+      </div>
+
+    </ng-container>
+
+  </div>
+</div>
+
 <!-- SHARED BOOKING WIDGET (used in pullover bottom sheet) -->
 <ng-template #bookingWidget>
   <section class="bottom-section">
@@ -1415,12 +1641,14 @@
         <div class="mb-2">
           <label class="center-block">Mobile Number *:
             <input formControlName="mobile" type="tel"
+              [class.border-red-400]="unregForm.controls['mobile'].invalid && unregForm.controls['mobile'].touched"
               class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
               placeholder="10 digit mobile number">
           </label>
-          <div *ngIf="unregForm.controls['mobile'].invalid && (unregForm.controls['mobile'].dirty || unregForm.controls['mobile'].touched)" class="alert">
-            <div *ngIf="unregForm.controls['mobile'].errors?.['required']">Please enter mobile number</div>
-            <div *ngIf="unregForm.controls['mobile'].errors?.['pattern']">Enter a valid 10-digit number</div>
+          <div *ngIf="unregForm.controls['mobile'].invalid && unregForm.controls['mobile'].touched" class="alert flex items-center gap-1">
+            <mat-icon class="!text-sm !w-4 !h-4 text-red-500">warning</mat-icon>
+            <span *ngIf="unregForm.controls['mobile'].errors?.['required']">Mobile number is required</span>
+            <span *ngIf="unregForm.controls['mobile'].errors?.['pattern']">Enter a valid 10-digit mobile number (digits only)</span>
           </div>
         </div>
 
@@ -1437,20 +1665,48 @@
         </div>
 
         <div class="mb-2">
-          <label class="center-block">Reason for Visit:
+          <label class="center-block">Procedure *:
             <select formControlName="reasonForVisit"
+              [class.border-red-400]="unregForm.controls['reasonForVisit'].invalid && unregForm.controls['reasonForVisit'].touched"
               class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-              <option value="">Select procedure (optional)</option>
+              <option value="">Select procedure</option>
               <option *ngFor="let svc of services" [value]="svc.name">{{ svc.name }}</option>
               <option value="Other">Other</option>
             </select>
           </label>
+          <div *ngIf="unregForm.controls['reasonForVisit'].invalid && unregForm.controls['reasonForVisit'].touched" class="alert flex items-center gap-1">
+            <mat-icon class="!text-sm !w-4 !h-4 text-red-500">warning</mat-icon>
+            <span>Please select a procedure</span>
+          </div>
         </div>
 
-        <div class="slot-scroll-area" [class.slots-disabled]="unregForm.invalid">
-          <div class="slots-disabled-hint" *ngIf="unregForm.invalid && scheduleDetails.length > 0">
-            <mat-icon class="!text-sm">info</mat-icon>
-            Fill in your details above to select a slot
+        <div class="mb-2" *ngIf="clinicNamesWidget.length > 0">
+          <label class="center-block">Clinic:</label>
+          <ng-container *ngIf="clinicNamesWidget.length === 1; else multiClinicWidget">
+            <input [value]="clinicNamesWidget[0]" readonly
+              class="form-control block w-full px-4 py-2 font-normal bg-gray-100 text-gray-500 border border-solid border-gray-200 rounded m-0 cursor-default">
+          </ng-container>
+          <ng-template #multiClinicWidget>
+            <select [(ngModel)]="selectedClinicWidget" [ngModelOptions]="{standalone: true}"
+              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+              <option value="">Select Clinic</option>
+              <option *ngFor="let c of clinicNamesWidget" [value]="c">{{ c }}</option>
+            </select>
+          </ng-template>
+        </div>
+
+        <div class="mb-2">
+          <label class="center-block">Address <span class="text-xs text-gray-400 font-normal">(optional)</span>:
+            <input formControlName="address" type="text" placeholder="Your home / locality address"
+              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+          </label>
+        </div>
+
+        <div class="slot-scroll-area" [class.slots-disabled]="!isSheetFormFilled">
+          <!-- Lock overlay banner -->
+          <div class="slots-disabled-hint" *ngIf="!isSheetFormFilled && scheduleDetails.length > 0">
+            <mat-icon class="!text-sm">lock</mat-icon>
+            Fill in your details above to unlock slot selection
           </div>
           <!-- Date tabs with sessions -->
           <mat-tab-group class="mb-4 tab-body" *ngIf="scheduleDetails.length > 0">
@@ -1462,7 +1718,7 @@
 
               <span *ngIf="sched.sessions.length > 0">
                 <span *ngFor="let session of sched.sessions; let i = index">
-                  <span *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1">
+                  <span *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1 && (!selectedClinicWidget || (session?.clinic?.clinicName || session?.clinic?.name) === selectedClinicWidget)">
                     <div class="session-header">
                       <div class="session-info">
                         <span class="session-label">Session {{ i + 1 }}</span>
@@ -1483,7 +1739,7 @@
                           class="slot-chip"
                           [class.slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
                           [class.slot-chip--booked]="slot._source?.status !== 'notBooked'"
-                          [disabled]="slot._source?.status !== 'notBooked' || unregForm.invalid"
+                          [disabled]="slot._source?.status !== 'notBooked' || !isSheetFormFilled"
                           (click)="setSelectedSlot(slot, session)">
                           {{ slot._source?.slotTime }}
                         </button>
@@ -1509,11 +1765,11 @@
     <!-- Book action pinned at bottom -->
     <div class="book-action-area">
       <button class="book-pay-btn"
-        [disabled]="!selectedSlotId || unregForm.invalid"
-        [class.book-pay-btn--disabled]="!selectedSlotId || unregForm.invalid"
+        [disabled]="!selectedSlotId || !isSheetFormFilled"
+        [class.book-pay-btn--disabled]="!selectedSlotId || !isSheetFormFilled"
         (click)="onSpotFreeBook(sessionIdSelected)">
         <mat-icon class="!text-lg !mr-1">event_available</mat-icon>
-        {{ selectedSlotId && !unregForm.invalid ? 'Book & Pay in Cash' : 'Fill details & select a slot' }}
+        {{ selectedSlotId && isSheetFormFilled ? 'Book & Pay in Cash' : 'Fill details & select a slot' }}
       </button>
     </div>
   </section>

@@ -631,8 +631,14 @@
     <div style="margin-bottom:12px;">
       <label class="center-block">Mobile Number *:
         <input type="tel" [(ngModel)]="mockPatient.mobile" placeholder="10 digit mobile number"
+          [class.border-red-400]="mobileErrorDemo"
+          (blur)="mobileTouched = true"
           class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
       </label>
+      <div *ngIf="mobileErrorDemo" class="alert flex items-center gap-1" style="font-size:0.75rem;font-weight:600;color:#ef4444;margin-top:4px;">
+        <mat-icon style="font-size:14px;width:14px;height:14px;color:#ef4444;">warning</mat-icon>
+        {{ mobileErrorDemo }}
+      </div>
     </div>
 
     <div style="margin-bottom:12px;">
@@ -656,6 +662,21 @@
           <option value="Other">Other</option>
         </select>
       </label>
+    </div>
+
+    <div style="margin-bottom:12px;" *ngIf="clinicNames.length > 0">
+      <label class="center-block">Clinic:</label>
+      <ng-container *ngIf="clinicNames.length === 1; else multiClinicDemo">
+        <input [value]="clinicNames[0]" readonly
+          class="form-control block w-full px-4 py-2 font-normal bg-gray-100 text-gray-500 border border-solid border-gray-200 rounded m-0 cursor-default">
+      </ng-container>
+      <ng-template #multiClinicDemo>
+        <select [(ngModel)]="selectedClinic"
+          class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+          <option value="">Select Clinic</option>
+          <option *ngFor="let c of clinicNames" [value]="c">{{ c }}</option>
+        </select>
+      </ng-template>
     </div>
   </div>
 

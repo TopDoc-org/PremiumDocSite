@@ -163,7 +163,17 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
   bookingStep: 'form' | 'slots' | 'confirmed' = 'form';
   selectedDayIndex = 0;
   selectedSlotTime = '';
+  selectedClinic = '';
+  mobileTouched = false;
   mockPatient = { name: '', mobile: '', gender: '', reason: '' };
+
+  get mobileErrorDemo(): string {
+    if (!this.mobileTouched) return '';
+    const v = this.mockPatient.mobile;
+    if (!v) return 'Mobile number is required';
+    if (!/^\d{10}$/.test(v)) return 'Enter a valid 10-digit mobile number (digits only)';
+    return '';
+  }
 
   mockDays: MockDay[] = this.generateMockDays();
 
@@ -225,10 +235,23 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
     });
   }
 
+  get clinicNames(): string[] {
+    const names = new Set<string>();
+    for (const day of this.mockDays) {
+      for (const session of day.sessions) {
+        if (session.clinic) names.add(session.clinic);
+      }
+    }
+    return Array.from(names);
+  }
+
   openBooking(): void {
     this.bookingOpen = true;
     this.bookingStep = 'form';
     this.selectedSlotTime = '';
+    this.mobileTouched = false;
+    const names = this.clinicNames;
+    this.selectedClinic = names.length === 1 ? names[0] : '';
     this.mockPatient = { name: '', mobile: '', gender: '', reason: '' };
     this.bookingConfirmation = null;
   }
