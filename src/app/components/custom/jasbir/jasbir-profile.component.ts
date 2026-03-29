@@ -25,9 +25,11 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   scheduleDetails: any[] = [];
   openBookByDefault = false;
   unregForm!: FormGroup;
+  authForm!: FormGroup;
   showAllOffers = false;
   animationsEnabled = true;
   darkMode = false;
+  showLimitModal = false;
   activeSlide = 0;
   showSectionNav = false;
   activeSection = '';
@@ -54,6 +56,24 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   showSessionsinAbha = false;
   selectedService: any = null;
   bookingConfirmation: any = null;
+  selectedClinicWidget = '';
+
+  // Auth gate state
+  authStep: 'none' | 'checking' | 'login' | 'register' = 'none';
+  authLoading = false;
+  authError = '';
+  showPassword = false;
+  showConfirmPassword = false;
+  pendingSessionId = '';
+  loggedInToken = '';
+  loggedInUserId = '';
+
+  // Forgot password state
+  showForgotPassword = false;
+  forgotPasswordEmail = '';
+  forgotPasswordLoading = false;
+  forgotPasswordSent = false;
+  forgotPasswordError = '';
 
   // KnocDoc typewriter
   knocdocPhrases = [
@@ -139,7 +159,13 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       name: ['', [Validators.required]],
       mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       gender: ['', [Validators.required]],
-      reasonForVisit: ['']
+      reasonForVisit: ['', [Validators.required]],
+      address: ['']
+    });
+
+    this.authForm = this.fb.group({
+      password: ['', [Validators.required]],
+      confirmPassword: ['']
     });
 
     // Restore dark mode preference
@@ -555,8 +581,38 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     return '';
   }
 
+  get clinicNamesWidget(): string[] {
+    const names = new Set<string>();
+    for (const sched of this.scheduleDetails) {
+      for (const session of (sched.sessions || [])) {
+        const name = session?.clinic?.clinicName || session?.clinic?.name;
+        if (name) names.add(name);
+      }
+    }
+    return Array.from(names);
+  }
+
+  get effectiveClinicWidget(): string {
+    const names = this.clinicNamesWidget;
+    if (names.length === 1) return names[0];
+    return this.selectedClinicWidget;
+  }
+
+  get isSheetFormFilled(): boolean {
+    if (!this.unregForm) return false;
+    const name = this.unregForm.get('name')?.value?.trim();
+    const mobile = this.unregForm.get('mobile')?.value?.trim();
+    const gender = this.unregForm.get('gender')?.value;
+    const reason = this.unregForm.get('reasonForVisit')?.value;
+    const clinicOk = this.clinicNamesWidget.length === 0 || !!this.effectiveClinicWidget;
+    const mobileValid = /^\d{10}$/.test(mobile || '');
+    return !!name && mobileValid && !!gender && !!reason && clinicOk;
+  }
+
   openTemplateSheetMenu(procedure: string = ''): void {
     this.unregForm.patchValue({ reasonForVisit: procedure });
+    const names = this.clinicNamesWidget;
+    this.selectedClinicWidget = names.length === 1 ? names[0] : '';
     this.bottomSheet.open(this.TemplateBottomSheet, {
       panelClass: 'custom-bottom-sheet-content'
     });
@@ -644,63 +700,274 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   onSpotFreeBook(sessionId: string): void {
-    if (!sessionId || this.unregForm.invalid) return;
+    if (!sessionId || !this.isSheetFormFilled) return;
+    this.openAuthStep(sessionId);
+  }
+
+  openAuthStep(sessionId: string): void {
+    this.pendingSessionId = sessionId;
+    this.authStep = 'checking';
+    this.authError = '';
+    this.authForm.reset();
+    this.authForm.get('confirmPassword')?.clearValidators();
+    this.authForm.get('confirmPassword')?.updateValueAndValidity();
+
+    const mobile = this.unregForm.get('mobile')?.value?.trim() || '';
+    this.bookingService.checkMobileRegistered(mobile).subscribe({
+      next: (res: any) => {
+        if (res?.hits > 0) {
+          this.authStep = 'login';
+        } else {
+          this.authStep = 'register';
+          this.authForm.get('confirmPassword')?.setValidators([Validators.required]);
+          this.authForm.get('confirmPassword')?.updateValueAndValidity();
+        }
+      },
+      error: () => {
+        // On error fallback to login tab
+        this.authStep = 'login';
+      }
+    });
+  }
+
+  cancelAuth(): void {
+    this.authStep = 'none';
+    this.pendingSessionId = '';
+    this.authError = '';
+    this.authForm.reset();
+    this.showForgotPassword = false;
+    this.forgotPasswordEmail = '';
+    this.forgotPasswordSent = false;
+    this.forgotPasswordError = '';
+  }
+
+  switchAuthMode(mode: 'login' | 'register'): void {
+    this.authStep = mode;
+    this.authError = '';
+    this.authForm.reset();
+    this.showForgotPassword = false;
+    this.forgotPasswordEmail = '';
+    this.forgotPasswordSent = false;
+    this.forgotPasswordError = '';
+    if (mode === 'register') {
+      this.authForm.get('confirmPassword')?.setValidators([Validators.required]);
+    } else {
+      this.authForm.get('confirmPassword')?.clearValidators();
+    }
+    this.authForm.get('confirmPassword')?.updateValueAndValidity();
+  }
+
+  sendForgotPassword(): void {
+    if (!this.forgotPasswordEmail?.trim()) {
+      this.forgotPasswordError = 'Please enter your email address.';
+      return;
+    }
+    this.forgotPasswordLoading = true;
+    this.forgotPasswordError = '';
+    this.bookingService.sendForgotPassword(this.forgotPasswordEmail.trim()).subscribe({
+      next: () => {
+        this.forgotPasswordLoading = false;
+        this.forgotPasswordSent = true;
+      },
+      error: (err: any) => {
+        this.forgotPasswordLoading = false;
+        this.forgotPasswordError = err.error?.message || 'Email not found. Please check and try again.';
+      }
+    });
+  }
+
+  submitAuth(): void {
+    this.authForm.markAllAsTouched();
+    if (this.authForm.invalid) return;
+
+    const mobile = this.unregForm.get('mobile')?.value;
+    const password = this.authForm.get('password')?.value;
+
+    if (this.authStep === 'login') {
+      this.authLoading = true;
+      this.authError = '';
+      this.bookingService.loginUser(mobile, password).subscribe({
+        next: (res: any) => {
+          this.authLoading = false;
+          this.loggedInToken = res.token;
+          this.loggedInUserId = res.userDetails?.userId || '';
+          this.authStep = 'none';
+          this.executeBooking(this.pendingSessionId);
+        },
+        error: (err: any) => {
+          this.authLoading = false;
+          if (err.status === 401) {
+            this.authError = 'Incorrect password. Try again or create a new account.';
+          } else {
+            this.authError = err.error?.message || 'Login failed. Please try again.';
+          }
+        }
+      });
+    } else {
+      const confirmPassword = this.authForm.get('confirmPassword')?.value;
+      if (password !== confirmPassword) {
+        this.authError = 'Passwords do not match.';
+        return;
+      }
+      const name = this.unregForm.get('name')?.value?.trim() || '';
+      // Validate: password must not contain name parts, mobile, or email
+      const pwdLower = password.toLowerCase();
+      const nameParts2 = name.toLowerCase().split(' ').filter((p: string) => p.length >= 3);
+      const mobileVal = (mobile || '').replace(/\D/g, '');
+      if (
+        nameParts2.some((part: string) => pwdLower.includes(part)) ||
+        (mobileVal.length >= 6 && pwdLower.includes(mobileVal.slice(-6)))
+      ) {
+        this.authError = 'Password cannot contain your name or mobile number. Please choose a different password.';
+        return;
+      }
+      const nameParts = name.split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || nameParts[0];
+
+      const signupPayload = {
+        firstName,
+        lastName,
+        name,
+        mobileNumber: mobile,
+        password,
+        confirmPassword,
+        role: 'user',
+        userType: 'registered',
+        gender: this.unregForm.get('gender')?.value || '',
+        address: this.unregForm.get('address')?.value || '',
+        email: '',
+        dob: null,
+        rights: null,
+        isEmailVerified: false,
+        emailVerificationOtp: null,
+        acceptTerms: true,
+        referredBy: ''
+      };
+
+      this.authLoading = true;
+      this.authError = '';
+      this.bookingService.signupUser(signupPayload).subscribe({
+        next: () => {
+          // Auto-login after signup
+          this.bookingService.loginUser(mobile, password).subscribe({
+            next: (loginRes: any) => {
+              this.authLoading = false;
+              this.loggedInToken = loginRes.token;
+              this.loggedInUserId = loginRes.userDetails?.userId || '';
+              this.authStep = 'none';
+              this.executeBooking(this.pendingSessionId);
+            },
+            error: () => {
+              this.authLoading = false;
+              this.authError = 'Account created! Please login to confirm your booking.';
+              this.switchAuthMode('login');
+            }
+          });
+        },
+        error: (err: any) => {
+          this.authLoading = false;
+          if (err.status === 409) {
+            this.authError = 'This mobile number is already registered. Please login instead.';
+            this.switchAuthMode('login');
+          } else {
+            this.authError = err.error?.message || 'Registration failed. Please try again.';
+          }
+        }
+      });
+    }
+  }
+
+  private executeBooking(sessionId: string): void {
+    if (!sessionId) return;
     const today = new Date();
     const appointmentDate = today.getFullYear() + '-' +
       (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
       today.getDate().toString().padStart(2, '0');
     const slotDay = this.weekdays[today.getDay()];
+    const slot = this.slotSelectedDetail;
+    const clinic = slot?.clinicDetails || {};
 
     const req = {
+      doctorId: this.doctorId,
+      doctorName: this.profRes?.name || 'Prof. Dr. Jasbir Meher',
+      clinicDetails: {
+        clinicId: clinic.clinicId || clinic.id || '',
+        clinicName: clinic.clinicName || clinic.name || '',
+        geoPoint: clinic.geoPoint || ''
+      },
+      clinicId: clinic.clinicId || clinic.id || '',
       sessionId,
+      slotId: slot?.slotId || '',
       reasonForVisit: this.unregForm.value.reasonForVisit || '',
       slotType: 'normal',
-      pin: Math.floor(Math.random() * 9000) + 1000 + '',
-      email: '',
-      paymentStatus: 'Default',
+      status: 'booked',
       appointmentType: 'Inperson',
+      slotTime: slot?.slotTime || '',
       slotDay,
-      userType: 'unRegistered',
-      doctorName: this.profRes?.name || 'Prof. Dr. Jasbir Meher',
+      userId: this.loggedInUserId,
+      userType: 'registered',
       bookingTimeStamp: new Date().toISOString(),
       appointmentDate,
+      sessionStartTime: slot?.sessionStartTime || '',
+      sessionEndTime: slot?.sessionEndTime || '',
       userName: this.unregForm.value.name,
       gender: this.unregForm.value.gender,
+      pin: Math.floor(Math.random() * 9000) + 1000 + '',
+      paymentStatus: 'default',
       mobile: this.unregForm.value.mobile,
-      status: 'booked',
-      isQueueUpdateReminder: false
+      email: '',
+      predictedSlotTime: slot?.slotTime || ''
     };
-    this.bookingService.bookUnregisteredUser(req).subscribe(
-      (res: any) => {
-        this.bookingConfirmation = {
-          patientName: req.userName,
-          mobile: req.mobile,
-          gender: req.gender,
-          doctorName: req.doctorName,
-          appointmentDate: req.appointmentDate,
-          slotDay: req.slotDay,
-          slotTime: this.slotSelectedDetail?.slotTime || '',
-          sessionTime: (this.slotSelectedDetail?.sessionStartTime || '') + ' - ' + (this.slotSelectedDetail?.sessionEndTime || ''),
-          clinicName: this.slotSelectedDetail?.clinicDetails?.clinicName || this.slotSelectedDetail?.clinicDetails?.name || '',
-          clinicLocation: this.slotSelectedDetail?.clinicDetails?.clinicLocation || '',
-          reasonForVisit: req.reasonForVisit,
-          pin: req.pin,
-          tokenNo: res?.tokenNo || res?.slotId || ''
-        };
-        this.selectedSlotId = '';
-        this.slotSelectedDetail = {};
-        this.closeTemplateSheetMenu();
-        setTimeout(() => {
-          this.bottomSheet.open(this.ConfirmationSheet, {
-            panelClass: 'confirmation-sheet',
-            disableClose: true
-          });
-        }, 400);
+    const doBooking = () => {
+      this.bookingService.bookRegisteredUser(req, this.loggedInToken).subscribe(
+        (res: any) => {
+          this.bookingConfirmation = {
+            patientName: req.userName,
+            mobile: req.mobile,
+            gender: req.gender,
+            doctorName: req.doctorName,
+            appointmentDate: req.appointmentDate,
+            slotDay: req.slotDay,
+            slotTime: this.slotSelectedDetail?.slotTime || '',
+            sessionTime: (this.slotSelectedDetail?.sessionStartTime || '') + ' - ' + (this.slotSelectedDetail?.sessionEndTime || ''),
+            clinicName: this.slotSelectedDetail?.clinicDetails?.clinicName || this.slotSelectedDetail?.clinicDetails?.name || '',
+            clinicLocation: this.slotSelectedDetail?.clinicDetails?.clinicLocation || '',
+            reasonForVisit: req.reasonForVisit,
+            pin: req.pin,
+            tokenNo: res?.tokenNo || res?.slotId || ''
+          };
+          this.selectedSlotId = '';
+          this.slotSelectedDetail = {};
+          this.closeTemplateSheetMenu();
+          setTimeout(() => {
+            this.bottomSheet.open(this.ConfirmationSheet, {
+              panelClass: 'confirmation-sheet',
+              disableClose: true
+            });
+          }, 400);
+        },
+        () => {
+          this._snackBar.open('Error booking appointment. Please try again.', '', { duration: 3000 });
+        }
+      );
+    };
+
+    this.bookingService.checkUserSessionBookings(this.doctorId, sessionId, req.mobile).subscribe({
+      next: (checkRes: any) => {
+        // API returns { hits: <number>, result: [...] }
+        // Use top-level hits count (already filtered); fall back to counting result[] by mobile
+        const bookedCount = typeof checkRes?.hits === 'number'
+          ? checkRes.hits
+          : (checkRes?.result || []).filter((r: any) => r?.mobile === req.mobile).length;
+        if (bookedCount >= 2) {
+          this.showLimitModal = true;
+          return;
+        }
+        doBooking();
       },
-      () => {
-        this._snackBar.open('Error booking appointment. Please try again.', '', { duration: 3000 });
-      }
-    );
+      error: () => doBooking()
+    });
   }
 
   downloadConfirmation(): void {

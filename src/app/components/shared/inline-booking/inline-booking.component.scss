@@ -153,6 +153,31 @@ $slate-500: #64748b;
   }
 
   &::placeholder { color: $slate-400; }
+
+  &--error {
+    border-color: #f87171 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08) !important;
+  }
+
+  &--readonly {
+    background: #f1f5f9;
+    color: $slate-400;
+    cursor: default;
+  }
+}
+
+.ib-error {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #ef4444;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  &::before {
+    content: '⚠';
+    font-size: 0.7rem;
+  }
 }
 
 select.ib-input {
