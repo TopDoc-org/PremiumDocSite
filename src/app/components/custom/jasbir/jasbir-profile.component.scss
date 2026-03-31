@@ -802,15 +802,23 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   @media (max-width: 767px) {
     gap: 8px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
+    padding: 0 12px;
 
     .hero-iso-inline {
       position: static;
       transform: none;
       flex-shrink: 0;
+      width: 100%;
+      text-align: center;
+      margin-top: 8px;
 
-      .iso-inline-img { height: 44px; }
+      .iso-inline-img {
+        height: 32px;
+        max-width: 100%;
+      }
     }
   }
 
@@ -834,6 +842,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   backdrop-filter: blur(12px);
   min-width: 0;
   flex-shrink: 1;
+  max-width: fit-content;
 
   .hero-clinic-brand {
     margin-bottom: 0;
@@ -873,6 +882,16 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
     .hero-brand-divider { height: 28px; }
     .hero-sponsor-pill .hero-sponsor-img { height: 22px; }
+  }
+
+  @media (max-width: 767px) {
+    max-width: fit-content;
+    margin: 0 auto;
+    padding: 6px 10px 6px 6px;
+    gap: 8px;
+
+    .hero-brand-divider { height: 18px; }
+    .hero-sponsor-pill .hero-sponsor-img { height: 14px; }
   }
 
   @media (max-width: 400px) {
@@ -3334,8 +3353,8 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     flex-shrink: 0;
 
     @media (max-width: 600px) {
-      width: 100%;
-      button { width: 100%; justify-content: center; }
+      width: auto;
+      button { width: auto; }
     }
   }
 
@@ -8952,7 +8971,10 @@ $dark-text-muted: #6b7790;
 
   .hero-top-row {
     order: 1 !important;
-    width: 100% !important;
+    width: auto !important;
+    max-width: 100% !important;
+    justify-content: center !important;
+    padding: 0 16px !important;
   }
 
   .hero-image-wrapper {
@@ -9053,7 +9075,10 @@ $dark-text-muted: #6b7790;
     margin-bottom: 24px !important;
 
     button {
-      width: 100% !important;
+      width: auto !important;
+      align-self: flex-start !important;
+      padding: 10px 22px !important;
+      font-size: 0.82rem !important;
     }
   }
 
