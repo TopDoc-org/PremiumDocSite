@@ -33,7 +33,7 @@ export class InlineBookingComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['scheduleDetails']) {
       const names = this.clinicNames;
-      if (names.length === 1) this.selectedClinic = names[0];
+      if (names.length >= 1) this.selectedClinic = names[0];
     }
   }
 
@@ -45,15 +45,29 @@ export class InlineBookingComponent implements OnChanges {
     return '';
   }
 
+  get emailError(): string {
+    const ctrl = this.form?.get('email');
+    if (!ctrl || !ctrl.touched) return '';
+    if (ctrl.errors?.['required']) return 'Email is required';
+    if (ctrl.errors?.['email']) return 'Enter a valid email address';
+    return '';
+  }
+
   get clinicNames(): string[] {
-    const names = new Set<string>();
+    const seen = new Set<string>();
+    const names: string[] = [];
     for (const sched of this.scheduleDetails) {
       for (const session of (sched.sessions || [])) {
-        const name = session?.clinic?.clinicName || session?.clinic?.name;
-        if (name) names.add(name);
+        const clinicObj = session?.clinic || {};
+        const displayName = clinicObj.clinicName || clinicObj.name || '';
+        const dedupKey = clinicObj.clinicId || clinicObj.id || displayName;
+        if (dedupKey && !seen.has(dedupKey)) {
+          seen.add(dedupKey);
+          names.push(displayName || dedupKey);
+        }
       }
     }
-    return Array.from(names);
+    return names;
   }
 
   // When there is exactly 1 clinic, use it automatically — no reliance on selectedClinic state
@@ -67,19 +81,23 @@ export class InlineBookingComponent implements OnChanges {
     if (!this.form) return false;
     const name = this.form.get('name')?.value?.trim();
     const mobile = this.form.get('mobile')?.value?.trim();
+    const email = this.form.get('email')?.value?.trim();
     const gender = this.form.get('gender')?.value;
     const reason = this.form.get('reasonForVisit')?.value;
     const clinicOk = this.clinicNames.length === 0 || !!this.effectiveClinic;
     const mobileValid = /^\d{10}$/.test(mobile || '');
-    return !!name && mobileValid && !!gender && !!reason && clinicOk;
+    const emailValid = !!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    return !!name && mobileValid && emailValid && !!gender && !!reason && clinicOk;
   }
 
   getFilteredSessions(sessions: any[]): any[] {
     const clinic = this.effectiveClinic;
     if (!clinic) return sessions;
     return sessions.filter(s => {
-      const name = s?.clinic?.clinicName || s?.clinic?.name;
-      return name === clinic;
+      const clinicObj = s?.clinic || {};
+      const displayName = clinicObj.clinicName || clinicObj.name || '';
+      const dedupKey = clinicObj.clinicId || clinicObj.id || displayName;
+      return displayName === clinic || dedupKey === clinic;
     });
   }
 

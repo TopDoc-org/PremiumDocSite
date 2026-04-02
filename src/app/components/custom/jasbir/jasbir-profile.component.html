@@ -923,14 +923,14 @@
             <mat-icon class="monthly-pin-icon">place</mat-icon>
             <div>
               <p class="monthly-clinic-name">Jaiprakash Hospital Rourkela <span class="monthly-sitting-tag">(Monthly sitting)</span></p>
-              <p class="monthly-clinic-note">Jaiprakash Hospital &amp; Research Center Pvt Ltd., Dayanand Nagar, Dandiapali, Rourkela, Odisha 769004</p>
+              <p class="monthly-clinic-note">JP Hospital, 21, Main Rd, Ambedkar Chowk, Udit Nagar, Rourkela, Odisha 769012</p>
             </div>
           </div>
           <div class="monthly-visit-item">
             <mat-icon class="monthly-pin-icon">place</mat-icon>
             <div>
-              <p class="monthly-clinic-name">Sambalpur Clinic <span class="monthly-sitting-tag">(Monthly sitting)</span></p>
-              <p class="monthly-clinic-note">Near VSS Medical College Road, Burla, Sambalpur, Odisha 768017</p>
+              <p class="monthly-clinic-name">Dental Art Clinic Sambalpur <span class="monthly-sitting-tag">(Monthly sitting)</span></p>
+              <p class="monthly-clinic-note">Dental Art, near GM college,Infront of Church main gate, Sambalpur</p>
             </div>
           </div>
         </div>
@@ -989,14 +989,14 @@
                 <mat-icon class="monthly-pin-icon">place</mat-icon>
                 <div>
                   <p class="monthly-clinic-name">Jaiprakash Hospital Rourkela <span class="monthly-sitting-tag">(Monthly sitting)</span></p>
-                  <p class="monthly-clinic-note">Jaiprakash Hospital &amp; Research Center Pvt Ltd., Dayanand Nagar, Dandiapali, Rourkela, Odisha 769004</p>
+                  <p class="monthly-clinic-note">JP Hospital, 21, Main Rd, Ambedkar Chowk, Udit Nagar, Rourkela, Odisha 769012</p>
                 </div>
               </div>
               <div class="monthly-visit-item">
                 <mat-icon class="monthly-pin-icon">place</mat-icon>
                 <div>
-                  <p class="monthly-clinic-name">Sambalpur Clinic <span class="monthly-sitting-tag">(Monthly sitting)</span></p>
-                  <p class="monthly-clinic-note">Near VSS Medical College Road, Burla, Sambalpur, Odisha 768017</p>
+                  <p class="monthly-clinic-name">Dental Art Clinic Sambalpur<span class="monthly-sitting-tag">(Monthly sitting)</span></p>
+                  <p class="monthly-clinic-note">Dental Art, near GM college,Infront of Church main gate, Sambalpur</p>
                 </div>
               </div>
             </div>
@@ -1653,6 +1653,20 @@
         </div>
 
         <div class="mb-2">
+          <label class="center-block">Email *:
+            <input formControlName="email" type="email"
+              [class.border-red-400]="unregForm.controls['email'].invalid && unregForm.controls['email'].touched"
+              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              placeholder="your@email.com">
+          </label>
+          <div *ngIf="unregForm.controls['email'].invalid && unregForm.controls['email'].touched" class="alert flex items-center gap-1">
+            <mat-icon class="!text-sm !w-4 !h-4 text-red-500">warning</mat-icon>
+            <span *ngIf="unregForm.controls['email'].errors?.['required']">Email is required</span>
+            <span *ngIf="unregForm.controls['email'].errors?.['email']">Enter a valid email address</span>
+          </div>
+        </div>
+
+        <div class="mb-2">
           <label class="center-block">Gender *:</label>
           <div class="flex gap-4 mt-1">
             <label class="flex items-center gap-2 cursor-pointer text-sm">
@@ -1689,7 +1703,6 @@
           <ng-template #multiClinicWidget>
             <select [(ngModel)]="selectedClinicWidget" [ngModelOptions]="{standalone: true}"
               class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-              <option value="">Select Clinic</option>
               <option *ngFor="let c of clinicNamesWidget" [value]="c">{{ c }}</option>
             </select>
           </ng-template>
@@ -1718,7 +1731,7 @@
 
               <span *ngIf="sched.sessions.length > 0">
                 <span *ngFor="let session of sched.sessions; let i = index">
-                  <span *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1 && (!selectedClinicWidget || (session?.clinic?.clinicName || session?.clinic?.name) === selectedClinicWidget)">
+                  <span *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1 && (!selectedClinicWidget || (session?.clinic?.clinicName || session?.clinic?.name || session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget || (session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget)">
                     <div class="session-header">
                       <div class="session-info">
                         <span class="session-label">Session {{ i + 1 }}</span>

@@ -642,6 +642,13 @@
     </div>
 
     <div style="margin-bottom:12px;">
+      <label class="center-block">Email *:
+        <input type="email" [(ngModel)]="mockPatient.email" placeholder="your@email.com"
+          class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+      </label>
+    </div>
+
+    <div style="margin-bottom:12px;">
       <label class="center-block">Gender *:</label>
       <div class="flex gap-4 mt-1">
         <label class="flex items-center gap-2 cursor-pointer text-sm">
@@ -769,8 +776,8 @@
   <!-- ACTION BUTTONS -->
   <div class="book-action-area">
     <button *ngIf="bookingStep === 'form'" class="book-pay-btn"
-      [class.book-pay-btn--disabled]="!mockPatient.name || !mockPatient.mobile"
-      [disabled]="!mockPatient.name || !mockPatient.mobile"
+      [class.book-pay-btn--disabled]="!mockPatient.name || !mockPatient.mobile || !mockPatient.email"
+      [disabled]="!mockPatient.name || !mockPatient.mobile || !mockPatient.email"
       (click)="proceedToSlots()">
       <mat-icon class="!text-lg !mr-1">arrow_forward</mat-icon>
       Continue — Select Slot
