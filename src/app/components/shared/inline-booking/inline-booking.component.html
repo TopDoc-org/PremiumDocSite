@@ -65,7 +65,6 @@
             </ng-container>
             <ng-template #multiClinic>
               <select class="ib-input" [(ngModel)]="selectedClinic" [ngModelOptions]="{standalone: true}">
-                <option value="">Select Clinic</option>
                 <option *ngFor="let c of clinicNames" [value]="c">{{ c }}</option>
               </select>
             </ng-template>

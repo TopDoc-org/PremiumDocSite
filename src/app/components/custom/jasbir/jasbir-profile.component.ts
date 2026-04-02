@@ -583,14 +583,30 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   get clinicNamesWidget(): string[] {
-    const names = new Set<string>();
+    const seen = new Set<string>();
+    const names: string[] = [];
     for (const sched of this.scheduleDetails) {
       for (const session of (sched.sessions || [])) {
-        const name = session?.clinic?.clinicName || session?.clinic?.name;
-        if (name) names.add(name);
+        const clinicObj = session?.clinic || {};
+        const displayName = clinicObj.clinicName || clinicObj.name || '';
+        const dedupKey = clinicObj.clinicId || clinicObj.id || displayName;
+        if (dedupKey && !seen.has(dedupKey)) {
+          seen.add(dedupKey);
+          names.push(displayName || dedupKey);
+        }
       }
     }
-    return Array.from(names);
+    return names;
+  }
+
+  getClinicIdByName(name: string): string {
+    for (const sched of this.scheduleDetails) {
+      for (const session of (sched.sessions || [])) {
+        const n = session?.clinic?.clinicName || session?.clinic?.name || session?.clinic?.clinicId || session?.clinic?.id || '';
+        if (n === name) return session?.clinic?.clinicId || session?.clinic?.id || '';
+      }
+    }
+    return '';
   }
 
   get effectiveClinicWidget(): string {
@@ -615,7 +631,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   openTemplateSheetMenu(procedure: string = ''): void {
     this.unregForm.patchValue({ reasonForVisit: procedure });
     const names = this.clinicNamesWidget;
-    this.selectedClinicWidget = names.length === 1 ? names[0] : '';
+    this.selectedClinicWidget = names[0] || '';
     this.bottomSheet.open(this.TemplateBottomSheet, {
       panelClass: 'custom-bottom-sheet-content'
     });
