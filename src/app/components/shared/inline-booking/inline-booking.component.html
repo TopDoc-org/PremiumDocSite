@@ -32,6 +32,13 @@
               (blur)="form.get('mobile')?.markAsTouched()">
             <div class="ib-error" *ngIf="mobileError">{{ mobileError }}</div>
           </div>
+          <div class="ib-field">
+            <label>Email</label>
+            <input formControlName="email" type="email" placeholder="your@email.com" class="ib-input"
+              [class.ib-input--error]="emailError"
+              (blur)="form.get('email')?.markAsTouched()">
+            <div class="ib-error" *ngIf="emailError">{{ emailError }}</div>
+          </div>
           <div class="ib-field-row">
             <div class="ib-field">
               <label>Gender</label>

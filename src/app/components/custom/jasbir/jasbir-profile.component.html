@@ -1653,6 +1653,20 @@
         </div>
 
         <div class="mb-2">
+          <label class="center-block">Email *:
+            <input formControlName="email" type="email"
+              [class.border-red-400]="unregForm.controls['email'].invalid && unregForm.controls['email'].touched"
+              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              placeholder="your@email.com">
+          </label>
+          <div *ngIf="unregForm.controls['email'].invalid && unregForm.controls['email'].touched" class="alert flex items-center gap-1">
+            <mat-icon class="!text-sm !w-4 !h-4 text-red-500">warning</mat-icon>
+            <span *ngIf="unregForm.controls['email'].errors?.['required']">Email is required</span>
+            <span *ngIf="unregForm.controls['email'].errors?.['email']">Enter a valid email address</span>
+          </div>
+        </div>
+
+        <div class="mb-2">
           <label class="center-block">Gender *:</label>
           <div class="flex gap-4 mt-1">
             <label class="flex items-center gap-2 cursor-pointer text-sm">

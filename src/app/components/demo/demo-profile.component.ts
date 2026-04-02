@@ -165,7 +165,7 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
   selectedSlotTime = '';
   selectedClinic = '';
   mobileTouched = false;
-  mockPatient = { name: '', mobile: '', gender: '', reason: '' };
+  mockPatient = { name: '', mobile: '', gender: '', reason: '', email: '' };
 
   get mobileErrorDemo(): string {
     if (!this.mobileTouched) return '';
@@ -252,7 +252,7 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
     this.mobileTouched = false;
     const names = this.clinicNames;
     this.selectedClinic = names.length === 1 ? names[0] : '';
-    this.mockPatient = { name: '', mobile: '', gender: '', reason: '' };
+    this.mockPatient = { name: '', mobile: '', gender: '', reason: '', email: '' };
     this.bookingConfirmation = null;
   }
 

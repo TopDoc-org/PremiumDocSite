@@ -158,6 +158,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.unregForm = this.fb.group({
       name: ['', [Validators.required]],
       mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      email: ['', [Validators.required, Validators.email]],
       gender: ['', [Validators.required]],
       reasonForVisit: ['', [Validators.required]],
       address: ['']
@@ -602,11 +603,13 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     if (!this.unregForm) return false;
     const name = this.unregForm.get('name')?.value?.trim();
     const mobile = this.unregForm.get('mobile')?.value?.trim();
+    const email = this.unregForm.get('email')?.value?.trim();
     const gender = this.unregForm.get('gender')?.value;
     const reason = this.unregForm.get('reasonForVisit')?.value;
     const clinicOk = this.clinicNamesWidget.length === 0 || !!this.effectiveClinicWidget;
     const mobileValid = /^\d{10}$/.test(mobile || '');
-    return !!name && mobileValid && !!gender && !!reason && clinicOk;
+    const emailValid = !!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    return !!name && mobileValid && emailValid && !!gender && !!reason && clinicOk;
   }
 
   openTemplateSheetMenu(procedure: string = ''): void {
@@ -810,17 +813,6 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         return;
       }
       const name = this.unregForm.get('name')?.value?.trim() || '';
-      // Validate: password must not contain name parts, mobile, or email
-      const pwdLower = password.toLowerCase();
-      const nameParts2 = name.toLowerCase().split(' ').filter((p: string) => p.length >= 3);
-      const mobileVal = (mobile || '').replace(/\D/g, '');
-      if (
-        nameParts2.some((part: string) => pwdLower.includes(part)) ||
-        (mobileVal.length >= 6 && pwdLower.includes(mobileVal.slice(-6)))
-      ) {
-        this.authError = 'Password cannot contain your name or mobile number. Please choose a different password.';
-        return;
-      }
       const nameParts = name.split(' ');
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ') || nameParts[0];
@@ -836,7 +828,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         userType: 'registered',
         gender: this.unregForm.get('gender')?.value || '',
         address: this.unregForm.get('address')?.value || '',
-        email: '',
+        email: this.unregForm.get('email')?.value || '',
         dob: null,
         rights: null,
         isEmailVerified: false,
@@ -916,7 +908,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       pin: Math.floor(Math.random() * 9000) + 1000 + '',
       paymentStatus: 'default',
       mobile: this.unregForm.value.mobile,
-      email: '',
+      email: this.unregForm.value.email || '',
       predictedSlotTime: slot?.slotTime || ''
     };
     const doBooking = () => {
