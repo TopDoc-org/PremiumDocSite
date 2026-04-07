@@ -19,6 +19,7 @@ import { TenantService } from '../../../services/tenant.service';
 export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   isMobileOrTabView = false;
   isMobileView = false;
+  isQueueUpdateReminder = true;
   timelineFetchStatus: 'none' | 'fetching' | 'done' | 'error' = 'none';
   doctorId = '';
   profRes: any;
@@ -42,6 +43,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   activeTechSlide = 0;
   showSidhantFull = false;
+  showRajdeepFull = false;
+  showPoojaFull = false;
   techImages = [
     { src: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&h=500&fit=crop', alt: 'Digital X-Ray Machine' },
     { src: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&h=500&fit=crop', alt: 'Dental Treatment Setup' },
@@ -925,7 +928,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       paymentStatus: 'default',
       mobile: this.unregForm.value.mobile,
       email: this.unregForm.value.email || '',
-      predictedSlotTime: slot?.slotTime || ''
+      predictedSlotTime: slot?.slotTime || '',
+      isQueueUpdateReminder: this.isQueueUpdateReminder
     };
     const doBooking = () => {
       this.bookingService.bookRegisteredUser(req, this.loggedInToken).subscribe(
