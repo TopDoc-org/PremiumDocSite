@@ -1,7 +1,9 @@
 import {
-  AfterViewInit, Component, ElementRef, OnDestroy, OnInit,
-  TemplateRef, ViewChild
+  AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit,
+  Renderer2, TemplateRef, ViewChild
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Title, Meta } from '@angular/platform-browser';
 import * as AOS from 'aos';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -37,6 +39,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   mobileMenuOpen = false;
   private sectionIds = ['sec-about', 'sec-tech', 'sec-offers', 'sec-services', 'sec-gallery', 'sec-contact'];
   private scrollListener: (() => void) | null = null;
+  private jsonLdScriptTags: HTMLScriptElement[] = [];
 
   get clinicLogo(): string {
     return 'assets/images/jasbir/ClinicLogo.jpeg';
@@ -151,7 +154,11 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     private activated: ActivatedRoute,
     private bookingService: BookingService,
     private doctorConfigService: DoctorConfigService,
-    private tenantService: TenantService
+    private tenantService: TenantService,
+    private titleService: Title,
+    private meta: Meta,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit(): void {
@@ -236,6 +243,46 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.techCarouselInterval) clearInterval(this.techCarouselInterval);
     this.stopKnocdocTypewriter();
     if (this.scrollListener) this.scrollListener();
+
+    // Clean up SEO meta tags
+    this.titleService.setTitle('Doctor Sites');
+    this.meta.removeTag('name="description"');
+    this.meta.removeTag('name="keywords"');
+    this.meta.removeTag('name="robots"');
+    this.meta.removeTag('name="geo.region"');
+    this.meta.removeTag('name="geo.placename"');
+    this.meta.removeTag('name="geo.position"');
+    this.meta.removeTag('name="ICBM"');
+    this.meta.removeTag('property="og:title"');
+    this.meta.removeTag('property="og:description"');
+    this.meta.removeTag('property="og:type"');
+    this.meta.removeTag('property="og:url"');
+    this.meta.removeTag('property="og:image"');
+    this.meta.removeTag('property="og:locale"');
+    this.meta.removeTag('property="og:site_name"');
+    this.meta.removeTag('name="twitter:card"');
+    this.meta.removeTag('name="twitter:title"');
+    this.meta.removeTag('name="twitter:description"');
+    this.meta.removeTag('name="twitter:image"');
+
+    const canonical = this.document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+      this.renderer.removeChild(this.document.head, canonical);
+    }
+
+    // Restore default favicon
+    const favicon = this.document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+    if (favicon) {
+      this.renderer.setAttribute(favicon, 'type', 'image/x-icon');
+      this.renderer.setAttribute(favicon, 'href', 'favicon.ico');
+    }
+
+    this.jsonLdScriptTags.forEach(script => {
+      if (script.parentNode) {
+        this.renderer.removeChild(this.document.head, script);
+      }
+    });
+    this.jsonLdScriptTags = [];
   }
 
   scrollToSection(id: string): void {
@@ -281,6 +328,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         const savedPref = localStorage.getItem('premiumAnimations');
         this.animationsEnabled = true; // Always on — premium profile always has animations
         this.timelineFetchStatus = 'done';
+        this.setMetaTags();
+        this.injectStructuredData();
         this.initAOS();
         this.initCounterAnimations();
         setTimeout(() => this.setupOffersConfettiObserver(), 300);
@@ -294,6 +343,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         this.profRes = this.getDefaultProfile();
         this.animationsEnabled = true;
         this.timelineFetchStatus = 'done';
+        this.setMetaTags();
+        this.injectStructuredData();
         this.initAOS();
         this.initCounterAnimations();
         setTimeout(() => this.setupOffersConfettiObserver(), 300);
@@ -321,6 +372,178 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       associatedClinics: [],
       profImageUrl: { src: 'assets/images/jasbir/profile.jpg' }
     };
+  }
+
+  private setMetaTags(): void {
+    const name = this.profRes?.name || 'Prof. Dr. Jasbir Meher';
+    const specialization = this.profRes?.specialization || 'Dentist';
+    const city = this.profRes?.city || 'Balangir';
+    const state = this.profRes?.state || 'Odisha';
+    const experience = this.profRes?.yearsOfExperience || '13';
+    const rating = this.profRes?.averageRating || 4.9;
+    const imageUrl = this.profRes?.profImageUrl?.src
+      ? (this.profRes.profImageUrl.src.startsWith('http')
+          ? this.profRes.profImageUrl.src
+          : `${window.location.origin}/${this.profRes.profImageUrl.src}`)
+      : `${window.location.origin}/assets/images/jasbir/profile.jpg`;
+    const canonicalUrl = window.location.origin + window.location.pathname;
+
+    const title = `${name} | Best ${specialization} & Orthodontist in ${city}, ${state}`;
+    this.titleService.setTitle(title);
+
+    const description = `${name} - Best ${specialization} & Orthodontist in ${city}, ${state}. BDS, MDS, PhD with ${experience}+ years experience. Invisalign provider, laser dentistry, braces & dental implants. Rated ${rating}/5. Book appointment online today.`;
+    this.meta.updateTag({ name: 'description', content: description });
+    this.meta.updateTag({ name: 'keywords', content: [
+      `best dentist in ${city}`, `dentist in ${city}`, `orthodontist in ${city}`,
+      `best orthodontist in ${city}`, `dental clinic in ${city}`, `${city} dentist`,
+      `best dental clinic ${city}`, `teeth braces ${city}`, `invisalign ${city}`,
+      `clear aligners ${city}`, `root canal treatment ${city}`, `dental implants ${city}`,
+      `laser dentistry ${city}`, `kids dentist ${city}`, `tooth extraction ${city}`,
+      `dental crowns ${city}`, `teeth whitening ${city}`, `gum treatment ${city}`,
+      name, `dentist ${state}`, `orthodontist ${state}`, `dental clinic ${state}`,
+      `best dentist in ${state}`, 'orthodontic center balangir', 'dental surgeon balangir'
+    ].join(', ') });
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+
+    // Geo meta tags for local SEO ("dentist near me" searches)
+    this.meta.updateTag({ name: 'geo.region', content: 'IN-OR' }); // ISO 3166-2 for Odisha
+    this.meta.updateTag({ name: 'geo.placename', content: `${city}, ${state}` });
+    this.meta.updateTag({ name: 'geo.position', content: '20.6989;83.4636' }); // Balangir coordinates
+    this.meta.updateTag({ name: 'ICBM', content: '20.6989, 83.4636' });
+
+    // Set clinic logo as favicon
+    this.setFavicon(`${window.location.origin}/assets/images/jasbir/ClinicLogo.jpeg`);
+
+    // Open Graph
+    this.meta.updateTag({ property: 'og:title', content: title });
+    this.meta.updateTag({ property: 'og:description', content: description });
+    this.meta.updateTag({ property: 'og:type', content: 'website' });
+    this.meta.updateTag({ property: 'og:url', content: canonicalUrl });
+    this.meta.updateTag({ property: 'og:image', content: imageUrl });
+    this.meta.updateTag({ property: 'og:locale', content: 'en_IN' });
+    this.meta.updateTag({ property: 'og:site_name', content: `${name} - Orthodontic Center & Dental Clinic` });
+
+    // Twitter Card
+    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.meta.updateTag({ name: 'twitter:title', content: title });
+    this.meta.updateTag({ name: 'twitter:description', content: description });
+    this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
+
+    this.setCanonicalUrl(canonicalUrl);
+  }
+
+  private setFavicon(url: string): void {
+    let link: HTMLLinkElement | null = this.document.querySelector('link[rel="icon"]');
+    if (!link) {
+      link = this.renderer.createElement('link');
+      this.renderer.setAttribute(link, 'rel', 'icon');
+      this.renderer.appendChild(this.document.head, link);
+    }
+    this.renderer.setAttribute(link, 'type', 'image/jpeg');
+    this.renderer.setAttribute(link, 'href', url);
+  }
+
+  private setCanonicalUrl(url: string): void {
+    let link: HTMLLinkElement | null = this.document.querySelector('link[rel="canonical"]');
+    if (!link) {
+      link = this.renderer.createElement('link');
+      this.renderer.setAttribute(link, 'rel', 'canonical');
+      this.renderer.appendChild(this.document.head, link);
+    }
+    this.renderer.setAttribute(link, 'href', url);
+  }
+
+  private injectStructuredData(): void {
+    const name = this.profRes?.name || 'Prof. Dr. Jasbir Meher';
+    const city = this.profRes?.city || 'Balangir';
+    const state = this.profRes?.state || 'Odisha';
+    const experience = this.profRes?.yearsOfExperience || '13';
+    const rating = this.profRes?.averageRating || 4.9;
+    const reviewCount = this.profRes?.noOfReviews || 127;
+    const imageUrl = this.profRes?.profImageUrl?.src
+      ? (this.profRes.profImageUrl.src.startsWith('http')
+          ? this.profRes.profImageUrl.src
+          : `${window.location.origin}/${this.profRes.profImageUrl.src}`)
+      : `${window.location.origin}/assets/images/jasbir/profile.jpg`;
+    const canonicalUrl = window.location.origin + window.location.pathname;
+
+    // Schema 1: Dentist (LocalBusiness)
+    const localBusiness = {
+      '@context': 'https://schema.org',
+      '@type': 'Dentist',
+      'name': "Dr. Meher's Orthodontic Center & Dental Clinic",
+      'image': imageUrl,
+      'url': canonicalUrl,
+      'telephone': '+91-9437975834',
+      'address': {
+        '@type': 'PostalAddress',
+        'streetAddress': 'Hotel Sai Palace, Kacheri Chowk, In front of Priyadarshani Cinema Hall',
+        'addressLocality': city,
+        'addressRegion': state,
+        'addressCountry': 'IN'
+      },
+      'openingHoursSpecification': {
+        '@type': 'OpeningHoursSpecification',
+        'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        'opens': '09:00',
+        'closes': '20:00'
+      },
+      'priceRange': '$$',
+      'aggregateRating': {
+        '@type': 'AggregateRating',
+        'ratingValue': rating,
+        'bestRating': 5,
+        'worstRating': 1,
+        'ratingCount': reviewCount
+      },
+      'medicalSpecialty': 'Orthodontics',
+      'availableService': this.services.map(s => ({
+        '@type': 'MedicalProcedure',
+        'name': s.name,
+        'description': s.description
+      }))
+    };
+
+    // Schema 2: Person (Doctor)
+    const doctor = {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      'name': name,
+      'image': imageUrl,
+      'url': canonicalUrl,
+      'jobTitle': 'Orthodontist & Dental Surgeon',
+      'description': `${name} is an experienced orthodontist and dental surgeon with ${experience}+ years of practice in ${city}, ${state}.`,
+      'medicalSpecialty': 'Orthodontics',
+      'alumniOf': this.placeholderEducation.map(edu => ({
+        '@type': 'EducationalOrganization',
+        'name': edu.institution
+      })),
+      'knowsAbout': this.services.map(s => s.name),
+      'address': {
+        '@type': 'PostalAddress',
+        'addressLocality': city,
+        'addressRegion': state,
+        'addressCountry': 'IN'
+      }
+    };
+
+    // Schema 3: BreadcrumbList
+    const breadcrumb = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': window.location.origin },
+        { '@type': 'ListItem', 'position': 2, 'name': name, 'item': canonicalUrl }
+      ]
+    };
+
+    [localBusiness, doctor, breadcrumb].forEach(schema => {
+      const script = this.renderer.createElement('script');
+      this.renderer.setAttribute(script, 'type', 'application/ld+json');
+      script.text = JSON.stringify(schema);
+      this.renderer.appendChild(this.document.head, script);
+      this.jsonLdScriptTags.push(script);
+    });
   }
 
   private fetchClinicDetails(): void {
