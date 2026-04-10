@@ -22,6 +22,9 @@ export class InlineBookingComponent implements OnChanges {
   // Accent color (defaults to orange)
   @Input() accentColor = '#e8793a';
 
+  // Queue update reminder flag (passed through to booking payload)
+  @Input() isQueueUpdateReminder = false;
+
   // Events
   @Output() slotSelected = new EventEmitter<{ slot: any; session: any }>();
   @Output() bookClicked = new EventEmitter<string>();

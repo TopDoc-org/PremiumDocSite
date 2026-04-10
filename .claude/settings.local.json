@@ -33,7 +33,9 @@
       "Bash(git push:*)",
       "Bash(find /c/Sarthak/doctor-sites/src -type f -name *hero* -o -name *header* -o -name *navbar* -o -name *jasbir*)",
       "Bash(git pull:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(git rebase:*)",
+      "Bash(GIT_EDITOR=true git rebase:*)"
     ]
   }
 }

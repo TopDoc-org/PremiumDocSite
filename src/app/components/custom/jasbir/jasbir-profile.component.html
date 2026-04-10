@@ -403,7 +403,7 @@
 
         <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
           <div class="about-team-img">
-            <img src="assets/images/jasbir/asst1.jpeg" alt="Dr. Sidhant Nayak" loading="lazy">
+            <img src="assets/images/jasbir/Asst2close.jpeg" alt="Dr. Sidhant Nayak" loading="lazy" style="scale: 1; object-position: center top;">
           </div>
           <div class="about-team-info">
             <h3>Dr. Sidhant Nayak <span class="visiting-tag">(Visiting Doctor)</span></h3>
@@ -418,6 +418,42 @@
             </p>
             <button class="about-team-readmore" (click)="showSidhantFull = !showSidhantFull">
               {{ showSidhantFull ? 'Show Less' : 'Read More' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+          <div class="about-team-img">
+            <img src="assets/images/jasbir/RajdeepBeura.jpeg" alt="Dr. Rajdeep Beura" loading="lazy">
+          </div>
+          <div class="about-team-info">
+            <h3>Dr. Rajdeep Beura <span class="visiting-tag">(Visiting Doctor)</span></h3>
+            <span class="about-team-role">Periodontist & Oral Implantologist</span>
+            <p [class.about-team-truncated]="!showRajdeepFull">
+              Associate Professor, Department of Periodontics and Oral Implantology.
+              Dental specialty focusing on the health of gum tissues which prevent, diagnose,
+              and treat gum diseases (gingivitis/periodontitis) and manage hard/soft tissue.
+            </p>
+            <button class="about-team-readmore" (click)="showRajdeepFull = !showRajdeepFull">
+              {{ showRajdeepFull ? 'Show Less' : 'Read More' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '450' : null">
+          <div class="about-team-img">
+            <img src="assets/images/jasbir/Pooja Agrawal.jpeg" alt="Dr. Pooja Agrawal" loading="lazy" style="scale: 1; object-position: center 20%;">
+          </div>
+          <div class="about-team-info">
+            <h3>Dr. Pooja Agrawal, MDS (OMFS) <span class="visiting-tag">(Visiting Doctor)</span></h3>
+            <span class="about-team-role">Consultant Oral & Maxillofacial Surgeon</span>
+            <p [class.about-team-truncated]="!showPoojaFull">
+              Fellowship-trained in Facial Cosmetic Surgery.
+              Senior Resident, SCB Government Dental College & Hospital, Cuttack.
+              Expertise: Minor Oral Surgery | Maxillofacial Trauma | Oral Cancer | Implants | Facial Aesthetics.
+            </p>
+            <button class="about-team-readmore" (click)="showPoojaFull = !showPoojaFull">
+              {{ showPoojaFull ? 'Show Less' : 'Read More' }}
             </button>
           </div>
         </div>
@@ -668,6 +704,7 @@
       [scheduleDetails]="scheduleDetails"
       [selectedSlotId]="selectedSlotId"
       [accentColor]="'#2563eb'"
+      [isQueueUpdateReminder]="isQueueUpdateReminder"
       (slotSelected)="setSelectedSlot($event.slot, $event.session)"
       (bookClicked)="onSpotFreeBook($event)">
     </app-inline-booking>
@@ -1623,7 +1660,7 @@
   <section class="bottom-section">
     <div class="booking-scroll-area">
       <form [formGroup]="unregForm">
-        <p class="sm:text-base text-lg font-medium title-font mb-2">Book An Appointment For Dr {{ profRes?.name || 'Jasbir Meher' }}</p>
+        <p class="sm:text-base text-lg font-medium title-font mb-2">Book An Appointment For  {{ profRes?.name || 'Jasbir Meher' }}</p>
 
         <div class="mb-2">
           <label class="center-block">Full Name *:
