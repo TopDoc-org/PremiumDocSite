@@ -3,12 +3,42 @@
 <div class="profile-landing" [class.animations-on]="animationsEnabled" [class.dark-mode]="darkMode">
 
   <!-- Loading State -->
-  <div *ngIf="timelineFetchStatus === 'fetching'" class="loading-container">
-    <div class="profile-loader">
-      <div class="profile-loader-ring"></div>
-      <img [src]="clinicLogo" alt="Loading..." class="profile-loader-logo">
+  <div *ngIf="timelineFetchStatus === 'fetching'" class="cool-loader-overlay">
+    <!-- Background particles -->
+    <div class="cl-particles" aria-hidden="true">
+      <span class="cl-particle"></span>
+      <span class="cl-particle"></span>
+      <span class="cl-particle"></span>
+      <span class="cl-particle"></span>
+      <span class="cl-particle"></span>
+      <span class="cl-particle"></span>
     </div>
-    <span class="loading-text">Loading doctor profile...</span>
+
+    <div class="cl-center">
+      <!-- Orbital rings -->
+      <div class="cl-ring cl-ring--1"></div>
+      <div class="cl-ring cl-ring--2"></div>
+      <div class="cl-ring cl-ring--3"></div>
+
+      <!-- Orbiting dot on ring 2 -->
+      <div class="cl-dot-track">
+        <span class="cl-dot"></span>
+      </div>
+
+      <!-- Clinic logo -->
+      <div class="cl-logo-wrap">
+        <img [src]="clinicLogo" alt="Dr. Meher's Clinic" class="cl-logo-img">
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="cl-text">
+      <span class="cl-clinic-name">Dr. Meher's Orthodontic Center</span>
+      <span class="cl-tagline">Loading your experience</span>
+      <div class="cl-dots">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->

@@ -916,6 +916,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    background: rgba(4, 12, 35, 0.95);
 
     &::before {
       content: '';
@@ -993,7 +994,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     flex-shrink: 1;
 
     .hero-logo-ring { width: 40px; height: 40px; flex-shrink: 0; }
-    .hero-clinic-logo { width: 40px; height: 40px; }
+    .hero-clinic-logo { width: 100%; height: 100%; scale: 1.25; }
     .hero-brand-text {
       min-width: 0;
       white-space: normal;
@@ -1011,7 +1012,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   @media (max-width: 400px) {
     .hero-logo-ring { width: 34px; height: 34px; }
-    .hero-clinic-logo { width: 34px; height: 34px; }
+    .hero-clinic-logo { width: 100%; height: 100%; scale: 1.25; }
     .hero-clinic-name { font-size: 0.65rem; }
     .hero-clinic-tagline { font-size: 0.52rem; }
     .hero-clinic-regn { font-size: 0.48rem; }
@@ -4094,6 +4095,258 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 //  15. LOADING STATES
 // ===============================================
 
+// =============================================
+//  CINEMATIC LOADER OVERLAY
+// =============================================
+
+.cool-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    rgba(6, 20, 55, 0.98) 0%,
+    rgba(2, 8, 28, 1) 70%
+  );
+  overflow: hidden;
+
+  // subtle grid texture
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(20, 184, 166, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20, 184, 166, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+}
+
+// ── Floating background particles ──
+.cl-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  .cl-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(20, 184, 166, 0.55);
+    animation: cl-float linear infinite;
+
+    &:nth-child(1) { width: 4px; height: 4px; left: 12%; animation-duration: 8s;  animation-delay: 0s;   top: 80%; }
+    &:nth-child(2) { width: 3px; height: 3px; left: 28%; animation-duration: 11s; animation-delay: 1.5s; top: 90%; background: rgba(212, 175, 55, 0.5); }
+    &:nth-child(3) { width: 5px; height: 5px; left: 55%; animation-duration: 9s;  animation-delay: 3s;   top: 85%; }
+    &:nth-child(4) { width: 3px; height: 3px; left: 70%; animation-duration: 13s; animation-delay: 0.8s; top: 88%; background: rgba(212, 175, 55, 0.5); }
+    &:nth-child(5) { width: 4px; height: 4px; left: 82%; animation-duration: 7s;  animation-delay: 2s;   top: 82%; }
+    &:nth-child(6) { width: 3px; height: 3px; left: 42%; animation-duration: 10s; animation-delay: 4s;   top: 92%; }
+  }
+}
+
+@keyframes cl-float {
+  0%   { transform: translateY(0) scale(1);    opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(-100vh) scale(0.6); opacity: 0; }
+}
+
+// ── Center ring system ──
+.cl-center {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  @media (max-width: 767px) {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+.cl-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.cl-ring--1 {
+  inset: 0;
+  border-top-color: rgba(20, 184, 166, 0.9);
+  border-right-color: rgba(20, 184, 166, 0.2);
+  animation: cl-spin 1.6s linear infinite;
+  box-shadow: 0 0 16px rgba(20, 184, 166, 0.35);
+}
+
+.cl-ring--2 {
+  inset: 16px;
+  border-bottom-color: rgba(212, 175, 55, 0.85);
+  border-left-color: rgba(212, 175, 55, 0.2);
+  animation: cl-spin 2.4s linear infinite reverse;
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.3);
+}
+
+.cl-ring--3 {
+  inset: 32px;
+  border-top-color: rgba(255, 255, 255, 0.4);
+  border-right-color: rgba(255, 255, 255, 0.08);
+  animation: cl-spin 3.5s linear infinite;
+}
+
+@keyframes cl-spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Orbiting glowing dot (tracks ring 2 diameter) ──
+.cl-dot-track {
+  position: absolute;
+  inset: 16px;
+  border-radius: 50%;
+  animation: cl-spin 2.4s linear infinite reverse;
+  pointer-events: none;
+
+  @media (max-width: 767px) {
+    inset: 12px;
+  }
+}
+
+.cl-dot {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 1);
+  box-shadow:
+    0 0 8px rgba(212, 175, 55, 0.9),
+    0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+// ── Logo in center ──
+.cl-logo-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(4, 12, 35, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 3px rgba(20, 184, 166, 0.2),
+    0 0 40px rgba(20, 184, 166, 0.2),
+    0 0 80px rgba(20, 184, 166, 0.08);
+  animation: cl-logo-pulse 2s ease-in-out infinite;
+
+  @media (max-width: 767px) {
+    width: 82px;
+    height: 82px;
+  }
+}
+
+.cl-logo-img {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  object-fit: cover;
+  scale: 1.15;
+
+  @media (max-width: 767px) {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@keyframes cl-logo-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px rgba(20, 184, 166, 0.2),
+      0 0 40px rgba(20, 184, 166, 0.2),
+      0 0 80px rgba(20, 184, 166, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(20, 184, 166, 0.35),
+      0 0 60px rgba(20, 184, 166, 0.35),
+      0 0 100px rgba(20, 184, 166, 0.15);
+  }
+}
+
+// ── Bottom text ──
+.cl-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.cl-clinic-name {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+  text-align: center;
+  animation: cl-fade-in 0.8s ease 0.3s both;
+
+  @media (max-width: 767px) {
+    font-size: 0.95rem;
+  }
+}
+
+.cl-tagline {
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(20, 184, 166, 0.8);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  animation: cl-fade-in 0.8s ease 0.6s both;
+}
+
+@keyframes cl-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Animated ellipsis dots ──
+.cl-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+
+  span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(20, 184, 166, 0.7);
+    animation: cl-dot-bounce 1.2s ease-in-out infinite;
+
+    &:nth-child(1) { animation-delay: 0s; }
+    &:nth-child(2) { animation-delay: 0.2s; }
+    &:nth-child(3) { animation-delay: 0.4s; }
+  }
+}
+
+@keyframes cl-dot-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40%            { transform: scale(1.2); opacity: 1; }
+}
+
+// ─────────────────────────────────────────────
+//  OLD SIMPLE LOADER (kept for error state)
+// ─────────────────────────────────────────────
 .loading-container {
   display: flex;
   align-items: center;
@@ -7762,6 +8015,18 @@ $bk-font: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   cursor: pointer;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  padding: 0;
+  line-height: 1;
+
+  mat-icon {
+    font-size: 22px !important;
+    width: 22px !important;
+    height: 22px !important;
+    line-height: 22px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
 
   &:hover {
     transform: scale(1.1);
