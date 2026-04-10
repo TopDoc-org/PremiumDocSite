@@ -777,28 +777,11 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 }
 
 .hero-top-row {
-  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
   gap: 0;
   animation: profile-fade-in 0.5s ease 0.1s both;
-
-  .hero-iso-inline {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    animation: stamp-slam 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
-
-    .iso-inline-img {
-      height: 90px;
-      width: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5));
-      animation: stamp-slam-repeat 5s cubic-bezier(0.22, 1, 0.36, 1) 2s infinite;
-    }
-  }
 
   @media (max-width: 767px) {
     gap: 8px;
@@ -806,99 +789,98 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     align-items: center;
     justify-content: center;
     padding: 0 12px;
-
-    .hero-iso-inline {
-      position: static;
-      transform: none;
-      flex-shrink: 0;
-      width: 100%;
-      text-align: center;
-      margin-top: 8px;
-
-      .iso-inline-img {
-        height: 32px;
-        max-width: 100%;
-      }
-    }
   }
 
   @media (max-width: 400px) {
     gap: 4px;
-    .hero-iso-inline {
-      flex-shrink: 0;
-      .iso-inline-img { height: 28px; }
-    }
   }
 }
 
+// ── Two separate brand ovals row ──
 .hero-brands-row {
   display: inline-flex;
   align-items: center;
-  gap: 16px;
-  padding: 10px 16px 10px 10px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 100px;
-  backdrop-filter: blur(12px);
-  min-width: 0;
+  gap: 10px;
   flex-shrink: 1;
   max-width: fit-content;
-
-  .hero-clinic-brand {
-    margin-bottom: 0;
-  }
-
-  // Vertical divider between brand and sponsor
-  .hero-brand-divider {
-    width: 1px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.12);
-    flex-shrink: 0;
-  }
-
-  .hero-sponsor-pill {
-    flex-shrink: 0;
-    min-width: 0;
-    border-radius: 100px;
-    border: 1px solid transparent;
-    padding: 2px 6px;
-
-    .hero-sponsor-img {
-      height: 30px;
-      width: auto;
-      object-fit: contain;
-      filter: brightness(1.1);
-      animation: sponsor-pulse 2.5s ease-in-out infinite;
-    }
-  }
+  flex-wrap: wrap;
 
   @media (max-width: 767px) {
     gap: 8px;
-    padding: 7px 10px 7px 7px;
-    border-radius: 100px;
-    flex-shrink: 1;
-    min-width: 0;
-    overflow: hidden;
-
-    .hero-brand-divider { height: 28px; }
-    .hero-sponsor-pill .hero-sponsor-img { height: 22px; }
-  }
-
-  @media (max-width: 767px) {
-    max-width: fit-content;
-    margin: 0 auto;
-    padding: 6px 10px 6px 6px;
-    gap: 8px;
-
-    .hero-brand-divider { height: 18px; }
-    .hero-sponsor-pill .hero-sponsor-img { height: 14px; }
+    justify-content: center;
+    width: 100%;
   }
 
   @media (max-width: 400px) {
-    gap: 5px;
-    padding: 5px 8px 5px 5px;
-    .hero-brand-divider { height: 20px; }
-    .hero-sponsor-pill .hero-sponsor-img { height: 16px; }
+    gap: 6px;
+  }
+}
+
+// ── Invisalign oval (smaller, separate) ──
+.hero-invisalign-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  background: rgba(4, 12, 35, 0.82);
+  border: 2px solid rgba(0, 195, 255, 0.75);
+  border-radius: 100px;
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+  box-shadow:
+    0 0 22px rgba(0, 195, 255, 0.4),
+    0 0 6px  rgba(0, 195, 255, 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: invisalign-border-pulse 2.2s ease-in-out infinite;
+
+  .hero-sponsor-img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(1.15) contrast(1.05);
+  }
+
+  @media (max-width: 767px) {
+    padding: 8px 20px;
+    .hero-sponsor-img { height: 32px; }
+  }
+
+  @media (max-width: 400px) {
+    padding: 6px 16px;
+    .hero-sponsor-img { height: 28px; }
+  }
+}
+
+@keyframes invisalign-border-pulse {
+  0%, 100% {
+    border-color: rgba(0, 195, 255, 0.85);
+    box-shadow:
+      0 0 28px rgba(0, 195, 255, 0.55),
+      0 0 8px  rgba(0, 195, 255, 0.3),
+      0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    border-color: rgba(0, 195, 255, 0.35);
+    box-shadow:
+      0 0 10px rgba(0, 195, 255, 0.15),
+      0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@keyframes clinic-border-pulse {
+  0%, 100% {
+    border-color: rgba(212, 175, 55, 0.35);
+    box-shadow:
+      0 0 12px rgba(212, 175, 55, 0.15),
+      0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    border-color: rgba(212, 175, 55, 0.95);
+    box-shadow:
+      0 0 32px rgba(212, 175, 55, 0.55),
+      0 0 10px rgba(212, 175, 55, 0.3),
+      0 4px 16px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -906,21 +888,28 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 .hero-clinic-brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   text-decoration: none;
   color: inherit;
   cursor: pointer;
   min-width: 0;
   border-radius: 100px;
-  border: 1px solid transparent;
-  padding: 6px 12px 6px 6px;
+  border: 2px solid rgba(212, 175, 55, 0.35);
+  padding: 10px 32px 10px 8px;
+  background: rgba(4, 12, 35, 0.82);
+  backdrop-filter: blur(8px);
   overflow: hidden;
+  box-shadow:
+    0 0 12px rgba(212, 175, 55, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: clinic-border-pulse 2.4s ease-in-out infinite;
   &:hover { opacity: 0.9; }
 
   .hero-logo-ring {
     position: relative;
-    width: 56px;
-    height: 56px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     overflow: hidden;
     display: flex;
@@ -973,7 +962,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   .hero-clinic-name {
     font-family: var(--font-heading), sans-serif;
-    font-size: 0.88rem;
+    font-size: 1.08rem;
     font-weight: 700;
     color: white;
     letter-spacing: 0.01em;
@@ -982,7 +971,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   .hero-clinic-tagline {
     font-family: var(--font-body), sans-serif;
-    font-size: 0.62rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: $teal-300;
     letter-spacing: 0.04em;
@@ -991,7 +980,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   .hero-clinic-regn {
     font-family: var(--font-body), sans-serif;
-    font-size: 0.52rem;
+    font-size: 0.62rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.62);
     letter-spacing: 0.03em;
@@ -1054,6 +1043,28 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     text-transform: uppercase;
     margin-bottom: 24px;
     backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+
+    // single mirror sweep
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(
+        115deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.22) 50%,
+        transparent 100%
+      );
+      transform: translateX(-150%);
+      animation: badge-shimmer-sweep 4s ease-in-out 1.5s infinite;
+      pointer-events: none;
+      border-radius: inherit;
+    }
 
     .badge-dot {
       width: 6px;
@@ -1182,11 +1193,56 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     font-weight: 600;
     color: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(4px);
+    position: relative;
+    overflow: hidden;
+
+    // single mirror sweep
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(
+        115deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.22) 50%,
+        transparent 100%
+      );
+      transform: translateX(-150%);
+      animation: badge-shimmer-sweep 4s ease-in-out infinite;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    &:nth-child(1)::after { animation-delay: 1.0s; }
+    &:nth-child(2)::after { animation-delay: 1.8s; }
+    &:nth-child(3)::after { animation-delay: 2.6s; }
 
     .trust-badge-icon {
       color: $teal-400;
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+      line-height: 16px !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    span {
+      line-height: 1;
+      vertical-align: middle;
     }
   }
+}
+
+@keyframes badge-shimmer-sweep {
+  0%           { transform: translateX(-150%); }
+  30%, 100%    { transform: translateX(350%); }
 }
 
 .hero-image-wrapper {
@@ -1201,6 +1257,13 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     flex-direction: column;
     align-items: center;
     width: 100%;
+  }
+
+  // Frame wraps the image + stamp so stamp is relative to photo corner
+  .hero-image-frame {
+    position: relative;
+    display: inline-block;
+    line-height: 0; // removes inline gap
   }
 
   .hero-image-container {
@@ -1245,10 +1308,10 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   .hero-iso-stamp {
     position: absolute;
-    top: -15px;
-    right: -25px;
+    bottom: -42px;
+    right: -42px;
     z-index: 10;
-    animation: stamp-slam-repeat 5s cubic-bezier(0.22, 1, 0.36, 1) 0.8s infinite;
+    animation: stamp-slam 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
 
     .iso-stamp-img {
       width: 95px;
@@ -1258,15 +1321,13 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     }
 
     @media (max-width: 1024px) {
-      top: -10px;
-      right: -15px;
+      bottom: -32px;
+      right: -32px;
       .iso-stamp-img { width: 78px; }
     }
 
     @media (max-width: 767px) {
-      top: -8px;
-      right: -8px;
-      .iso-stamp-img { width: 62px; }
+      display: none;
     }
   }
 
@@ -1293,7 +1354,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    margin-top: 6px;
+    margin-top: 54px;
     animation: profile-fade-in 0.5s ease 0.4s both;
 
     .hero-highlight-tag {
@@ -1350,7 +1411,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     }
 
     @media (max-width: 767px) {
-      margin-top: 4px;
+      margin-top: 36px;
       .hero-highlight-tag { font-size: 0.62rem; padding: 6px 16px; }
       .hero-reg-number { font-size: 0.6rem; }
     }
