@@ -1,5 +1,5 @@
 import {
-  AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit,
+  AfterViewInit, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit,
   Renderer2, TemplateRef, ViewChild
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
@@ -28,7 +28,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   scheduleDetails: any[] = [];
   openBookByDefault = false;
   unregForm!: FormGroup;
-  authForm!: FormGroup;
+  showProcedureDropdown = false;
   showAllOffers = false;
   animationsEnabled = true;
   darkMode = false;
@@ -65,14 +65,23 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   selectedClinicWidget = '';
 
   // Auth gate state
-  authStep: 'none' | 'checking' | 'login' | 'register' = 'none';
+  authStep: 'none' | 'checking' | 'login' | 'register' | 'new-number' = 'none';
   authLoading = false;
   authError = '';
-  showPassword = false;
-  showConfirmPassword = false;
   pendingSessionId = '';
   loggedInToken = '';
   loggedInUserId = '';
+  existingUserDetails: { name: string; mobile: string; gender: string } | null = null;
+
+  // PIN auth state
+  pinValue = '';
+  confirmPinValue = '';
+  pinResetCounter = 0;
+  confirmPinResetCounter = 0;
+  registerPinStep: 'create' | 'confirm' = 'create';
+
+  // New number form state
+  newNumberForm!: FormGroup;
 
   // Forgot password state
   showForgotPassword = false;
@@ -168,15 +177,17 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.unregForm = this.fb.group({
       name: ['', [Validators.required]],
       mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      gender: ['', [Validators.required]],
+      email: ['', [Validators.email]],
+      gender: ['male', [Validators.required]],
       reasonForVisit: ['', [Validators.required]],
       address: ['']
     });
 
-    this.authForm = this.fb.group({
-      password: ['', [Validators.required]],
-      confirmPassword: ['']
+    this.newNumberForm = this.fb.group({
+      name: ['', [Validators.required]],
+      mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      email: ['', [Validators.email]],
+      gender: ['male', [Validators.required]]
     });
 
     // Restore dark mode preference
@@ -850,7 +861,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     const reason = this.unregForm.get('reasonForVisit')?.value;
     const clinicOk = this.clinicNamesWidget.length === 0 || !!this.effectiveClinicWidget;
     const mobileValid = /^\d{10}$/.test(mobile || '');
-    const emailValid = !!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailValid = !email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     return !!name && mobileValid && emailValid && !!gender && !!reason && clinicOk;
   }
 
@@ -949,27 +960,54 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.openAuthStep(sessionId);
   }
 
+  selectProcedure(value: string): void {
+    this.unregForm.get('reasonForVisit')?.setValue(value);
+    this.unregForm.get('reasonForVisit')?.markAsTouched();
+    this.showProcedureDropdown = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.procedure-dropdown')) {
+      this.showProcedureDropdown = false;
+    }
+  }
+
   openAuthStep(sessionId: string): void {
     this.pendingSessionId = sessionId;
     this.authStep = 'checking';
     this.authError = '';
-    this.authForm.reset();
-    this.authForm.get('confirmPassword')?.clearValidators();
-    this.authForm.get('confirmPassword')?.updateValueAndValidity();
+    this.pinValue = '';
+    this.confirmPinValue = '';
+    this.pinResetCounter++;
+    this.existingUserDetails = null;
 
     const mobile = this.unregForm.get('mobile')?.value?.trim() || '';
     this.bookingService.checkMobileRegistered(mobile).subscribe({
       next: (res: any) => {
         if (res?.hits > 0) {
+          const user = res?.results?.[0] || res?.result?.[0] || res;
+          const userName = user?.name
+            || ((user?.firstName || '') + ' ' + (user?.lastName || '')).trim()
+            || '';
+          this.existingUserDetails = {
+            name: userName,
+            mobile: user?.mobileNumber || user?.mobile || mobile,
+            gender: user?.gender || ''
+          };
+          if (this.existingUserDetails.name) {
+            this.unregForm.patchValue({ name: this.existingUserDetails.name });
+          }
+          if (this.existingUserDetails.gender) {
+            this.unregForm.patchValue({ gender: this.existingUserDetails.gender.toLowerCase() });
+          }
           this.authStep = 'login';
         } else {
           this.authStep = 'register';
-          this.authForm.get('confirmPassword')?.setValidators([Validators.required]);
-          this.authForm.get('confirmPassword')?.updateValueAndValidity();
         }
       },
       error: () => {
-        // On error fallback to login tab
         this.authStep = 'login';
       }
     });
@@ -979,7 +1017,12 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.authStep = 'none';
     this.pendingSessionId = '';
     this.authError = '';
-    this.authForm.reset();
+    this.pinValue = '';
+    this.confirmPinValue = '';
+    this.pinResetCounter++;
+    this.confirmPinResetCounter++;
+    this.registerPinStep = 'create';
+    this.existingUserDetails = null;
     this.showForgotPassword = false;
     this.forgotPasswordEmail = '';
     this.forgotPasswordSent = false;
@@ -989,17 +1032,75 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   switchAuthMode(mode: 'login' | 'register'): void {
     this.authStep = mode;
     this.authError = '';
-    this.authForm.reset();
+    this.pinValue = '';
+    this.confirmPinValue = '';
+    this.pinResetCounter++;
+    this.confirmPinResetCounter++;
+    this.registerPinStep = 'create';
     this.showForgotPassword = false;
     this.forgotPasswordEmail = '';
     this.forgotPasswordSent = false;
     this.forgotPasswordError = '';
-    if (mode === 'register') {
-      this.authForm.get('confirmPassword')?.setValidators([Validators.required]);
-    } else {
-      this.authForm.get('confirmPassword')?.clearValidators();
-    }
-    this.authForm.get('confirmPassword')?.updateValueAndValidity();
+  }
+
+  openNewNumberForm(): void {
+    this.authStep = 'new-number';
+    this.authError = '';
+    this.pinValue = '';
+    this.confirmPinValue = '';
+    this.pinResetCounter++;
+    this.confirmPinResetCounter++;
+    this.registerPinStep = 'create';
+    this.newNumberForm.reset({
+      name: this.unregForm.get('name')?.value?.trim() || '',
+      mobile: '',
+      email: this.unregForm.get('email')?.value?.trim() || '',
+      gender: this.unregForm.get('gender')?.value || 'male'
+    });
+  }
+
+  submitNewNumber(): void {
+    this.newNumberForm.markAllAsTouched();
+    if (this.newNumberForm.invalid) return;
+
+    const mobile = this.newNumberForm.get('mobile')?.value?.trim();
+    this.unregForm.patchValue({
+      name: this.newNumberForm.get('name')?.value?.trim(),
+      mobile,
+      email: this.newNumberForm.get('email')?.value?.trim(),
+      gender: this.newNumberForm.get('gender')?.value
+    });
+
+    this.authStep = 'checking';
+    this.authError = '';
+    this.existingUserDetails = null;
+    this.bookingService.checkMobileRegistered(mobile).subscribe({
+      next: (res: any) => {
+        if (res?.hits > 0) {
+          const user = res?.results?.[0] || res?.result?.[0] || res;
+          const userName = user?.name
+            || ((user?.firstName || '') + ' ' + (user?.lastName || '')).trim()
+            || '';
+          this.existingUserDetails = {
+            name: userName,
+            mobile: user?.mobileNumber || user?.mobile || mobile,
+            gender: user?.gender || ''
+          };
+          if (this.existingUserDetails.name) {
+            this.unregForm.patchValue({ name: this.existingUserDetails.name });
+          }
+          if (this.existingUserDetails.gender) {
+            this.unregForm.patchValue({ gender: this.existingUserDetails.gender.toLowerCase() });
+          }
+          this.authStep = 'login';
+        } else {
+          this.authStep = 'register';
+        }
+      },
+      error: () => {
+        this.authStep = 'login';
+      }
+    });
   }
 
   sendForgotPassword(): void {
@@ -1021,12 +1122,40 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  submitAuth(): void {
-    this.authForm.markAllAsTouched();
-    if (this.authForm.invalid) return;
+  onPinComplete(pin: string): void {
+    this.pinValue = pin;
+    if (this.authStep === 'register' && this.registerPinStep === 'create') {
+      this.registerPinStep = 'confirm';
+      this.confirmPinValue = '';
+      this.confirmPinResetCounter++;
+    }
+  }
 
+  onPinChange(pin: string): void {
+    this.pinValue = pin;
+    this.authError = '';
+  }
+
+  onConfirmPinComplete(pin: string): void {
+    this.confirmPinValue = pin;
+    if (this.authStep === 'register') {
+      this.submitAuth();
+    }
+  }
+
+  onConfirmPinChange(pin: string): void {
+    this.confirmPinValue = pin;
+    this.authError = '';
+  }
+
+  submitAuth(): void {
     const mobile = this.unregForm.get('mobile')?.value;
-    const password = this.authForm.get('password')?.value;
+
+    if (this.pinValue.length !== 4) {
+      this.authError = 'Please enter all 4 digits of your PIN.';
+      return;
+    }
+    const password = this.pinValue;
 
     if (this.authStep === 'login') {
       this.authLoading = true;
@@ -1042,24 +1171,30 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         error: (err: any) => {
           this.authLoading = false;
           if (err.status === 401) {
-            this.authError = 'Incorrect password. Try again or create a new account.';
+            this.authError = 'Incorrect PIN. Please try again.';
           } else {
             this.authError = err.error?.message || 'Login failed. Please try again.';
           }
         }
       });
     } else {
-      const confirmPassword = this.authForm.get('confirmPassword')?.value;
-      if (password !== confirmPassword) {
-        this.authError = 'Passwords do not match.';
+      if (this.confirmPinValue !== this.pinValue) {
+        this.authError = 'PINs do not match. Please try again.';
+        this.pinValue = '';
+        this.confirmPinValue = '';
+        this.pinResetCounter++;
+        this.confirmPinResetCounter++;
+        this.registerPinStep = 'create';
         return;
       }
+      const confirmPassword = this.confirmPinValue;
+
       const name = this.unregForm.get('name')?.value?.trim() || '';
       const nameParts = name.split(' ');
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ') || nameParts[0];
 
-      const signupPayload = {
+      const signupPayload: any = {
         firstName,
         lastName,
         name,
@@ -1070,20 +1205,21 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         userType: 'registered',
         gender: this.unregForm.get('gender')?.value || '',
         address: this.unregForm.get('address')?.value || '',
-        email: this.unregForm.get('email')?.value || '',
         dob: null,
         rights: null,
         isEmailVerified: false,
         emailVerificationOtp: null,
         acceptTerms: true,
-        referredBy: ''
+        referredBy: '',
+        isQueueUpdateReminder: this.isQueueUpdateReminder
       };
+      const signupEmail = this.unregForm.get('email')?.value?.trim();
+      if (signupEmail) { signupPayload.email = signupEmail; }
 
       this.authLoading = true;
       this.authError = '';
       this.bookingService.signupUser(signupPayload).subscribe({
         next: () => {
-          // Auto-login after signup
           this.bookingService.loginUser(mobile, password).subscribe({
             next: (loginRes: any) => {
               this.authLoading = false;
@@ -1122,7 +1258,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     const slot = this.slotSelectedDetail;
     const clinic = slot?.clinicDetails || {};
 
-    const req = {
+    const req: any = {
       doctorId: this.doctorId,
       doctorName: this.profRes?.name || 'Prof. Dr. Jasbir Meher',
       clinicDetails: {
@@ -1150,10 +1286,11 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       pin: Math.floor(Math.random() * 9000) + 1000 + '',
       paymentStatus: 'default',
       mobile: this.unregForm.value.mobile,
-      email: this.unregForm.value.email || '',
       predictedSlotTime: slot?.slotTime || '',
       isQueueUpdateReminder: this.isQueueUpdateReminder
     };
+    const bookingEmail = this.unregForm.value.email?.trim();
+    if (bookingEmail) { req.email = bookingEmail; }
     const doBooking = () => {
       this.bookingService.bookRegisteredUser(req, this.loggedInToken).subscribe(
         (res: any) => {
