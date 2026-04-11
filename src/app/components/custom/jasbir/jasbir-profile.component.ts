@@ -25,6 +25,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   timelineFetchStatus: 'none' | 'fetching' | 'done' | 'error' = 'none';
   doctorId = '';
   profRes: any;
+  private apiDoctorName = '';
   scheduleDetails: any[] = [];
   openBookByDefault = false;
   unregForm!: FormGroup;
@@ -325,6 +326,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.bookingService.fetchDoctorProfile(this.doctorId).subscribe(
       (data: any) => {
         this.profRes = data?.results?.[0] || this.getDefaultProfile();
+        this.apiDoctorName = this.profRes.name || '';
         if (this.profRes.name) {
           // Strip any existing prefixes (Dr., Prof., Prof. Dr., etc.) then add canonical prefix
           const cleanName = this.profRes.name.replace(/^(Prof\.\s*)?Dr\.\s*/i, '').replace(/^Prof\.\s*/i, '');
@@ -1260,7 +1262,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
 
     const req: any = {
       doctorId: this.doctorId,
-      doctorName: this.profRes?.name || 'Prof. Dr. Jasbir Meher',
+      doctorName: this.apiDoctorName || this.profRes?.name || '',
       clinicDetails: {
         clinicId: clinic.clinicId || clinic.id || '',
         clinicName: clinic.clinicName || clinic.name || '',
