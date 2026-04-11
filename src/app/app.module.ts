@@ -42,6 +42,7 @@ import { ErrorPageComponent } from './components/error-page/error-page.component
 import { TenantService } from './services/tenant.service';
 import { tenantInitializerFactory } from './initializers/tenant.initializer';
 import { TenantInterceptor } from './interceptors/tenant.interceptor';
+import { PinInputComponent } from './components/shared/pin-input/pin-input.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { TenantInterceptor } from './interceptors/tenant.interceptor';
     MultiDoctorComponent,
     TenantRouterComponent,
     ErrorPageComponent,
+    PinInputComponent,
   ],
   imports: [
     BrowserModule,

@@ -3,12 +3,42 @@
 <div class="profile-landing" [class.animations-on]="animationsEnabled" [class.dark-mode]="darkMode">
 
   <!-- Loading State -->
-  <div *ngIf="timelineFetchStatus === 'fetching'" class="loading-container">
-    <div class="profile-loader">
-      <div class="profile-loader-ring"></div>
-      <img [src]="clinicLogo" alt="Loading..." class="profile-loader-logo">
+  <div *ngIf="timelineFetchStatus === 'fetching'" class="cool-loader-overlay">
+    <!-- Background particles -->
+    <div class="cl-particles" aria-hidden="true">
+      <span class="cl-particle"></span>
+      <span class="cl-particle"></span>
+      <span class="cl-particle"></span>
+      <span class="cl-particle"></span>
+      <span class="cl-particle"></span>
+      <span class="cl-particle"></span>
     </div>
-    <span class="loading-text">Loading doctor profile...</span>
+
+    <div class="cl-center">
+      <!-- Orbital rings -->
+      <div class="cl-ring cl-ring--1"></div>
+      <div class="cl-ring cl-ring--2"></div>
+      <div class="cl-ring cl-ring--3"></div>
+
+      <!-- Orbiting dot on ring 2 -->
+      <div class="cl-dot-track">
+        <span class="cl-dot"></span>
+      </div>
+
+      <!-- Clinic logo -->
+      <div class="cl-logo-wrap">
+        <img [src]="clinicLogo" alt="Dr. Meher's Clinic" class="cl-logo-img">
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="cl-text">
+      <span class="cl-clinic-name">Dr. Meher's Orthodontic Center</span>
+      <span class="cl-tagline">Loading your experience</span>
+      <div class="cl-dots">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->
@@ -64,7 +94,7 @@
     </div>
 
     <!-- Dark Mode Toggle -->
-    <button class="dark-mode-toggle" (click)="toggleDarkMode()" [attr.title]="darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+    <button class="dark-mode-toggle" *ngIf="authStep === 'none'" (click)="toggleDarkMode()" [attr.title]="darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
       <mat-icon class="!text-xl">{{ darkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
     </button>
 
@@ -100,25 +130,24 @@
       <div class="hero-content">
         <!-- Brands Row (independent for mobile ordering) -->
         <div class="hero-top-row">
-          <div class="hero-brands-row">
-            <a class="hero-clinic-brand" (click)="scrollToTop()" role="button" style="cursor:pointer" aria-label="Back to top — Dr. Meher's Orthodontic Center">
+          <div class="hero-brands-row" >
+            <!-- Meher Clinic oval (larger) -->
+            <a class="hero-clinic-brand" (click)="scrollToTop()" role="button" style="cursor:pointer ;" aria-label="Back to top — Dr. Meher's Orthodontic Center">
               <div class="hero-logo-ring">
                 <img [src]="clinicLogo" alt="Dr. Meher's Clinic Logo" class="hero-clinic-logo">
               </div>
-              <div class="hero-brand-text">
+              <div class="hero-brand-text" >
                 <span class="hero-clinic-name">Dr. Meher's Orthodontic Center</span>
                 <span class="hero-clinic-tagline">& Dental Clinic, Balangir</span>
                 <span class="hero-clinic-regn">Clinic Regd No: BOL/00051/2022</span>
               </div>
             </a>
-            <div class="hero-brand-divider"></div>
-            <div class="hero-sponsor-pill">
+            <!-- Invisalign oval (smaller, separate) -->
+            <div class="hero-invisalign-pill">
               <img src="assets/images/jasbir/InvisAlignBrand.png" alt="Invisalign Provider" class="hero-sponsor-img">
             </div>
           </div>
-          <div class="hero-iso-inline">
-            <img src="assets/images/jasbir/isoWBG.png" alt="ISO 9001:2015 Certified" class="iso-inline-img">
-          </div>
+
         </div>
 
         <!-- Text Side -->
@@ -186,14 +215,20 @@
         <div class="hero-image-wrapper">
           <div class="hero-accent-shape shape-1"></div>
           <div class="hero-accent-shape shape-2"></div>
-          <div class="hero-image-container">
-            <img
-              [src]="profRes.profImageUrl?.src || 'assets/images/jasbir/profile.jpg'"
-              alt="{{ profRes.name }}"
-              loading="eager"
-              #heroImg
-              (error)="heroImg.src = 'assets/images/jasbir/profile.jpg'"
-            >
+          <div class="hero-image-frame">
+            <div class="hero-image-container">
+              <img
+                [src]="profRes.profImageUrl?.src || 'assets/images/jasbir/profile.jpg'"
+                alt="{{ profRes.name }}"
+                loading="eager"
+                #heroImg
+                (error)="heroImg.src = 'assets/images/jasbir/profile.jpg'"
+              >
+            </div>
+            <!-- ISO Certified stamp at bottom-right corner of photo -->
+            <div class="hero-iso-stamp">
+              <img src="assets/images/jasbir/isoWBG.png" alt="ISO 9001:2015 Certified" class="iso-stamp-img">
+            </div>
           </div>
           <div class="hero-image-footer">
             <span class="hero-highlight-tag">Only Orthodontist Specialist In Western Odisha</span>
@@ -201,14 +236,7 @@
         </div>
       </div>
 
-      <!-- Scroll down indicator -->
-      <button class="hero-scroll-indicator" (click)="scrollToSection('sec-about')" aria-label="Scroll to about section">
-        <span class="hero-scroll-indicator__label">Scroll</span>
-        <span class="hero-scroll-indicator__line"></span>
-        <span class="hero-scroll-indicator__arrow">
-          <mat-icon>arrow_downward</mat-icon>
-        </span>
-      </button>
+
     </section>
 
     <!-- MAIN CONTENT -->
@@ -405,7 +433,7 @@
 
         <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
           <div class="about-team-img">
-            <img src="assets/images/jasbir/asst1.jpeg" alt="Dr. Sidhant Nayak" loading="lazy">
+            <img src="assets/images/jasbir/Asst2close.jpeg" alt="Dr. Sidhant Nayak" loading="lazy" style="scale: 1; object-position: center top;">
           </div>
           <div class="about-team-info">
             <h3>Dr. Sidhant Nayak <span class="visiting-tag">(Visiting Doctor)</span></h3>
@@ -420,6 +448,42 @@
             </p>
             <button class="about-team-readmore" (click)="showSidhantFull = !showSidhantFull">
               {{ showSidhantFull ? 'Show Less' : 'Read More' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
+          <div class="about-team-img">
+            <img src="assets/images/jasbir/RajdeepBeura.jpeg" alt="Dr. Rajdeep Beura" loading="lazy">
+          </div>
+          <div class="about-team-info">
+            <h3>Dr. Rajdeep Beura <span class="visiting-tag">(Visiting Doctor)</span></h3>
+            <span class="about-team-role">Periodontist & Oral Implantologist</span>
+            <p [class.about-team-truncated]="!showRajdeepFull">
+              Associate Professor, Department of Periodontics and Oral Implantology.
+              Dental specialty focusing on the health of gum tissues which prevent, diagnose,
+              and treat gum diseases (gingivitis/periodontitis) and manage hard/soft tissue.
+            </p>
+            <button class="about-team-readmore" (click)="showRajdeepFull = !showRajdeepFull">
+              {{ showRajdeepFull ? 'Show Less' : 'Read More' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '450' : null">
+          <div class="about-team-img">
+            <img src="assets/images/jasbir/Pooja Agrawal.jpeg" alt="Dr. Pooja Agrawal" loading="lazy" style="scale: 1; object-position: center 20%;">
+          </div>
+          <div class="about-team-info">
+            <h3>Dr. Pooja Agrawal, MDS (OMFS) <span class="visiting-tag">(Visiting Doctor)</span></h3>
+            <span class="about-team-role">Consultant Oral & Maxillofacial Surgeon</span>
+            <p [class.about-team-truncated]="!showPoojaFull">
+              Fellowship-trained in Facial Cosmetic Surgery.
+              Senior Resident, SCB Government Dental College & Hospital, Cuttack.
+              Expertise: Minor Oral Surgery | Maxillofacial Trauma | Oral Cancer | Implants | Facial Aesthetics.
+            </p>
+            <button class="about-team-readmore" (click)="showPoojaFull = !showPoojaFull">
+              {{ showPoojaFull ? 'Show Less' : 'Read More' }}
             </button>
           </div>
         </div>
@@ -670,6 +734,7 @@
       [scheduleDetails]="scheduleDetails"
       [selectedSlotId]="selectedSlotId"
       [accentColor]="'#2563eb'"
+      [isQueueUpdateReminder]="isQueueUpdateReminder"
       (slotSelected)="setSelectedSlot($event.slot, $event.session)"
       (bookClicked)="onSpotFreeBook($event)">
     </app-inline-booking>
@@ -712,7 +777,7 @@
         <div class="video-tour-embed" [attr.data-aos]="animationsEnabled ? 'fade-left' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
           <div class="video-wrapper">
             <iframe
-              src="https://www.youtube.com/embed/-IlvqRKH_Ds?rel=0"
+              src="https://www.youtube.com/embed/wJ_BcllHIyo?rel=0"
               title="Dental Clinic Tour"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -874,7 +939,7 @@
     </section>
 
 
-    <!-- SECTION 11: PRACTICES / CLINICS -->
+    <!-- SECTION 11: PRACTICES / CLINICS (commented out)
     <section class="practices-section">
       <div class="section-brand-label">
         <img [src]="clinicLogo" alt="" class="section-brand-icon">
@@ -884,7 +949,6 @@
         <h2 class="section-heading" style="margin-bottom: 0;">Visit Our Dental Clinic</h2>
       </div>
 
-      <!-- PRIMARY CLINIC CARD -->
       <div class="clinic-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
         <div class="clinic-card-inner">
           <div class="clinic-logo-wrap">
@@ -893,7 +957,7 @@
           <div class="flex-1 min-w-0">
             <div class="clinic-card-header-row">
               <div>
-                <h4 class="clinic-card-name">Meher Dental Clinic</h4>
+                <h4 class="clinic-card-name">Dr Meher Dental Clinic</h4>
                 <p class="clinic-card-address">
                   <mat-icon class="!text-sm !w-4 !h-4">location_on</mat-icon>
                   Hotel Sai Palace, Kacheri Chowk, In front of Priyadarshani Cinema Hall, Balangir, Odisha
@@ -912,7 +976,6 @@
         </div>
       </div>
 
-      <!-- MONTHLY VISITS -->
       <div class="monthly-visits-block" style="margin-top: 20px;">
         <div class="monthly-visits-header">
           <mat-icon class="monthly-visits-icon">event_repeat</mat-icon>
@@ -936,6 +999,7 @@
         </div>
       </div>
     </section>
+    -->
 
 
     <!-- SECTION 11B: CLINIC MAP -->
@@ -951,7 +1015,7 @@
               <mat-icon class="!text-2xl text-blue-600">location_on</mat-icon>
             </div>
             <div>
-              <h4 class="map-address-title">Meher Dental Clinic</h4>
+              <h4 class="map-address-title">Dr Meher Dental Clinic</h4>
               <p class="map-address-text">Hotel Sai Palace, Kacheri Chowk,<br>In front of Priyadarshani Cinema Hall,<br>Balangir, Odisha</p>
             </div>
           </div>
@@ -1488,13 +1552,13 @@
         <h3 class="auth-gate-title">{{ authStep === 'login' ? 'Welcome Back!' : 'One Last Step' }}</h3>
         <p class="auth-gate-subtitle">
           {{ authStep === 'login'
-            ? 'Enter your password to confirm the booking'
-            : 'Create a password to complete your account' }}
+            ? 'Enter your 4-digit PIN to confirm the booking'
+            : 'Create a 4-digit PIN to complete your account' }}
         </p>
       </div>
 
-      <!-- Pre-filled details summary card -->
-      <div class="auth-gate-prefilled-card">
+      <!-- Pre-filled details summary card (register / fallback) -->
+      <div class="auth-gate-prefilled-card" *ngIf="authStep === 'register' || !existingUserDetails">
         <div class="auth-gate-prefilled-label">
           <mat-icon class="!text-sm">check_circle</mat-icon>
           Booking details already captured
@@ -1513,9 +1577,30 @@
         </div>
       </div>
 
-      <!-- FORGOT PASSWORD FORM -->
+      <!-- Existing user details from API (login flow) -->
+      <div class="auth-gate-prefilled-card auth-gate-prefilled-card--existing" *ngIf="authStep === 'login' && existingUserDetails">
+        <div class="auth-gate-prefilled-label auth-gate-prefilled-label--existing">
+          <mat-icon class="!text-sm">check_circle</mat-icon>
+          This number is already registered
+        </div>
+        <div class="auth-gate-prefilled-row">
+          <mat-icon class="!text-sm">phone</mat-icon>
+          <span>{{ existingUserDetails.mobile }}</span>
+        </div>
+        <div class="auth-gate-prefilled-row" *ngIf="existingUserDetails.name">
+          <mat-icon class="!text-sm">person</mat-icon>
+          <span>{{ existingUserDetails.name }}</span>
+        </div>
+        <div class="auth-gate-prefilled-row" *ngIf="existingUserDetails.gender">
+          <mat-icon class="!text-sm">wc</mat-icon>
+          <span>{{ existingUserDetails.gender | titlecase }}</span>
+        </div>
+        <p class="auth-gate-existing-hint">Enter your PIN to proceed with this account</p>
+      </div>
+
+      <!-- FORGOT PIN FORM -->
       <div class="auth-gate-forgot-panel" *ngIf="showForgotPassword && authStep === 'login'">
-        <p class="auth-gate-forgot-heading">Reset your password</p>
+        <p class="auth-gate-forgot-heading">Reset your PIN</p>
         <p class="auth-gate-forgot-sub">Enter your registered email and we'll send a reset link.</p>
 
         <ng-container *ngIf="!forgotPasswordSent">
@@ -1543,55 +1628,72 @@
         </button>
       </div>
 
-      <!-- MAIN FORM — only password fields needed -->
-      <form [formGroup]="authForm" (ngSubmit)="submitAuth()" class="auth-gate-form" *ngIf="!showForgotPassword">
+      <!-- PIN INPUT FORM -->
+      <div class="auth-gate-form" *ngIf="!showForgotPassword">
 
-        <p class="auth-gate-only-field-hint">
-          <mat-icon>info</mat-icon>
-          <span class="auth-gate-hint-text">{{ authStep === 'login' ? 'Only your password is needed' : 'Just set a password to create your account' }}</span>
-        </p>
+        <!-- LOGIN flow: single PIN -->
+        <ng-container *ngIf="authStep === 'login'">
+          <p class="auth-gate-only-field-hint">
+            <mat-icon>info</mat-icon>
+            <span class="auth-gate-hint-text">Enter your 4-digit PIN</span>
+          </p>
 
-        <!-- Password -->
-        <div class="auth-gate-field">
-          <label class="auth-gate-label">Password</label>
-          <div class="auth-gate-pwd-wrap">
-            <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
-              class="auth-gate-input"
-              [class.auth-gate-input--error]="authForm.get('password')?.invalid && authForm.get('password')?.touched"
-              [placeholder]="authStep === 'login' ? 'Enter your password' : 'Create a strong password'">
-            <button type="button" class="auth-gate-eye-btn" (click)="showPassword = !showPassword" tabindex="-1">
-              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          <div class="auth-gate-field">
+            <label class="auth-gate-label">Your PIN</label>
+            <app-pin-input
+              [length]="4"
+              [hasError]="!!authError"
+              [reset]="pinResetCounter"
+              (pinComplete)="onPinComplete($event)"
+              (pinChange)="onPinChange($event)">
+            </app-pin-input>
+          </div>
+
+          <div class="auth-gate-forgot-link">
+            <button type="button" class="auth-gate-switch-btn"
+              (click)="showForgotPassword = true; forgotPasswordError = ''; forgotPasswordSent = false; forgotPasswordEmail = ''">
+              Forgot PIN?
             </button>
           </div>
-          <div class="auth-gate-field-error" *ngIf="authForm.get('password')?.invalid && authForm.get('password')?.touched">
-            Password is required
-          </div>
-        </div>
+        </ng-container>
 
-        <!-- Confirm Password (register only) -->
-        <div class="auth-gate-field" *ngIf="authStep === 'register'">
-          <label class="auth-gate-label">Confirm Password</label>
-          <div class="auth-gate-pwd-wrap">
-            <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword"
-              class="auth-gate-input"
-              [class.auth-gate-input--error]="authForm.get('confirmPassword')?.invalid && authForm.get('confirmPassword')?.touched"
-              placeholder="Re-enter your password">
-            <button type="button" class="auth-gate-eye-btn" (click)="showConfirmPassword = !showConfirmPassword" tabindex="-1">
-              <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-            </button>
-          </div>
-          <div class="auth-gate-field-error" *ngIf="authForm.get('confirmPassword')?.invalid && authForm.get('confirmPassword')?.touched">
-            Please confirm your password
-          </div>
-        </div>
+        <!-- REGISTER flow: stepped Create → Confirm -->
+        <ng-container *ngIf="authStep === 'register'">
 
-        <!-- Forgot password link (login only) -->
-        <div class="auth-gate-forgot-link" *ngIf="authStep === 'login'">
-          <button type="button" class="auth-gate-switch-btn"
-            (click)="showForgotPassword = true; forgotPasswordError = ''; forgotPasswordSent = false; forgotPasswordEmail = ''">
-            Forgot password?
-          </button>
-        </div>
+          <!-- Step 1: Create PIN -->
+          <div class="auth-gate-field" *ngIf="registerPinStep === 'create'">
+            <p class="auth-gate-only-field-hint">
+              <mat-icon>info</mat-icon>
+              <span class="auth-gate-hint-text">Create a 4-digit PIN for your account</span>
+            </p>
+            <label class="auth-gate-label">Create PIN</label>
+            <app-pin-input
+              [length]="4"
+              [hasError]="!!authError"
+              [reset]="pinResetCounter"
+              (pinComplete)="onPinComplete($event)"
+              (pinChange)="onPinChange($event)">
+            </app-pin-input>
+          </div>
+
+          <!-- Step 2: Confirm PIN -->
+          <div class="auth-gate-field" *ngIf="registerPinStep === 'confirm'">
+            <p class="auth-gate-only-field-hint" style="background: #f0fdf4; border-color: #bbf7d0;">
+              <mat-icon style="color: #16a34a;">check_circle</mat-icon>
+              <span class="auth-gate-hint-text" style="color: #16a34a;">PIN set! Now confirm it</span>
+            </p>
+            <label class="auth-gate-label">Confirm PIN</label>
+            <app-pin-input
+              [length]="4"
+              [hasError]="!!authError"
+              [reset]="confirmPinResetCounter"
+              [autoFocus]="true"
+              (pinComplete)="onConfirmPinComplete($event)"
+              (pinChange)="onConfirmPinChange($event)">
+            </app-pin-input>
+          </div>
+
+        </ng-container>
 
         <!-- API error -->
         <div class="auth-gate-api-error" *ngIf="authError">
@@ -1599,22 +1701,90 @@
           {{ authError }}
         </div>
 
-        <!-- Submit -->
-        <button type="submit" class="auth-gate-submit" [disabled]="authLoading">
+        <!-- Submit (login: manual click, register: auto-submits on confirm complete) -->
+        <button type="button" class="auth-gate-submit" [disabled]="authLoading" (click)="submitAuth()"
+          *ngIf="authStep === 'login' || (authStep === 'register' && registerPinStep === 'confirm')">
           <span class="auth-gate-spinner" *ngIf="authLoading"></span>
           <mat-icon *ngIf="!authLoading">{{ authStep === 'login' ? 'lock_open' : 'person_add' }}</mat-icon>
           {{ authLoading ? 'Please wait...' : (authStep === 'login' ? 'Login & Confirm Booking' : 'Create Account & Book') }}
         </button>
-      </form>
+      </div>
 
       <!-- Switch mode note -->
       <div class="auth-gate-switch" *ngIf="!showForgotPassword">
-        {{ authStep === 'login' ? "Not you? New to us?" : 'Already have an account?' }}
-        <button class="auth-gate-switch-btn" (click)="switchAuthMode(authStep === 'login' ? 'register' : 'login')">
-          {{ authStep === 'login' ? 'Create account instead' : 'Login instead' }}
+        {{ authStep === 'login' ? "Not you?" : 'Already have an account?' }}
+        <button class="auth-gate-switch-btn" (click)="authStep === 'login' ? openNewNumberForm() : switchAuthMode('login')">
+          {{ authStep === 'login' ? 'Try with a different number' : 'Login instead' }}
         </button>
       </div>
 
+    </ng-container>
+
+    <!-- NEW NUMBER STATE -->
+    <ng-container *ngIf="authStep === 'new-number'">
+      <div class="auth-gate-header">
+        <div class="auth-gate-logo-ring">
+          <img [src]="clinicLogo" alt="Clinic" class="auth-gate-logo-img">
+        </div>
+        <div class="auth-gate-mode-badge auth-gate-mode-badge--new">
+          <mat-icon>person_add</mat-icon>
+          New Number
+        </div>
+        <h3 class="auth-gate-title">Use a Different Number</h3>
+        <p class="auth-gate-subtitle">Enter the mobile number you'd like to book with</p>
+      </div>
+
+      <form [formGroup]="newNumberForm" (ngSubmit)="submitNewNumber()" class="auth-gate-form">
+        <div class="auth-gate-field">
+          <label class="auth-gate-label">Full Name *</label>
+          <input type="text" formControlName="name" class="auth-gate-input"
+            [class.auth-gate-input--error]="newNumberForm.get('name')?.invalid && newNumberForm.get('name')?.touched"
+            placeholder="Full name">
+          <div class="auth-gate-field-error" *ngIf="newNumberForm.get('name')?.invalid && newNumberForm.get('name')?.touched">
+            Name is required
+          </div>
+        </div>
+
+        <div class="auth-gate-field">
+          <label class="auth-gate-label">Mobile Number *</label>
+          <input type="tel" formControlName="mobile" class="auth-gate-input"
+            [class.auth-gate-input--error]="newNumberForm.get('mobile')?.invalid && newNumberForm.get('mobile')?.touched"
+            placeholder="10-digit mobile number">
+          <div class="auth-gate-field-error" *ngIf="newNumberForm.get('mobile')?.invalid && newNumberForm.get('mobile')?.touched">
+            <span *ngIf="newNumberForm.get('mobile')?.errors?.['required']">Mobile number is required</span>
+            <span *ngIf="newNumberForm.get('mobile')?.errors?.['pattern']">Enter a valid 10-digit number</span>
+          </div>
+        </div>
+
+        <div class="auth-gate-field">
+          <label class="auth-gate-label">Email (optional)</label>
+          <input type="email" formControlName="email" class="auth-gate-input"
+            placeholder="your@email.com">
+        </div>
+
+        <div class="auth-gate-field">
+          <label class="auth-gate-label">Gender *</label>
+          <div class="flex gap-4 mt-1">
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+              <input type="radio" formControlName="gender" value="male" class="accent-blue-600"> Male
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+              <input type="radio" formControlName="gender" value="female" class="accent-blue-600"> Female
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-gate-submit">
+          <mat-icon>arrow_forward</mat-icon>
+          Continue
+        </button>
+      </form>
+
+      <div class="auth-gate-switch">
+        <button class="auth-gate-switch-btn" (click)="cancelAuth()">
+          <mat-icon class="!text-sm">arrow_back</mat-icon> Back to booking
+        </button>
+      </div>
     </ng-container>
 
   </div>
@@ -1625,7 +1795,7 @@
   <section class="bottom-section">
     <div class="booking-scroll-area">
       <form [formGroup]="unregForm">
-        <p class="sm:text-base text-lg font-medium title-font mb-2">Book An Appointment For Dr {{ profRes?.name || 'Jasbir Meher' }}</p>
+        <p class="sm:text-base text-lg font-medium title-font mb-2">Book An Appointment For  {{ profRes?.name || 'Jasbir Meher' }}</p>
 
         <div class="mb-2">
           <label class="center-block">Full Name *:
@@ -1653,7 +1823,7 @@
         </div>
 
         <div class="mb-2">
-          <label class="center-block">Email *:
+          <label class="center-block">Email <span class="text-xs text-gray-400 font-normal">(optional)</span>:
             <input formControlName="email" type="email"
               [class.border-red-400]="unregForm.controls['email'].invalid && unregForm.controls['email'].touched"
               class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
@@ -1661,7 +1831,6 @@
           </label>
           <div *ngIf="unregForm.controls['email'].invalid && unregForm.controls['email'].touched" class="alert flex items-center gap-1">
             <mat-icon class="!text-sm !w-4 !h-4 text-red-500">warning</mat-icon>
-            <span *ngIf="unregForm.controls['email'].errors?.['required']">Email is required</span>
             <span *ngIf="unregForm.controls['email'].errors?.['email']">Enter a valid email address</span>
           </div>
         </div>
@@ -1678,16 +1847,31 @@
           </div>
         </div>
 
-        <div class="mb-2">
-          <label class="center-block">Procedure *:
-            <select formControlName="reasonForVisit"
+        <div class="mb-2 procedure-dropdown">
+          <label class="center-block">Procedure *:</label>
+          <div class="relative">
+            <button type="button"
+              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 text-left flex items-center justify-between"
               [class.border-red-400]="unregForm.controls['reasonForVisit'].invalid && unregForm.controls['reasonForVisit'].touched"
-              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-              <option value="">Select procedure</option>
-              <option *ngFor="let svc of services" [value]="svc.name">{{ svc.name }}</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
+              [class.border-gray-300]="!(unregForm.controls['reasonForVisit'].invalid && unregForm.controls['reasonForVisit'].touched)"
+              (click)="showProcedureDropdown = !showProcedureDropdown">
+              <span [class.text-gray-400]="!unregForm.get('reasonForVisit')?.value">
+                {{ unregForm.get('reasonForVisit')?.value || 'Select procedure' }}
+              </span>
+              <mat-icon class="!text-base !w-4 !h-4 text-gray-400">{{ showProcedureDropdown ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </button>
+            <div class="procedure-dropdown-list" *ngIf="showProcedureDropdown">
+              <button type="button" *ngFor="let svc of services"
+                class="procedure-dropdown-item"
+                (click)="selectProcedure(svc.name)">
+                {{ svc.name }}
+              </button>
+              <button type="button" class="procedure-dropdown-item"
+                (click)="selectProcedure('Other')">
+                Other
+              </button>
+            </div>
+          </div>
           <div *ngIf="unregForm.controls['reasonForVisit'].invalid && unregForm.controls['reasonForVisit'].touched" class="alert flex items-center gap-1">
             <mat-icon class="!text-sm !w-4 !h-4 text-red-500">warning</mat-icon>
             <span>Please select a procedure</span>

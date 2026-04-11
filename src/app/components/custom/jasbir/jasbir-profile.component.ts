@@ -1,7 +1,9 @@
 import {
-  AfterViewInit, Component, ElementRef, OnDestroy, OnInit,
-  TemplateRef, ViewChild
+  AfterViewInit, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit,
+  Renderer2, TemplateRef, ViewChild
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Title, Meta } from '@angular/platform-browser';
 import * as AOS from 'aos';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -19,13 +21,14 @@ import { TenantService } from '../../../services/tenant.service';
 export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   isMobileOrTabView = false;
   isMobileView = false;
+  isQueueUpdateReminder = true;
   timelineFetchStatus: 'none' | 'fetching' | 'done' | 'error' = 'none';
   doctorId = '';
   profRes: any;
   scheduleDetails: any[] = [];
   openBookByDefault = false;
   unregForm!: FormGroup;
-  authForm!: FormGroup;
+  showProcedureDropdown = false;
   showAllOffers = false;
   animationsEnabled = true;
   darkMode = false;
@@ -36,12 +39,15 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   mobileMenuOpen = false;
   private sectionIds = ['sec-about', 'sec-tech', 'sec-offers', 'sec-services', 'sec-gallery', 'sec-contact'];
   private scrollListener: (() => void) | null = null;
+  private jsonLdScriptTags: HTMLScriptElement[] = [];
 
   get clinicLogo(): string {
     return 'assets/images/jasbir/ClinicLogo.jpeg';
   }
   activeTechSlide = 0;
   showSidhantFull = false;
+  showRajdeepFull = false;
+  showPoojaFull = false;
   techImages = [
     { src: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&h=500&fit=crop', alt: 'Digital X-Ray Machine' },
     { src: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&h=500&fit=crop', alt: 'Dental Treatment Setup' },
@@ -59,14 +65,23 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   selectedClinicWidget = '';
 
   // Auth gate state
-  authStep: 'none' | 'checking' | 'login' | 'register' = 'none';
+  authStep: 'none' | 'checking' | 'login' | 'register' | 'new-number' = 'none';
   authLoading = false;
   authError = '';
-  showPassword = false;
-  showConfirmPassword = false;
   pendingSessionId = '';
   loggedInToken = '';
   loggedInUserId = '';
+  existingUserDetails: { name: string; mobile: string; gender: string } | null = null;
+
+  // PIN auth state
+  pinValue = '';
+  confirmPinValue = '';
+  pinResetCounter = 0;
+  confirmPinResetCounter = 0;
+  registerPinStep: 'create' | 'confirm' = 'create';
+
+  // New number form state
+  newNumberForm!: FormGroup;
 
   // Forgot password state
   showForgotPassword = false;
@@ -148,7 +163,11 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     private activated: ActivatedRoute,
     private bookingService: BookingService,
     private doctorConfigService: DoctorConfigService,
-    private tenantService: TenantService
+    private tenantService: TenantService,
+    private titleService: Title,
+    private meta: Meta,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit(): void {
@@ -158,15 +177,17 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.unregForm = this.fb.group({
       name: ['', [Validators.required]],
       mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      gender: ['', [Validators.required]],
+      email: ['', [Validators.email]],
+      gender: ['male', [Validators.required]],
       reasonForVisit: ['', [Validators.required]],
       address: ['']
     });
 
-    this.authForm = this.fb.group({
-      password: ['', [Validators.required]],
-      confirmPassword: ['']
+    this.newNumberForm = this.fb.group({
+      name: ['', [Validators.required]],
+      mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      email: ['', [Validators.email]],
+      gender: ['male', [Validators.required]]
     });
 
     // Restore dark mode preference
@@ -233,6 +254,46 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.techCarouselInterval) clearInterval(this.techCarouselInterval);
     this.stopKnocdocTypewriter();
     if (this.scrollListener) this.scrollListener();
+
+    // Clean up SEO meta tags
+    this.titleService.setTitle('Doctor Sites');
+    this.meta.removeTag('name="description"');
+    this.meta.removeTag('name="keywords"');
+    this.meta.removeTag('name="robots"');
+    this.meta.removeTag('name="geo.region"');
+    this.meta.removeTag('name="geo.placename"');
+    this.meta.removeTag('name="geo.position"');
+    this.meta.removeTag('name="ICBM"');
+    this.meta.removeTag('property="og:title"');
+    this.meta.removeTag('property="og:description"');
+    this.meta.removeTag('property="og:type"');
+    this.meta.removeTag('property="og:url"');
+    this.meta.removeTag('property="og:image"');
+    this.meta.removeTag('property="og:locale"');
+    this.meta.removeTag('property="og:site_name"');
+    this.meta.removeTag('name="twitter:card"');
+    this.meta.removeTag('name="twitter:title"');
+    this.meta.removeTag('name="twitter:description"');
+    this.meta.removeTag('name="twitter:image"');
+
+    const canonical = this.document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+      this.renderer.removeChild(this.document.head, canonical);
+    }
+
+    // Restore default favicon
+    const favicon = this.document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+    if (favicon) {
+      this.renderer.setAttribute(favicon, 'type', 'image/x-icon');
+      this.renderer.setAttribute(favicon, 'href', 'favicon.ico');
+    }
+
+    this.jsonLdScriptTags.forEach(script => {
+      if (script.parentNode) {
+        this.renderer.removeChild(this.document.head, script);
+      }
+    });
+    this.jsonLdScriptTags = [];
   }
 
   scrollToSection(id: string): void {
@@ -278,6 +339,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         const savedPref = localStorage.getItem('premiumAnimations');
         this.animationsEnabled = true; // Always on — premium profile always has animations
         this.timelineFetchStatus = 'done';
+        this.setMetaTags();
+        this.injectStructuredData();
         this.initAOS();
         this.initCounterAnimations();
         setTimeout(() => this.setupOffersConfettiObserver(), 300);
@@ -291,6 +354,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         this.profRes = this.getDefaultProfile();
         this.animationsEnabled = true;
         this.timelineFetchStatus = 'done';
+        this.setMetaTags();
+        this.injectStructuredData();
         this.initAOS();
         this.initCounterAnimations();
         setTimeout(() => this.setupOffersConfettiObserver(), 300);
@@ -318,6 +383,178 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       associatedClinics: [],
       profImageUrl: { src: 'assets/images/jasbir/profile.jpg' }
     };
+  }
+
+  private setMetaTags(): void {
+    const name = this.profRes?.name || 'Prof. Dr. Jasbir Meher';
+    const specialization = this.profRes?.specialization || 'Dentist';
+    const city = this.profRes?.city || 'Balangir';
+    const state = this.profRes?.state || 'Odisha';
+    const experience = this.profRes?.yearsOfExperience || '13';
+    const rating = this.profRes?.averageRating || 4.9;
+    const imageUrl = this.profRes?.profImageUrl?.src
+      ? (this.profRes.profImageUrl.src.startsWith('http')
+          ? this.profRes.profImageUrl.src
+          : `${window.location.origin}/${this.profRes.profImageUrl.src}`)
+      : `${window.location.origin}/assets/images/jasbir/profile.jpg`;
+    const canonicalUrl = window.location.origin + window.location.pathname;
+
+    const title = `${name} | Best ${specialization} & Orthodontist in ${city}, ${state}`;
+    this.titleService.setTitle(title);
+
+    const description = `${name} - Best ${specialization} & Orthodontist in ${city}, ${state}. BDS, MDS, PhD with ${experience}+ years experience. Invisalign provider, laser dentistry, braces & dental implants. Rated ${rating}/5. Book appointment online today.`;
+    this.meta.updateTag({ name: 'description', content: description });
+    this.meta.updateTag({ name: 'keywords', content: [
+      `best dentist in ${city}`, `dentist in ${city}`, `orthodontist in ${city}`,
+      `best orthodontist in ${city}`, `dental clinic in ${city}`, `${city} dentist`,
+      `best dental clinic ${city}`, `teeth braces ${city}`, `invisalign ${city}`,
+      `clear aligners ${city}`, `root canal treatment ${city}`, `dental implants ${city}`,
+      `laser dentistry ${city}`, `kids dentist ${city}`, `tooth extraction ${city}`,
+      `dental crowns ${city}`, `teeth whitening ${city}`, `gum treatment ${city}`,
+      name, `dentist ${state}`, `orthodontist ${state}`, `dental clinic ${state}`,
+      `best dentist in ${state}`, 'orthodontic center balangir', 'dental surgeon balangir'
+    ].join(', ') });
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+
+    // Geo meta tags for local SEO ("dentist near me" searches)
+    this.meta.updateTag({ name: 'geo.region', content: 'IN-OR' }); // ISO 3166-2 for Odisha
+    this.meta.updateTag({ name: 'geo.placename', content: `${city}, ${state}` });
+    this.meta.updateTag({ name: 'geo.position', content: '20.6989;83.4636' }); // Balangir coordinates
+    this.meta.updateTag({ name: 'ICBM', content: '20.6989, 83.4636' });
+
+    // Set clinic logo as favicon
+    this.setFavicon(`${window.location.origin}/assets/images/jasbir/ClinicLogo.jpeg`);
+
+    // Open Graph
+    this.meta.updateTag({ property: 'og:title', content: title });
+    this.meta.updateTag({ property: 'og:description', content: description });
+    this.meta.updateTag({ property: 'og:type', content: 'website' });
+    this.meta.updateTag({ property: 'og:url', content: canonicalUrl });
+    this.meta.updateTag({ property: 'og:image', content: imageUrl });
+    this.meta.updateTag({ property: 'og:locale', content: 'en_IN' });
+    this.meta.updateTag({ property: 'og:site_name', content: `${name} - Orthodontic Center & Dental Clinic` });
+
+    // Twitter Card
+    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.meta.updateTag({ name: 'twitter:title', content: title });
+    this.meta.updateTag({ name: 'twitter:description', content: description });
+    this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
+
+    this.setCanonicalUrl(canonicalUrl);
+  }
+
+  private setFavicon(url: string): void {
+    let link: HTMLLinkElement | null = this.document.querySelector('link[rel="icon"]');
+    if (!link) {
+      link = this.renderer.createElement('link');
+      this.renderer.setAttribute(link, 'rel', 'icon');
+      this.renderer.appendChild(this.document.head, link);
+    }
+    this.renderer.setAttribute(link, 'type', 'image/jpeg');
+    this.renderer.setAttribute(link, 'href', url);
+  }
+
+  private setCanonicalUrl(url: string): void {
+    let link: HTMLLinkElement | null = this.document.querySelector('link[rel="canonical"]');
+    if (!link) {
+      link = this.renderer.createElement('link');
+      this.renderer.setAttribute(link, 'rel', 'canonical');
+      this.renderer.appendChild(this.document.head, link);
+    }
+    this.renderer.setAttribute(link, 'href', url);
+  }
+
+  private injectStructuredData(): void {
+    const name = this.profRes?.name || 'Prof. Dr. Jasbir Meher';
+    const city = this.profRes?.city || 'Balangir';
+    const state = this.profRes?.state || 'Odisha';
+    const experience = this.profRes?.yearsOfExperience || '13';
+    const rating = this.profRes?.averageRating || 4.9;
+    const reviewCount = this.profRes?.noOfReviews || 127;
+    const imageUrl = this.profRes?.profImageUrl?.src
+      ? (this.profRes.profImageUrl.src.startsWith('http')
+          ? this.profRes.profImageUrl.src
+          : `${window.location.origin}/${this.profRes.profImageUrl.src}`)
+      : `${window.location.origin}/assets/images/jasbir/profile.jpg`;
+    const canonicalUrl = window.location.origin + window.location.pathname;
+
+    // Schema 1: Dentist (LocalBusiness)
+    const localBusiness = {
+      '@context': 'https://schema.org',
+      '@type': 'Dentist',
+      'name': "Dr. Meher's Orthodontic Center & Dental Clinic",
+      'image': imageUrl,
+      'url': canonicalUrl,
+      'telephone': '+91-9437975834',
+      'address': {
+        '@type': 'PostalAddress',
+        'streetAddress': 'Hotel Sai Palace, Kacheri Chowk, In front of Priyadarshani Cinema Hall',
+        'addressLocality': city,
+        'addressRegion': state,
+        'addressCountry': 'IN'
+      },
+      'openingHoursSpecification': {
+        '@type': 'OpeningHoursSpecification',
+        'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        'opens': '09:00',
+        'closes': '20:00'
+      },
+      'priceRange': '$$',
+      'aggregateRating': {
+        '@type': 'AggregateRating',
+        'ratingValue': rating,
+        'bestRating': 5,
+        'worstRating': 1,
+        'ratingCount': reviewCount
+      },
+      'medicalSpecialty': 'Orthodontics',
+      'availableService': this.services.map(s => ({
+        '@type': 'MedicalProcedure',
+        'name': s.name,
+        'description': s.description
+      }))
+    };
+
+    // Schema 2: Person (Doctor)
+    const doctor = {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      'name': name,
+      'image': imageUrl,
+      'url': canonicalUrl,
+      'jobTitle': 'Orthodontist & Dental Surgeon',
+      'description': `${name} is an experienced orthodontist and dental surgeon with ${experience}+ years of practice in ${city}, ${state}.`,
+      'medicalSpecialty': 'Orthodontics',
+      'alumniOf': this.placeholderEducation.map(edu => ({
+        '@type': 'EducationalOrganization',
+        'name': edu.institution
+      })),
+      'knowsAbout': this.services.map(s => s.name),
+      'address': {
+        '@type': 'PostalAddress',
+        'addressLocality': city,
+        'addressRegion': state,
+        'addressCountry': 'IN'
+      }
+    };
+
+    // Schema 3: BreadcrumbList
+    const breadcrumb = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': window.location.origin },
+        { '@type': 'ListItem', 'position': 2, 'name': name, 'item': canonicalUrl }
+      ]
+    };
+
+    [localBusiness, doctor, breadcrumb].forEach(schema => {
+      const script = this.renderer.createElement('script');
+      this.renderer.setAttribute(script, 'type', 'application/ld+json');
+      script.text = JSON.stringify(schema);
+      this.renderer.appendChild(this.document.head, script);
+      this.jsonLdScriptTags.push(script);
+    });
   }
 
   private fetchClinicDetails(): void {
@@ -624,7 +861,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     const reason = this.unregForm.get('reasonForVisit')?.value;
     const clinicOk = this.clinicNamesWidget.length === 0 || !!this.effectiveClinicWidget;
     const mobileValid = /^\d{10}$/.test(mobile || '');
-    const emailValid = !!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailValid = !email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     return !!name && mobileValid && emailValid && !!gender && !!reason && clinicOk;
   }
 
@@ -723,27 +960,54 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.openAuthStep(sessionId);
   }
 
+  selectProcedure(value: string): void {
+    this.unregForm.get('reasonForVisit')?.setValue(value);
+    this.unregForm.get('reasonForVisit')?.markAsTouched();
+    this.showProcedureDropdown = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.procedure-dropdown')) {
+      this.showProcedureDropdown = false;
+    }
+  }
+
   openAuthStep(sessionId: string): void {
     this.pendingSessionId = sessionId;
     this.authStep = 'checking';
     this.authError = '';
-    this.authForm.reset();
-    this.authForm.get('confirmPassword')?.clearValidators();
-    this.authForm.get('confirmPassword')?.updateValueAndValidity();
+    this.pinValue = '';
+    this.confirmPinValue = '';
+    this.pinResetCounter++;
+    this.existingUserDetails = null;
 
     const mobile = this.unregForm.get('mobile')?.value?.trim() || '';
     this.bookingService.checkMobileRegistered(mobile).subscribe({
       next: (res: any) => {
         if (res?.hits > 0) {
+          const user = res?.results?.[0] || res?.result?.[0] || res;
+          const userName = user?.name
+            || ((user?.firstName || '') + ' ' + (user?.lastName || '')).trim()
+            || '';
+          this.existingUserDetails = {
+            name: userName,
+            mobile: user?.mobileNumber || user?.mobile || mobile,
+            gender: user?.gender || ''
+          };
+          if (this.existingUserDetails.name) {
+            this.unregForm.patchValue({ name: this.existingUserDetails.name });
+          }
+          if (this.existingUserDetails.gender) {
+            this.unregForm.patchValue({ gender: this.existingUserDetails.gender.toLowerCase() });
+          }
           this.authStep = 'login';
         } else {
           this.authStep = 'register';
-          this.authForm.get('confirmPassword')?.setValidators([Validators.required]);
-          this.authForm.get('confirmPassword')?.updateValueAndValidity();
         }
       },
       error: () => {
-        // On error fallback to login tab
         this.authStep = 'login';
       }
     });
@@ -753,7 +1017,12 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.authStep = 'none';
     this.pendingSessionId = '';
     this.authError = '';
-    this.authForm.reset();
+    this.pinValue = '';
+    this.confirmPinValue = '';
+    this.pinResetCounter++;
+    this.confirmPinResetCounter++;
+    this.registerPinStep = 'create';
+    this.existingUserDetails = null;
     this.showForgotPassword = false;
     this.forgotPasswordEmail = '';
     this.forgotPasswordSent = false;
@@ -763,17 +1032,75 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   switchAuthMode(mode: 'login' | 'register'): void {
     this.authStep = mode;
     this.authError = '';
-    this.authForm.reset();
+    this.pinValue = '';
+    this.confirmPinValue = '';
+    this.pinResetCounter++;
+    this.confirmPinResetCounter++;
+    this.registerPinStep = 'create';
     this.showForgotPassword = false;
     this.forgotPasswordEmail = '';
     this.forgotPasswordSent = false;
     this.forgotPasswordError = '';
-    if (mode === 'register') {
-      this.authForm.get('confirmPassword')?.setValidators([Validators.required]);
-    } else {
-      this.authForm.get('confirmPassword')?.clearValidators();
-    }
-    this.authForm.get('confirmPassword')?.updateValueAndValidity();
+  }
+
+  openNewNumberForm(): void {
+    this.authStep = 'new-number';
+    this.authError = '';
+    this.pinValue = '';
+    this.confirmPinValue = '';
+    this.pinResetCounter++;
+    this.confirmPinResetCounter++;
+    this.registerPinStep = 'create';
+    this.newNumberForm.reset({
+      name: this.unregForm.get('name')?.value?.trim() || '',
+      mobile: '',
+      email: this.unregForm.get('email')?.value?.trim() || '',
+      gender: this.unregForm.get('gender')?.value || 'male'
+    });
+  }
+
+  submitNewNumber(): void {
+    this.newNumberForm.markAllAsTouched();
+    if (this.newNumberForm.invalid) return;
+
+    const mobile = this.newNumberForm.get('mobile')?.value?.trim();
+    this.unregForm.patchValue({
+      name: this.newNumberForm.get('name')?.value?.trim(),
+      mobile,
+      email: this.newNumberForm.get('email')?.value?.trim(),
+      gender: this.newNumberForm.get('gender')?.value
+    });
+
+    this.authStep = 'checking';
+    this.authError = '';
+    this.existingUserDetails = null;
+    this.bookingService.checkMobileRegistered(mobile).subscribe({
+      next: (res: any) => {
+        if (res?.hits > 0) {
+          const user = res?.results?.[0] || res?.result?.[0] || res;
+          const userName = user?.name
+            || ((user?.firstName || '') + ' ' + (user?.lastName || '')).trim()
+            || '';
+          this.existingUserDetails = {
+            name: userName,
+            mobile: user?.mobileNumber || user?.mobile || mobile,
+            gender: user?.gender || ''
+          };
+          if (this.existingUserDetails.name) {
+            this.unregForm.patchValue({ name: this.existingUserDetails.name });
+          }
+          if (this.existingUserDetails.gender) {
+            this.unregForm.patchValue({ gender: this.existingUserDetails.gender.toLowerCase() });
+          }
+          this.authStep = 'login';
+        } else {
+          this.authStep = 'register';
+        }
+      },
+      error: () => {
+        this.authStep = 'login';
+      }
+    });
   }
 
   sendForgotPassword(): void {
@@ -795,12 +1122,40 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  submitAuth(): void {
-    this.authForm.markAllAsTouched();
-    if (this.authForm.invalid) return;
+  onPinComplete(pin: string): void {
+    this.pinValue = pin;
+    if (this.authStep === 'register' && this.registerPinStep === 'create') {
+      this.registerPinStep = 'confirm';
+      this.confirmPinValue = '';
+      this.confirmPinResetCounter++;
+    }
+  }
 
+  onPinChange(pin: string): void {
+    this.pinValue = pin;
+    this.authError = '';
+  }
+
+  onConfirmPinComplete(pin: string): void {
+    this.confirmPinValue = pin;
+    if (this.authStep === 'register') {
+      this.submitAuth();
+    }
+  }
+
+  onConfirmPinChange(pin: string): void {
+    this.confirmPinValue = pin;
+    this.authError = '';
+  }
+
+  submitAuth(): void {
     const mobile = this.unregForm.get('mobile')?.value;
-    const password = this.authForm.get('password')?.value;
+
+    if (this.pinValue.length !== 4) {
+      this.authError = 'Please enter all 4 digits of your PIN.';
+      return;
+    }
+    const password = this.pinValue;
 
     if (this.authStep === 'login') {
       this.authLoading = true;
@@ -816,24 +1171,30 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         error: (err: any) => {
           this.authLoading = false;
           if (err.status === 401) {
-            this.authError = 'Incorrect password. Try again or create a new account.';
+            this.authError = 'Incorrect PIN. Please try again.';
           } else {
             this.authError = err.error?.message || 'Login failed. Please try again.';
           }
         }
       });
     } else {
-      const confirmPassword = this.authForm.get('confirmPassword')?.value;
-      if (password !== confirmPassword) {
-        this.authError = 'Passwords do not match.';
+      if (this.confirmPinValue !== this.pinValue) {
+        this.authError = 'PINs do not match. Please try again.';
+        this.pinValue = '';
+        this.confirmPinValue = '';
+        this.pinResetCounter++;
+        this.confirmPinResetCounter++;
+        this.registerPinStep = 'create';
         return;
       }
+      const confirmPassword = this.confirmPinValue;
+
       const name = this.unregForm.get('name')?.value?.trim() || '';
       const nameParts = name.split(' ');
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ') || nameParts[0];
 
-      const signupPayload = {
+      const signupPayload: any = {
         firstName,
         lastName,
         name,
@@ -844,20 +1205,21 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         userType: 'registered',
         gender: this.unregForm.get('gender')?.value || '',
         address: this.unregForm.get('address')?.value || '',
-        email: this.unregForm.get('email')?.value || '',
         dob: null,
         rights: null,
         isEmailVerified: false,
         emailVerificationOtp: null,
         acceptTerms: true,
-        referredBy: ''
+        referredBy: '',
+        isQueueUpdateReminder: this.isQueueUpdateReminder
       };
+      const signupEmail = this.unregForm.get('email')?.value?.trim();
+      if (signupEmail) { signupPayload.email = signupEmail; }
 
       this.authLoading = true;
       this.authError = '';
       this.bookingService.signupUser(signupPayload).subscribe({
         next: () => {
-          // Auto-login after signup
           this.bookingService.loginUser(mobile, password).subscribe({
             next: (loginRes: any) => {
               this.authLoading = false;
@@ -896,7 +1258,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     const slot = this.slotSelectedDetail;
     const clinic = slot?.clinicDetails || {};
 
-    const req = {
+    const req: any = {
       doctorId: this.doctorId,
       doctorName: this.profRes?.name || 'Prof. Dr. Jasbir Meher',
       clinicDetails: {
@@ -924,9 +1286,11 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       pin: Math.floor(Math.random() * 9000) + 1000 + '',
       paymentStatus: 'default',
       mobile: this.unregForm.value.mobile,
-      email: this.unregForm.value.email || '',
-      predictedSlotTime: slot?.slotTime || ''
+      predictedSlotTime: slot?.slotTime || '',
+      isQueueUpdateReminder: this.isQueueUpdateReminder
     };
+    const bookingEmail = this.unregForm.value.email?.trim();
+    if (bookingEmail) { req.email = bookingEmail; }
     const doBooking = () => {
       this.bookingService.bookRegisteredUser(req, this.loggedInToken).subscribe(
         (res: any) => {

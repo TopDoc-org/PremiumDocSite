@@ -777,28 +777,11 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 }
 
 .hero-top-row {
-  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
   gap: 0;
   animation: profile-fade-in 0.5s ease 0.1s both;
-
-  .hero-iso-inline {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    animation: stamp-slam 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
-
-    .iso-inline-img {
-      height: 90px;
-      width: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5));
-      animation: stamp-slam-repeat 5s cubic-bezier(0.22, 1, 0.36, 1) 2s infinite;
-    }
-  }
 
   @media (max-width: 767px) {
     gap: 8px;
@@ -806,127 +789,100 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     align-items: center;
     justify-content: center;
     padding: 0 12px;
-
-    .hero-iso-inline {
-      position: static;
-      transform: none;
-      flex-shrink: 0;
-      width: 100%;
-      text-align: center;
-      margin-top: 8px;
-
-      .iso-inline-img {
-        height: 32px;
-        max-width: 100%;
-      }
-    }
   }
 
   @media (max-width: 400px) {
     gap: 4px;
-    .hero-iso-inline {
-      flex-shrink: 0;
-      .iso-inline-img { height: 28px; }
-    }
   }
 }
 
+// ── Two separate brand ovals row ──
 .hero-brands-row {
   display: inline-flex;
   align-items: center;
-  gap: 16px;
-  padding: 10px 16px 10px 10px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 100px;
-  backdrop-filter: blur(12px);
-  min-width: 0;
+  gap: 10px;
   flex-shrink: 1;
   max-width: fit-content;
-
-  .hero-clinic-brand {
-    margin-bottom: 0;
-  }
-
-  // Vertical divider between brand and sponsor
-  .hero-brand-divider {
-    width: 1px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.12);
-    flex-shrink: 0;
-  }
-
-  .hero-sponsor-pill {
-    flex-shrink: 0;
-    min-width: 0;
-    border-radius: 100px;
-    border: 1px solid transparent;
-    padding: 2px 6px;
-
-    .hero-sponsor-img {
-      height: 30px;
-      width: auto;
-      object-fit: contain;
-      filter: brightness(1.1);
-      animation: sponsor-pulse 2.5s ease-in-out infinite;
-    }
-  }
+  flex-wrap: wrap;
 
   @media (max-width: 767px) {
     gap: 8px;
-    padding: 7px 10px 7px 7px;
-    border-radius: 100px;
-    flex-shrink: 1;
-    min-width: 0;
-    overflow: hidden;
-
-    .hero-brand-divider { height: 28px; }
-    .hero-sponsor-pill .hero-sponsor-img { height: 22px; }
-  }
-
-  @media (max-width: 767px) {
-    max-width: fit-content;
-    margin: 0 auto;
-    padding: 6px 10px 6px 6px;
-    gap: 8px;
-
-    .hero-brand-divider { height: 18px; }
-    .hero-sponsor-pill .hero-sponsor-img { height: 14px; }
+    justify-content: center;
+    width: 100%;
   }
 
   @media (max-width: 400px) {
-    gap: 5px;
-    padding: 5px 8px 5px 5px;
-    .hero-brand-divider { height: 20px; }
-    .hero-sponsor-pill .hero-sponsor-img { height: 16px; }
+    gap: 6px;
   }
 }
+
+// ── Invisalign oval (smaller, separate) ──
+.hero-invisalign-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  background: rgba(4, 12, 35, 0.82);
+  border: 2px solid rgba(0, 195, 255, 0.75);
+  border-radius: 100px;
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+  box-shadow:
+    0 0 22px rgba(0, 195, 255, 0.4),
+    0 0 6px  rgba(0, 195, 255, 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  .hero-sponsor-img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(1.15) contrast(1.05);
+  }
+
+  @media (max-width: 767px) {
+    padding: 8px 20px;
+    .hero-sponsor-img { height: 32px; }
+  }
+
+  @media (max-width: 400px) {
+    padding: 6px 16px;
+    .hero-sponsor-img { height: 28px; }
+  }
+}
+
 
 // ── Hero clinic brand (inside .hero-top-row > .hero-brands-row) ──
 .hero-clinic-brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   text-decoration: none;
   color: inherit;
   cursor: pointer;
   min-width: 0;
   border-radius: 100px;
-  border: 1px solid transparent;
-  padding: 6px 12px 6px 6px;
+  border: 2px solid rgba(212, 175, 55, 0.35);
+  padding: 10px 32px 10px 8px;
+  background: rgba(4, 12, 35, 0.82);
+  backdrop-filter: blur(8px);
   overflow: hidden;
+  box-shadow:
+    0 0 12px rgba(212, 175, 55, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   &:hover { opacity: 0.9; }
 
   .hero-logo-ring {
     position: relative;
-    width: 56px;
-    height: 56px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    background: rgba(4, 12, 35, 0.95);
 
     &::before {
       content: '';
@@ -973,7 +929,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   .hero-clinic-name {
     font-family: var(--font-heading), sans-serif;
-    font-size: 0.88rem;
+    font-size: 1.08rem;
     font-weight: 700;
     color: white;
     letter-spacing: 0.01em;
@@ -982,7 +938,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   .hero-clinic-tagline {
     font-family: var(--font-body), sans-serif;
-    font-size: 0.62rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: $teal-300;
     letter-spacing: 0.04em;
@@ -991,7 +947,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   .hero-clinic-regn {
     font-family: var(--font-body), sans-serif;
-    font-size: 0.52rem;
+    font-size: 0.62rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.62);
     letter-spacing: 0.03em;
@@ -1004,7 +960,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     flex-shrink: 1;
 
     .hero-logo-ring { width: 40px; height: 40px; flex-shrink: 0; }
-    .hero-clinic-logo { width: 40px; height: 40px; }
+    .hero-clinic-logo { width: 100%; height: 100%; scale: 1.25; }
     .hero-brand-text {
       min-width: 0;
       white-space: normal;
@@ -1022,7 +978,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   @media (max-width: 400px) {
     .hero-logo-ring { width: 34px; height: 34px; }
-    .hero-clinic-logo { width: 34px; height: 34px; }
+    .hero-clinic-logo { width: 100%; height: 100%; scale: 1.25; }
     .hero-clinic-name { font-size: 0.65rem; }
     .hero-clinic-tagline { font-size: 0.52rem; }
     .hero-clinic-regn { font-size: 0.48rem; }
@@ -1054,6 +1010,28 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     text-transform: uppercase;
     margin-bottom: 24px;
     backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+
+    // single mirror sweep
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(
+        115deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.22) 50%,
+        transparent 100%
+      );
+      transform: translateX(-150%);
+      animation: badge-shimmer-sweep 4s ease-in-out 1.5s infinite;
+      pointer-events: none;
+      border-radius: inherit;
+    }
 
     .badge-dot {
       width: 6px;
@@ -1182,11 +1160,56 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     font-weight: 600;
     color: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(4px);
+    position: relative;
+    overflow: hidden;
+
+    // single mirror sweep
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(
+        115deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.22) 50%,
+        transparent 100%
+      );
+      transform: translateX(-150%);
+      animation: badge-shimmer-sweep 4s ease-in-out infinite;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    &:nth-child(1)::after { animation-delay: 1.0s; }
+    &:nth-child(2)::after { animation-delay: 1.8s; }
+    &:nth-child(3)::after { animation-delay: 2.6s; }
 
     .trust-badge-icon {
       color: $teal-400;
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+      line-height: 16px !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    span {
+      line-height: 1;
+      vertical-align: middle;
     }
   }
+}
+
+@keyframes badge-shimmer-sweep {
+  0%           { transform: translateX(-150%); }
+  30%, 100%    { transform: translateX(350%); }
 }
 
 .hero-image-wrapper {
@@ -1201,6 +1224,13 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     flex-direction: column;
     align-items: center;
     width: 100%;
+  }
+
+  // Frame wraps the image + stamp so stamp is relative to photo corner
+  .hero-image-frame {
+    position: relative;
+    display: inline-block;
+    line-height: 0; // removes inline gap
   }
 
   .hero-image-container {
@@ -1245,10 +1275,10 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   .hero-iso-stamp {
     position: absolute;
-    top: -15px;
-    right: -25px;
+    bottom: -42px;
+    right: -42px;
     z-index: 10;
-    animation: stamp-slam-repeat 5s cubic-bezier(0.22, 1, 0.36, 1) 0.8s infinite;
+    animation: stamp-slam 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
 
     .iso-stamp-img {
       width: 95px;
@@ -1258,15 +1288,13 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     }
 
     @media (max-width: 1024px) {
-      top: -10px;
-      right: -15px;
+      bottom: -32px;
+      right: -32px;
       .iso-stamp-img { width: 78px; }
     }
 
     @media (max-width: 767px) {
-      top: -8px;
-      right: -8px;
-      .iso-stamp-img { width: 62px; }
+      display: none;
     }
   }
 
@@ -1293,7 +1321,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    margin-top: 6px;
+    margin-top: 54px;
     animation: profile-fade-in 0.5s ease 0.4s both;
 
     .hero-highlight-tag {
@@ -1350,7 +1378,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     }
 
     @media (max-width: 767px) {
-      margin-top: 4px;
+      margin-top: 36px;
       .hero-highlight-tag { font-size: 0.62rem; padding: 6px 16px; }
       .hero-reg-number { font-size: 0.6rem; }
     }
@@ -2044,15 +2072,17 @@ mat-sidenav-container { height: calc(100vh - 85px); }
       background: none;
       border: none;
       padding: 0;
-      margin-top: 6px;
+      margin-top: 2px;
       font-family: var(--font-body), sans-serif;
-      font-size: 0.72rem;
-      font-weight: 700;
+      font-size: 0.78rem;
+      font-weight: 600;
       color: $teal-600;
       cursor: pointer;
       transition: color 0.2s ease;
+      display: inline-block;
+      line-height: 1.6;
 
-      &:hover { color: $teal-700; }
+      &:hover { color: $teal-700; text-decoration: underline; }
     }
   }
 }
@@ -2101,6 +2131,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     .about-team-info {
       h3 { font-size: 0.9rem; }
       p { font-size: 0.74rem; }
+      .about-team-readmore { font-size: 0.74rem; }
     }
   }
 }
@@ -3596,6 +3627,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   &--visible {
     transform: translateY(0);
   }
+
 }
 
 .section-nav-logo {
@@ -4029,6 +4061,258 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 //  15. LOADING STATES
 // ===============================================
 
+// =============================================
+//  CINEMATIC LOADER OVERLAY
+// =============================================
+
+.cool-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    rgba(6, 20, 55, 0.98) 0%,
+    rgba(2, 8, 28, 1) 70%
+  );
+  overflow: hidden;
+
+  // subtle grid texture
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(20, 184, 166, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20, 184, 166, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+}
+
+// ── Floating background particles ──
+.cl-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  .cl-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(20, 184, 166, 0.55);
+    animation: cl-float linear infinite;
+
+    &:nth-child(1) { width: 4px; height: 4px; left: 12%; animation-duration: 8s;  animation-delay: 0s;   top: 80%; }
+    &:nth-child(2) { width: 3px; height: 3px; left: 28%; animation-duration: 11s; animation-delay: 1.5s; top: 90%; background: rgba(212, 175, 55, 0.5); }
+    &:nth-child(3) { width: 5px; height: 5px; left: 55%; animation-duration: 9s;  animation-delay: 3s;   top: 85%; }
+    &:nth-child(4) { width: 3px; height: 3px; left: 70%; animation-duration: 13s; animation-delay: 0.8s; top: 88%; background: rgba(212, 175, 55, 0.5); }
+    &:nth-child(5) { width: 4px; height: 4px; left: 82%; animation-duration: 7s;  animation-delay: 2s;   top: 82%; }
+    &:nth-child(6) { width: 3px; height: 3px; left: 42%; animation-duration: 10s; animation-delay: 4s;   top: 92%; }
+  }
+}
+
+@keyframes cl-float {
+  0%   { transform: translateY(0) scale(1);    opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(-100vh) scale(0.6); opacity: 0; }
+}
+
+// ── Center ring system ──
+.cl-center {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  @media (max-width: 767px) {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+.cl-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.cl-ring--1 {
+  inset: 0;
+  border-top-color: rgba(20, 184, 166, 0.9);
+  border-right-color: rgba(20, 184, 166, 0.2);
+  animation: cl-spin 1.6s linear infinite;
+  box-shadow: 0 0 16px rgba(20, 184, 166, 0.35);
+}
+
+.cl-ring--2 {
+  inset: 16px;
+  border-bottom-color: rgba(212, 175, 55, 0.85);
+  border-left-color: rgba(212, 175, 55, 0.2);
+  animation: cl-spin 2.4s linear infinite reverse;
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.3);
+}
+
+.cl-ring--3 {
+  inset: 32px;
+  border-top-color: rgba(255, 255, 255, 0.4);
+  border-right-color: rgba(255, 255, 255, 0.08);
+  animation: cl-spin 3.5s linear infinite;
+}
+
+@keyframes cl-spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Orbiting glowing dot (tracks ring 2 diameter) ──
+.cl-dot-track {
+  position: absolute;
+  inset: 16px;
+  border-radius: 50%;
+  animation: cl-spin 2.4s linear infinite reverse;
+  pointer-events: none;
+
+  @media (max-width: 767px) {
+    inset: 12px;
+  }
+}
+
+.cl-dot {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 1);
+  box-shadow:
+    0 0 8px rgba(212, 175, 55, 0.9),
+    0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+// ── Logo in center ──
+.cl-logo-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(4, 12, 35, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 3px rgba(20, 184, 166, 0.2),
+    0 0 40px rgba(20, 184, 166, 0.2),
+    0 0 80px rgba(20, 184, 166, 0.08);
+  animation: cl-logo-pulse 2s ease-in-out infinite;
+
+  @media (max-width: 767px) {
+    width: 82px;
+    height: 82px;
+  }
+}
+
+.cl-logo-img {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  object-fit: cover;
+  scale: 1.15;
+
+  @media (max-width: 767px) {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@keyframes cl-logo-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px rgba(20, 184, 166, 0.2),
+      0 0 40px rgba(20, 184, 166, 0.2),
+      0 0 80px rgba(20, 184, 166, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(20, 184, 166, 0.35),
+      0 0 60px rgba(20, 184, 166, 0.35),
+      0 0 100px rgba(20, 184, 166, 0.15);
+  }
+}
+
+// ── Bottom text ──
+.cl-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.cl-clinic-name {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+  text-align: center;
+  animation: cl-fade-in 0.8s ease 0.3s both;
+
+  @media (max-width: 767px) {
+    font-size: 0.95rem;
+  }
+}
+
+.cl-tagline {
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(20, 184, 166, 0.8);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  animation: cl-fade-in 0.8s ease 0.6s both;
+}
+
+@keyframes cl-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Animated ellipsis dots ──
+.cl-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+
+  span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(20, 184, 166, 0.7);
+    animation: cl-dot-bounce 1.2s ease-in-out infinite;
+
+    &:nth-child(1) { animation-delay: 0s; }
+    &:nth-child(2) { animation-delay: 0.2s; }
+    &:nth-child(3) { animation-delay: 0.4s; }
+  }
+}
+
+@keyframes cl-dot-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40%            { transform: scale(1.2); opacity: 1; }
+}
+
+// ─────────────────────────────────────────────
+//  OLD SIMPLE LOADER (kept for error state)
+// ─────────────────────────────────────────────
 .loading-container {
   display: flex;
   align-items: center;
@@ -5801,6 +6085,19 @@ mat-sidenav-container { height: calc(100vh - 85px); }
       height: 100%;
       border: none;
     }
+
+    &--native {
+      video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: inherit;
+        background: #000;
+      }
+    }
   }
 
   .video-caption {
@@ -6193,48 +6490,45 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 1.1rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
+  // Brand colors on white pill
+  background: rgba(255, 255, 255, 0.95);
+  .fa-instagram { color: #E4405F; }
+  .fa-facebook-f { color: #1877F2; }
+  .fa-youtube { color: #FF0000; }
+  .fa-share-nodes { color: #555; }
+
   &:hover {
-    background: rgba(255, 255, 255, 0.16);
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transform: scale(1.15);
   }
 
   &:active {
-    transform: translateY(0);
-    box-shadow: none;
+    transform: scale(1);
   }
 
   &.share-btn {
-    border-color: rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.95);
   }
 
   @media (max-width: 480px) {
     width: 38px;
     height: 38px;
-    border-radius: 10px;
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   @media (min-width: 1024px) {
     width: 44px;
     height: 44px;
-    font-size: 1.15rem;
+    font-size: 1.3rem;
   }
 }
 
@@ -7493,6 +7787,50 @@ $bk-font: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   &:focus-visible { outline: 2px solid $bk-primary-400; outline-offset: 2px; }
 }
 
+// ─── Procedure Dropdown ───
+.procedure-dropdown {
+  position: relative;
+}
+
+.procedure-dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: white;
+  border: 1px solid $bk-dark-200;
+  border-radius: $bk-radius-sm;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  max-height: 240px;
+  overflow-y: auto;
+  margin-top: 4px;
+}
+
+.procedure-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  text-align: left;
+  font-family: $bk-font;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: $bk-dark-700;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: $bk-primary-50;
+    color: $bk-primary-700;
+  }
+
+  & + & {
+    border-top: 1px solid rgba(0,0,0,0.04);
+  }
+}
+
 // ─── Slot Grid ───
 .slot-grid {
   display: grid;
@@ -7674,7 +8012,7 @@ $bk-font: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   position: fixed;
   bottom: 24px;
   left: 24px;
-  z-index: 9999;
+  z-index: 999;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -7687,6 +8025,18 @@ $bk-font: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   cursor: pointer;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  padding: 0;
+  line-height: 1;
+
+  mat-icon {
+    font-size: 22px !important;
+    width: 22px !important;
+    height: 22px !important;
+    line-height: 22px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
 
   &:hover {
     transform: scale(1.1);
@@ -8874,11 +9224,11 @@ $dark-text-muted: #6b7790;
 
 // --- Blink border: top hero buttons ---
 @keyframes blink-border {
-  0%, 100% {
+  0%, 40%, 100% {
     border-color: rgba(255, 255, 255, 0.10);
     box-shadow: none;
   }
-  50% {
+  15%, 25% {
     border-color: rgba(53, 200, 235, 0.75);
     box-shadow: 0 0 8px 2px rgba(53, 200, 235, 0.4), 0 0 18px 4px rgba(53, 200, 235, 0.15);
   }
@@ -8896,16 +9246,6 @@ $dark-text-muted: #6b7790;
   }
 }
 
-// ============================================================
-//  ALWAYS-ON BLINK: these must come LAST so nothing overrides
-// ============================================================
-.hero-clinic-brand {
-  animation: blink-border 2.2s ease-in-out 2s infinite !important;
-}
-
-.hero-sponsor-pill {
-  animation: blink-border 2.2s ease-in-out 2.3s infinite !important;
-}
 
 .kbk-claim {
   animation: kbk-blink 1.8s ease-in-out infinite !important;
@@ -8913,7 +9253,7 @@ $dark-text-muted: #6b7790;
 
 @media (prefers-reduced-motion: reduce) {
   .hero-clinic-brand,
-  .hero-sponsor-pill,
+  .hero-invisalign-pill,
   .kbk-claim {
     animation: none !important;
   }
@@ -9334,11 +9674,15 @@ $dark-text-muted: #6b7790;
     .auth-gate-mode-badge { background: rgba(37,99,235,0.15); border-color: rgba(37,99,235,0.3); }
     .auth-gate-mode-badge--new { background: rgba(22,163,74,0.15); border-color: rgba(22,163,74,0.3); }
     .auth-gate-prefilled-card { background: #0f172a; border-color: #334155; }
+    .auth-gate-prefilled-card--existing { background: rgba(22,163,74,0.1); border-color: rgba(34,197,94,0.3); }
     .auth-gate-prefilled-row { color: #cbd5e1; }
+    .auth-gate-existing-hint { color: #94a3b8; }
     .auth-gate-only-field-hint { background: #1e293b; color: #94a3b8;
       mat-icon { color: #60a5fa; }
       .auth-gate-hint-text { color: #60a5fa; }
     }
+    .auth-gate-field label,
+    .mb-2 label { color: #cbd5e1; }
     .auth-gate-switch { color: #64748b; }
     .auth-gate-switch-btn { color: #60a5fa; }
     .auth-gate-checking-text { color: #94a3b8; }
@@ -9537,6 +9881,24 @@ $dark-text-muted: #6b7790;
   mat-icon { font-size: 14px; width: 14px; height: 14px; color: #64748b; flex-shrink: 0; }
 }
 
+// Existing user variant (number already registered)
+.auth-gate-prefilled-card--existing {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.auth-gate-prefilled-label--existing {
+  color: #16a34a;
+  mat-icon { color: #16a34a; }
+}
+
+.auth-gate-existing-hint {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 4px 0 0;
+  font-style: italic;
+}
+
 // Hint above password field
 .auth-gate-only-field-hint {
   display: flex;
@@ -9701,7 +10063,8 @@ $dark-text-muted: #6b7790;
 
 .auth-gate-api-error {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 10px 14px;
   background: #fef2f2;
@@ -9709,7 +10072,8 @@ $dark-text-muted: #6b7790;
   border-radius: 10px;
   font-size: 0.82rem;
   color: #b91c1c;
-  mat-icon { flex-shrink: 0; margin-top: 1px; }
+  text-align: center;
+  mat-icon { flex-shrink: 0; }
 }
 
 .auth-gate-submit {
@@ -9775,6 +10139,9 @@ $dark-text-muted: #6b7790;
 }
 
 .auth-gate-switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   background: none;
   border: none;
   cursor: pointer;
@@ -9783,6 +10150,7 @@ $dark-text-muted: #6b7790;
   font-weight: 600;
   padding: 0;
   margin-left: 4px;
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
   &:hover { text-decoration: underline; }
 }
 
@@ -10044,4 +10412,37 @@ $dark-text-muted: #6b7790;
   .limit-modal-title { color: #f1f5f9; }
   .limit-modal-body { color: #94a3b8; strong { color: #f1f5f9; } }
   .limit-modal-note { background: #0f172a; border-color: #334155; color: #64748b; }
+}
+
+// ============================================================
+//  HERO BORDER PULSE — clinic (gold) then invisalign (cyan)
+// ============================================================
+@keyframes gold-pulse {
+  0%, 100% {
+    border-color: rgba(212, 175, 55, 0.25);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    border-color: rgba(255, 215, 0, 1);
+    box-shadow: 0 0 24px rgba(255, 215, 0, 0.6), 0 0 48px rgba(255, 215, 0, 0.25), 0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@keyframes cyan-pulse {
+  0%, 100% {
+    border-color: rgba(0, 195, 255, 0.25);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    border-color: rgba(0, 195, 255, 1);
+    box-shadow: 0 0 24px rgba(0, 195, 255, 0.6), 0 0 48px rgba(0, 195, 255, 0.25), 0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.hero-clinic-brand {
+  animation: cyan-pulse 2s ease-in-out infinite !important;
+}
+
+.hero-invisalign-pill {
+  animation: cyan-pulse 2s ease-in-out 1s infinite !important;
 }
