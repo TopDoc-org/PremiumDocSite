@@ -765,7 +765,7 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 
   @media (max-width: 1024px) {
     padding: 60px 32px 48px;
-    gap: 40px;
+    gap: 24px 32px;
   }
 
   @media (max-width: 767px) {
@@ -991,7 +991,8 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 }
 
 .hero-text {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   animation: profile-fade-up 0.6s ease both;
 
   .hero-badge {
@@ -1294,7 +1295,9 @@ mat-sidenav-container { height: calc(100vh - 85px); }
     }
 
     @media (max-width: 767px) {
-      display: none;
+      bottom: -20px;
+      right: -20px;
+      .iso-stamp-img { width: 58px; }
     }
   }
 
