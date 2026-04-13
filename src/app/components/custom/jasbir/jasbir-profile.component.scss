@@ -6940,43 +6940,38 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 .cta-social-icon {
   width: 44px;
   height: 44px;
-  border-radius: 12px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1.15rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  .fa-instagram { color: #E4405F; }
+  .fa-facebook-f { color: #1877F2; }
+  .fa-youtube { color: #FF0000; }
+  .fa-share-nodes { color: #555; }
 
   @media (max-width: 480px) {
     width: 40px;
     height: 40px;
-    border-radius: 10px;
     font-size: 1.05rem;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.28);
-    color: #fff;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transform: scale(1.15);
   }
 
   &:active {
-    transform: translateY(0);
-    box-shadow: none;
+    transform: scale(1);
   }
 
   &.share-btn {
-    border-color: rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
   }
 }
 
@@ -8484,9 +8479,7 @@ $dark-text-muted: #6b7790;
     .final-cta-badge { color: $dark-text-secondary; }
     .final-cta-social-label { color: $dark-text-muted; }
     .cta-social-icon {
-      background: $dark-card;
-      border-color: $dark-border;
-      color: $dark-text-secondary;
+      background: rgba(255, 255, 255, 0.95);
     }
     .final-cta-guarantee span { color: $dark-text-muted; }
   }
