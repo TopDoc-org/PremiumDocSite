@@ -1600,38 +1600,179 @@
         <p class="auth-gate-existing-hint">Enter your PIN to proceed with this account</p>
       </div>
 
-      <!-- FORGOT PIN FORM -->
-      <div class="auth-gate-forgot-panel" *ngIf="showForgotPassword && authStep === 'login'">
-        <p class="auth-gate-forgot-heading">Reset your PIN</p>
-        <p class="auth-gate-forgot-sub">Enter your registered email and we'll send a reset link.</p>
+      <!-- PIN RESET FLOW (WhatsApp OTP) -->
+      <div class="auth-gate-reset-panel" *ngIf="showResetFlow && authStep === 'login'">
 
-        <ng-container *ngIf="!forgotPasswordSent">
-          <input type="email" class="auth-gate-input" [(ngModel)]="forgotPasswordEmail"
-            [ngModelOptions]="{standalone: true}"
-            placeholder="Your registered email address">
-          <div class="auth-gate-api-error" *ngIf="forgotPasswordError">
-            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
-            {{ forgotPasswordError }}
+        <!-- Progress bar -->
+        <div class="reset-progress-bar">
+          <div class="reset-progress-fill" [style.width.%]="resetProgress"></div>
+        </div>
+
+        <!-- ─── STEP 1: Phone Number ─── -->
+        <ng-container *ngIf="resetStep === 'phone'">
+          <div class="reset-step-icon reset-step-icon--wa">
+            <mat-icon>chat</mat-icon>
           </div>
-          <button class="auth-gate-submit" (click)="sendForgotPassword()" [disabled]="forgotPasswordLoading">
-            <span class="auth-gate-spinner" *ngIf="forgotPasswordLoading"></span>
-            <mat-icon *ngIf="!forgotPasswordLoading">send</mat-icon>
-            {{ forgotPasswordLoading ? 'Sending...' : 'Send Reset Link' }}
+          <p class="reset-step-heading">Reset your PIN</p>
+          <p class="reset-step-sub">Enter your registered mobile number. We'll send a verification code via WhatsApp.</p>
+
+          <div class="auth-gate-field">
+            <label class="auth-gate-label">Mobile number</label>
+            <div class="reset-phone-wrap">
+              <span class="reset-phone-prefix">+91</span>
+              <input type="tel" class="auth-gate-input reset-phone-input"
+                [(ngModel)]="resetPhone" [ngModelOptions]="{standalone: true}"
+                placeholder="10-digit mobile number" maxlength="10" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="auth-gate-api-error" *ngIf="resetError">
+            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
+            {{ resetError }}
+          </div>
+
+          <button class="auth-gate-submit reset-btn--wa" (click)="sendResetOtp()" [disabled]="resetLoading">
+            <span class="auth-gate-spinner" *ngIf="resetLoading"></span>
+            <mat-icon *ngIf="!resetLoading">chat</mat-icon>
+            {{ resetLoading ? 'Sending...' : 'Send WhatsApp Code' }}
+          </button>
+
+          <button class="reset-back-btn" (click)="closeResetFlow()">
+            <mat-icon>arrow_back</mat-icon> Back to login
           </button>
         </ng-container>
 
-        <div class="auth-gate-forgot-success" *ngIf="forgotPasswordSent">
-          <mat-icon class="text-green-500">check_circle</mat-icon>
-          <p>Reset link sent! Check your email inbox.</p>
-        </div>
+        <!-- ─── STEP 2: OTP Verification ─── -->
+        <ng-container *ngIf="resetStep === 'otp'">
+          <div class="reset-step-icon reset-step-icon--shield">
+            <mat-icon>verified_user</mat-icon>
+          </div>
+          <p class="reset-step-heading">Verify your number</p>
+          <p class="reset-step-sub">
+            Enter the 6-digit code sent to
+            <strong class="reset-otp-phone-badge">+91 {{ maskedResetPhone }}</strong>
+          </p>
 
-        <button class="auth-gate-back-to-login" (click)="showForgotPassword = false">
-          <mat-icon>arrow_back</mat-icon> Back to login
-        </button>
+          <div class="reset-otp-wrap" [class.reset-otp-wrap--error]="!!resetError">
+            <app-pin-input
+              [length]="6"
+              [mask]="false"
+              [hasError]="!!resetError"
+              [reset]="resetOtpResetCounter"
+              (pinComplete)="onResetOtpComplete($event)"
+              (pinChange)="onResetOtpChange($event)">
+            </app-pin-input>
+          </div>
+
+          <div class="reset-resend-row">
+            <span *ngIf="resetResendTimer > 0">
+              Resend code in <strong>{{ resetResendTimer }}s</strong>
+            </span>
+            <button type="button" *ngIf="resetResendTimer === 0" [disabled]="resetLoading" (click)="resendResetOtp()">
+              <mat-icon class="!text-sm">refresh</mat-icon> Resend Code
+            </button>
+          </div>
+
+          <div class="auth-gate-api-error" *ngIf="resetError">
+            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
+            {{ resetError }}
+          </div>
+
+          <button class="auth-gate-submit" (click)="verifyResetOtp()" [disabled]="resetLoading">
+            <span class="auth-gate-spinner" *ngIf="resetLoading"></span>
+            <mat-icon *ngIf="!resetLoading">check_circle</mat-icon>
+            {{ resetLoading ? 'Verifying...' : 'Verify Code' }}
+          </button>
+
+          <button class="reset-back-btn" (click)="goResetBackToPhone()">
+            <mat-icon>arrow_back</mat-icon> Change number
+          </button>
+        </ng-container>
+
+        <!-- ─── STEP 3a: Create New PIN ─── -->
+        <ng-container *ngIf="resetStep === 'pin' && resetPinSubStep === 'create'">
+          <div class="reset-step-icon reset-step-icon--lock">
+            <mat-icon>lock</mat-icon>
+          </div>
+          <p class="reset-step-heading">Create new PIN</p>
+          <p class="reset-step-sub">Enter a 4-digit PIN you'll use to sign in.</p>
+
+          <div class="auth-gate-field reset-pin-center">
+            <app-pin-input
+              [length]="4"
+              [mask]="true"
+              [autoFocus]="true"
+              [reset]="resetPinResetCounter"
+              (pinComplete)="onResetNewPinComplete($event)"
+              (pinChange)="onResetNewPinChange($event)">
+            </app-pin-input>
+            <p class="reset-pin-hint">You'll confirm this PIN next</p>
+          </div>
+
+          <div class="auth-gate-api-error" *ngIf="resetError">
+            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
+            {{ resetError }}
+          </div>
+        </ng-container>
+
+        <!-- ─── STEP 3b: Confirm New PIN ─── -->
+        <ng-container *ngIf="resetStep === 'pin' && resetPinSubStep === 'confirm'">
+          <div class="reset-step-icon reset-step-icon--shield">
+            <mat-icon>shield</mat-icon>
+          </div>
+          <p class="reset-step-heading">Confirm your PIN</p>
+          <p class="reset-step-sub">Re-enter your 4-digit PIN to confirm.</p>
+
+          <div class="auth-gate-field reset-pin-center">
+            <app-pin-input
+              [length]="4"
+              [mask]="true"
+              [autoFocus]="true"
+              [hasError]="!!resetError"
+              [reset]="resetConfirmPinResetCounter"
+              (pinComplete)="onResetConfirmPinComplete($event)"
+              (pinChange)="onResetConfirmPinChange($event)">
+            </app-pin-input>
+          </div>
+
+          <div class="auth-gate-api-error" *ngIf="resetError">
+            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
+            {{ resetError }}
+          </div>
+
+          <div *ngIf="resetLoading" class="reset-pin-loading">
+            <span class="auth-gate-spinner"></span>
+            <span>Setting your PIN...</span>
+          </div>
+
+          <button class="reset-back-btn" (click)="goResetBackToCreatePin()">
+            <mat-icon>arrow_back</mat-icon> Back to create PIN
+          </button>
+        </ng-container>
+
+        <!-- ─── STEP 4: Success ─── -->
+        <ng-container *ngIf="resetStep === 'success'">
+          <div class="reset-success-panel">
+            <div class="reset-success-check">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+            <p class="reset-step-heading">PIN Updated!</p>
+            <ng-container *ngIf="!resetAutoLoginInProgress">
+              <p class="reset-step-sub">Your new PIN has been set successfully.</p>
+            </ng-container>
+            <ng-container *ngIf="resetAutoLoginInProgress">
+              <div class="reset-auto-login">
+                <span class="auth-gate-spinner"></span>
+                <span>Logging you in & booking your slot...</span>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+
       </div>
 
       <!-- PIN INPUT FORM -->
-      <div class="auth-gate-form" *ngIf="!showForgotPassword">
+      <div class="auth-gate-form" *ngIf="!showResetFlow">
 
         <!-- LOGIN flow: single PIN -->
         <ng-container *ngIf="authStep === 'login'">
@@ -1652,8 +1793,7 @@
           </div>
 
           <div class="auth-gate-forgot-link">
-            <button type="button" class="auth-gate-switch-btn"
-              (click)="showForgotPassword = true; forgotPasswordError = ''; forgotPasswordSent = false; forgotPasswordEmail = ''">
+            <button type="button" class="auth-gate-switch-btn" (click)="openResetFlow()">
               Forgot PIN?
             </button>
           </div>
@@ -1713,7 +1853,7 @@
       </div>
 
       <!-- Switch mode note -->
-      <div class="auth-gate-switch" *ngIf="!showForgotPassword">
+      <div class="auth-gate-switch" *ngIf="!showResetFlow">
         {{ authStep === 'login' ? "Not you?" : 'Already have an account?' }}
         <button class="auth-gate-switch-btn" (click)="authStep === 'login' ? openNewNumberForm() : switchAuthMode('login')">
           {{ authStep === 'login' ? 'Try with a different number' : 'Login instead' }}

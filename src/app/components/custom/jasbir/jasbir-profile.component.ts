@@ -81,13 +81,33 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   get pinResetCounter() { return this.bookingFlow.auth.pinResetCounter; }
   get confirmPinResetCounter() { return this.bookingFlow.auth.confirmPinResetCounter; }
   get registerPinStep() { return this.bookingFlow.auth.registerPinStep; }
-  get showForgotPassword() { return this.bookingFlow.auth.showForgotPassword; }
-  set showForgotPassword(v) { this.bookingFlow.auth.showForgotPassword = v; }
-  get forgotPasswordEmail() { return this.bookingFlow.auth.forgotPasswordEmail; }
-  set forgotPasswordEmail(v) { this.bookingFlow.auth.forgotPasswordEmail = v; }
-  get forgotPasswordLoading() { return this.bookingFlow.auth.forgotPasswordLoading; }
-  get forgotPasswordSent() { return this.bookingFlow.auth.forgotPasswordSent; }
-  get forgotPasswordError() { return this.bookingFlow.auth.forgotPasswordError; }
+  // PIN Reset flow (WhatsApp OTP)
+  get showResetFlow() { return this.bookingFlow.auth.showResetFlow; }
+  get resetStep() { return this.bookingFlow.auth.resetStep; }
+  get resetPhone() { return this.bookingFlow.auth.resetPhone; }
+  set resetPhone(v: string) { this.bookingFlow.auth.resetPhone = v; }
+  get resetResendTimer() { return this.bookingFlow.auth.resetResendTimer; }
+  get resetLoading() { return this.bookingFlow.auth.resetLoading; }
+  get resetError() { return this.bookingFlow.auth.resetError; }
+  get resetPinSubStep() { return this.bookingFlow.auth.resetPinSubStep; }
+  get resetPinResetCounter() { return this.bookingFlow.auth.resetPinResetCounter; }
+  get resetConfirmPinResetCounter() { return this.bookingFlow.auth.resetConfirmPinResetCounter; }
+  get resetOtpResetCounter() { return this.bookingFlow.auth.resetOtpResetCounter; }
+  get resetAutoLoginInProgress() { return this.bookingFlow.auth.resetAutoLoginInProgress; }
+  get maskedResetPhone(): string {
+    const p = this.bookingFlow.auth.resetPhone || '';
+    if (p.length < 4) return p;
+    return p.slice(0, 2) + '\u2022\u2022\u2022\u2022\u2022\u2022' + p.slice(-2);
+  }
+  get resetProgress(): number {
+    switch (this.resetStep) {
+      case 'phone': return 33;
+      case 'otp': return 50;
+      case 'pin': return 75;
+      case 'success': return 100;
+      default: return 0;
+    }
+  }
 
   // New number form state
   newNumberForm!: FormGroup;
@@ -960,8 +980,37 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  sendForgotPassword(): void {
-    this.bookingFlow.sendForgotPassword(this.forgotPasswordEmail);
+  // ── PIN Reset Flow (WhatsApp OTP) ──
+  openResetFlow(): void {
+    const phone = this.unregForm.get('mobile')?.value?.trim() || '';
+    this.bookingFlow.openResetFlow(phone);
+  }
+  closeResetFlow(): void { this.bookingFlow.closeResetFlow(); }
+  sendResetOtp(): void { this.bookingFlow.sendResetOtp(); }
+  resendResetOtp(): void { this.bookingFlow.resendResetOtp(); }
+  verifyResetOtp(): void { this.bookingFlow.verifyResetOtp(); }
+  onResetOtpComplete(otp: string): void {
+    this.bookingFlow.auth.resetOtp = otp;
+  }
+  onResetOtpChange(otp: string): void {
+    this.bookingFlow.auth.resetOtp = otp;
+    this.bookingFlow.auth.resetError = '';
+  }
+  onResetNewPinComplete(pin: string): void { this.bookingFlow.onResetNewPinComplete(pin); }
+  onResetNewPinChange(pin: string): void { this.bookingFlow.onResetNewPinChange(pin); }
+  onResetConfirmPinComplete(pin: string): void {
+    this.bookingFlow.onResetConfirmPinComplete(pin, () => {
+      this.executeBooking(this.bookingFlow.auth.pendingSessionId);
+    });
+  }
+  onResetConfirmPinChange(pin: string): void { this.bookingFlow.onResetConfirmPinChange(pin); }
+  goResetBackToCreatePin(): void { this.bookingFlow.goResetBackToCreatePin(); }
+  goResetBackToPhone(): void {
+    this.bookingFlow.destroyResetTimerPublic();
+    this.bookingFlow.auth.resetOtp = '';
+    this.bookingFlow.auth.resetOtpResetCounter++;
+    this.bookingFlow.auth.resetStep = 'phone';
+    this.bookingFlow.auth.resetError = '';
   }
 
   submitAuth(): void {

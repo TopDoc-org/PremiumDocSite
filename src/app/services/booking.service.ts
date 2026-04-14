@@ -63,6 +63,18 @@ export class BookingService {
     return this.http.post(`${this.baseUrl}/forgetPassword/send`, { email, role: 'user' });
   }
 
+  sendWhatsappOtp(phoneNumber: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/user/sendWhatsappOtp`, { phoneNumber });
+  }
+
+  verifyWhatsappOtp(req: { phoneNumber: string; otp: string; otpId?: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/user/verifyWhatsappOtp`, req);
+  }
+
+  resetPinAfterOtp(mobileNumber: string, newPin: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/user/resetPinAfterOtp`, { mobileNumber, newPin });
+  }
+
   checkUserSessionBookings(doctorId: string, sessionId: string, mobile: string): Observable<any> {
     const today = new Date();
     const dateStr = today.getFullYear() + '-' +

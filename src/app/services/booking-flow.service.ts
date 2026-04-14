@@ -14,11 +14,22 @@ export interface AuthState {
   pinResetCounter: number;
   confirmPinResetCounter: number;
   registerPinStep: 'create' | 'confirm';
-  showForgotPassword: boolean;
-  forgotPasswordEmail: string;
-  forgotPasswordLoading: boolean;
-  forgotPasswordSent: boolean;
-  forgotPasswordError: string;
+  // PIN Reset via WhatsApp OTP
+  showResetFlow: boolean;
+  resetStep: 'phone' | 'otp' | 'pin' | 'success';
+  resetPhone: string;
+  resetOtpId: string;
+  resetOtp: string;
+  resetResendTimer: number;
+  resetLoading: boolean;
+  resetError: string;
+  resetPinValue: string;
+  resetConfirmPinValue: string;
+  resetPinSubStep: 'create' | 'confirm';
+  resetPinResetCounter: number;
+  resetConfirmPinResetCounter: number;
+  resetOtpResetCounter: number;
+  resetAutoLoginInProgress: boolean;
 }
 
 export interface ScheduleDay {
@@ -60,6 +71,7 @@ const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frida
 @Injectable({ providedIn: 'root' })
 export class BookingFlowService {
   auth: AuthState = this.freshAuthState();
+  private resetTimerRef: any = null;
 
   constructor(private bookingService: BookingService) {}
 
@@ -77,11 +89,21 @@ export class BookingFlowService {
       pinResetCounter: 0,
       confirmPinResetCounter: 0,
       registerPinStep: 'create',
-      showForgotPassword: false,
-      forgotPasswordEmail: '',
-      forgotPasswordLoading: false,
-      forgotPasswordSent: false,
-      forgotPasswordError: ''
+      showResetFlow: false,
+      resetStep: 'phone',
+      resetPhone: '',
+      resetOtpId: '',
+      resetOtp: '',
+      resetResendTimer: 0,
+      resetLoading: false,
+      resetError: '',
+      resetPinValue: '',
+      resetConfirmPinValue: '',
+      resetPinSubStep: 'create',
+      resetPinResetCounter: 0,
+      resetConfirmPinResetCounter: 0,
+      resetOtpResetCounter: 0,
+      resetAutoLoginInProgress: false
     };
   }
 
@@ -139,10 +161,7 @@ export class BookingFlowService {
     this.auth.confirmPinResetCounter++;
     this.auth.registerPinStep = 'create';
     this.auth.existingUserDetails = null;
-    this.auth.showForgotPassword = false;
-    this.auth.forgotPasswordEmail = '';
-    this.auth.forgotPasswordSent = false;
-    this.auth.forgotPasswordError = '';
+    this.closeResetFlow();
   }
 
   switchAuthMode(mode: 'login' | 'register'): void {
@@ -153,10 +172,7 @@ export class BookingFlowService {
     this.auth.pinResetCounter++;
     this.auth.confirmPinResetCounter++;
     this.auth.registerPinStep = 'create';
-    this.auth.showForgotPassword = false;
-    this.auth.forgotPasswordEmail = '';
-    this.auth.forgotPasswordSent = false;
-    this.auth.forgotPasswordError = '';
+    this.closeResetFlow();
   }
 
   onPinComplete(pin: string): void {
@@ -185,23 +201,231 @@ export class BookingFlowService {
     this.auth.error = '';
   }
 
-  sendForgotPassword(email: string): void {
-    if (!email?.trim()) {
-      this.auth.forgotPasswordError = 'Please enter your email address.';
+  // ── PIN Reset (WhatsApp OTP) ──────────────────────────
+
+  openResetFlow(prefillPhone: string): void {
+    this.auth.showResetFlow = true;
+    this.auth.resetStep = 'phone';
+    this.auth.resetPhone = prefillPhone || '';
+    this.auth.resetError = '';
+    this.auth.resetLoading = false;
+    this.auth.resetOtpId = '';
+    this.auth.resetOtp = '';
+    this.auth.resetPinValue = '';
+    this.auth.resetConfirmPinValue = '';
+    this.auth.resetPinSubStep = 'create';
+    this.auth.resetPinResetCounter++;
+    this.auth.resetConfirmPinResetCounter++;
+    this.auth.resetOtpResetCounter++;
+    this.auth.resetAutoLoginInProgress = false;
+  }
+
+  closeResetFlow(): void {
+    this.auth.showResetFlow = false;
+    this.auth.resetStep = 'phone';
+    this.auth.resetError = '';
+    this.auth.resetLoading = false;
+    this.auth.resetAutoLoginInProgress = false;
+    this.destroyResetTimer();
+  }
+
+  sendResetOtp(): void {
+    const phone = this.auth.resetPhone?.trim();
+    if (!phone || !/^\d{10}$/.test(phone)) {
+      this.auth.resetError = 'Please enter a valid 10-digit mobile number.';
       return;
     }
-    this.auth.forgotPasswordLoading = true;
-    this.auth.forgotPasswordError = '';
-    this.bookingService.sendForgotPassword(email.trim()).subscribe({
-      next: () => {
-        this.auth.forgotPasswordLoading = false;
-        this.auth.forgotPasswordSent = true;
+    this.auth.resetLoading = true;
+    this.auth.resetError = '';
+
+    this.bookingService.sendWhatsappOtp(phone).subscribe({
+      next: (res: any) => {
+        this.auth.resetLoading = false;
+        if (res.success) {
+          this.auth.resetOtpId = res.otpId || '';
+          this.auth.resetStep = 'otp';
+          this.auth.resetOtp = '';
+          this.auth.resetOtpResetCounter++;
+          this.startResendTimer();
+        } else {
+          this.auth.resetError = res.message || 'Failed to send OTP.';
+        }
       },
       error: (err: any) => {
-        this.auth.forgotPasswordLoading = false;
-        this.auth.forgotPasswordError = err.error?.message || 'Email not found. Please check and try again.';
+        this.auth.resetLoading = false;
+        this.auth.resetError = err.error?.message || 'Failed to send OTP. Please try again.';
       }
     });
+  }
+
+  resendResetOtp(): void {
+    if (this.auth.resetResendTimer > 0 || this.auth.resetLoading) return;
+    this.auth.resetOtp = '';
+    this.auth.resetOtpResetCounter++;
+    this.auth.resetError = '';
+    this.sendResetOtp();
+  }
+
+  verifyResetOtp(): void {
+    const otp = this.auth.resetOtp?.trim();
+    if (!otp || otp.length !== 6) {
+      this.auth.resetError = 'Please enter the complete 6-digit OTP.';
+      return;
+    }
+    this.auth.resetLoading = true;
+    this.auth.resetError = '';
+
+    const req: any = { phoneNumber: this.auth.resetPhone, otp };
+    if (this.auth.resetOtpId) req.otpId = this.auth.resetOtpId;
+
+    this.bookingService.verifyWhatsappOtp(req).subscribe({
+      next: (res: any) => {
+        this.auth.resetLoading = false;
+        if (res.verified) {
+          this.auth.resetStep = 'pin';
+          this.auth.resetPinSubStep = 'create';
+          this.auth.resetPinValue = '';
+          this.auth.resetConfirmPinValue = '';
+          this.auth.resetPinResetCounter++;
+          this.auth.resetConfirmPinResetCounter++;
+          this.destroyResetTimer();
+        } else {
+          this.auth.resetError = res.message || 'Verification failed.';
+        }
+      },
+      error: (err: any) => {
+        this.auth.resetLoading = false;
+        const msg = err.error?.message || '';
+        if (msg.includes('expired')) {
+          this.auth.resetError = 'OTP expired. Please request a new one.';
+        } else if (msg.includes('already used')) {
+          this.auth.resetError = 'OTP already used. Please request a new one.';
+        } else if (msg.toLowerCase().includes('invalid')) {
+          this.auth.resetError = 'Invalid OTP. Please try again.';
+        } else {
+          this.auth.resetError = msg || 'Verification failed.';
+        }
+      }
+    });
+  }
+
+  onResetNewPinComplete(pin: string): void {
+    this.auth.resetPinValue = pin;
+    setTimeout(() => {
+      this.auth.resetPinSubStep = 'confirm';
+      this.auth.resetConfirmPinValue = '';
+      this.auth.resetConfirmPinResetCounter++;
+      this.auth.resetError = '';
+    }, 200);
+  }
+
+  onResetNewPinChange(pin: string): void {
+    this.auth.resetPinValue = pin;
+    this.auth.resetError = '';
+  }
+
+  onResetConfirmPinComplete(pin: string, onBookingSuccess: () => void): void {
+    this.auth.resetConfirmPinValue = pin;
+    if (this.auth.resetPinValue === this.auth.resetConfirmPinValue) {
+      setTimeout(() => this.submitResetPin(onBookingSuccess), 200);
+    } else {
+      this.auth.resetError = 'PINs don\'t match. Please try again.';
+    }
+  }
+
+  onResetConfirmPinChange(pin: string): void {
+    this.auth.resetConfirmPinValue = pin;
+    this.auth.resetError = '';
+  }
+
+  goResetBackToCreatePin(): void {
+    this.auth.resetConfirmPinValue = '';
+    this.auth.resetPinSubStep = 'create';
+    this.auth.resetError = '';
+  }
+
+  submitResetPin(onBookingSuccess: () => void): void {
+    if (this.auth.resetPinValue.length !== 4 || this.auth.resetConfirmPinValue.length !== 4) return;
+    if (this.auth.resetPinValue !== this.auth.resetConfirmPinValue) {
+      this.auth.resetError = 'PINs don\'t match. Please try again.';
+      this.auth.resetPinValue = '';
+      this.auth.resetConfirmPinValue = '';
+      this.auth.resetPinResetCounter++;
+      this.auth.resetConfirmPinResetCounter++;
+      this.auth.resetPinSubStep = 'create';
+      return;
+    }
+    this.auth.resetLoading = true;
+    this.auth.resetError = '';
+
+    this.bookingService.resetPinAfterOtp(this.auth.resetPhone, this.auth.resetPinValue).subscribe({
+      next: (res: any) => {
+        this.auth.resetLoading = false;
+        if (res.statuscode === 200 || res.success || res.message?.toLowerCase().includes('success')) {
+          this.auth.resetStep = 'success';
+          // Auto-login after a brief success display
+          setTimeout(() => this.autoLoginAfterReset(onBookingSuccess), 1500);
+        } else {
+          this.auth.resetError = res.message || 'Failed to reset PIN.';
+        }
+      },
+      error: (err: any) => {
+        this.auth.resetLoading = false;
+        if (err.status === 403) {
+          this.auth.resetError = 'OTP verification expired. Please start over.';
+        } else if (err.status === 404) {
+          this.auth.resetError = 'No account found for this number.';
+        } else {
+          this.auth.resetError = err.error?.message || 'Failed to reset PIN.';
+        }
+      }
+    });
+  }
+
+  private autoLoginAfterReset(onBookingSuccess: () => void): void {
+    this.auth.resetAutoLoginInProgress = true;
+    this.bookingService.loginUser(this.auth.resetPhone, this.auth.resetPinValue).subscribe({
+      next: (res: any) => {
+        this.auth.loggedInToken = res.token;
+        this.auth.loggedInUserId = res.userDetails?.userId || '';
+        this.auth.step = 'none';
+        this.closeResetFlow();
+        onBookingSuccess();
+      },
+      error: () => {
+        // Login failed after reset — fall back to manual login
+        this.auth.resetAutoLoginInProgress = false;
+        this.auth.pinValue = '';
+        this.auth.pinResetCounter++;
+        this.auth.error = '';
+        this.auth.showResetFlow = false;
+        this.auth.resetStep = 'phone';
+        this.destroyResetTimer();
+      }
+    });
+  }
+
+  destroyResetTimerPublic(): void {
+    this.destroyResetTimer();
+  }
+
+  private startResendTimer(): void {
+    this.destroyResetTimer();
+    this.auth.resetResendTimer = 60;
+    this.resetTimerRef = setInterval(() => {
+      this.auth.resetResendTimer--;
+      if (this.auth.resetResendTimer <= 0) {
+        this.destroyResetTimer();
+      }
+    }, 1000);
+  }
+
+  private destroyResetTimer(): void {
+    if (this.resetTimerRef) {
+      clearInterval(this.resetTimerRef);
+      this.resetTimerRef = null;
+    }
+    this.auth.resetResendTimer = 0;
   }
 
   /**
