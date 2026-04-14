@@ -13,6 +13,7 @@ import { BookingService } from '../../../services/booking.service';
 import { BookingFlowService } from '../../../services/booking-flow.service';
 import { DoctorConfigService } from '../../../services/doctor-config.service';
 import { TenantService } from '../../../services/tenant.service';
+import { cloudinaryUrl } from '../../../utils/cloudinary.util';
 
 @Component({
   selector: 'app-jasbir-profile',
@@ -44,7 +45,10 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   private jsonLdScriptTags: HTMLScriptElement[] = [];
 
   get clinicLogo(): string {
-    return 'assets/images/jasbir/ClinicLogo.jpeg';
+    return cloudinaryUrl('knocdoc/jasbir/clinic/clinic-logo', 'w_300');
+  }
+  get profileImageFallback(): string {
+    return cloudinaryUrl('knocdoc/jasbir/hero/profile', 'w_600');
   }
   activeTechSlide = 0;
   showSidhantFull = false;
@@ -381,7 +385,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       experience: this.placeholderExperience,
       awardsAndPublications: this.placeholderAwards,
       associatedClinics: [],
-      profImageUrl: { src: 'assets/images/jasbir/profile.jpg' }
+      profImageUrl: { src: cloudinaryUrl('knocdoc/jasbir/hero/profile', 'w_600') }
     };
   }
 
@@ -396,7 +400,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       ? (this.profRes.profImageUrl.src.startsWith('http')
           ? this.profRes.profImageUrl.src
           : `${window.location.origin}/${this.profRes.profImageUrl.src}`)
-      : `${window.location.origin}/assets/images/jasbir/profile.jpg`;
+      : cloudinaryUrl('knocdoc/jasbir/hero/profile', 'w_600');
     const canonicalUrl = window.location.origin + window.location.pathname;
 
     const title = `${name} | Best ${specialization} & Orthodontist in ${city}, ${state}`;
@@ -423,7 +427,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.meta.updateTag({ name: 'ICBM', content: '20.6989, 83.4636' });
 
     // Set clinic logo as favicon
-    this.setFavicon(`${window.location.origin}/assets/images/jasbir/ClinicLogo.jpeg`);
+    this.setFavicon(cloudinaryUrl('knocdoc/jasbir/clinic/clinic-logo', 'w_64'));
 
     // Open Graph
     this.meta.updateTag({ property: 'og:title', content: title });
@@ -475,7 +479,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       ? (this.profRes.profImageUrl.src.startsWith('http')
           ? this.profRes.profImageUrl.src
           : `${window.location.origin}/${this.profRes.profImageUrl.src}`)
-      : `${window.location.origin}/assets/images/jasbir/profile.jpg`;
+      : cloudinaryUrl('knocdoc/jasbir/hero/profile', 'w_600');
     const canonicalUrl = window.location.origin + window.location.pathname;
 
     // Schema 1: Dentist (LocalBusiness)

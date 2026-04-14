@@ -102,7 +102,7 @@
     <section class="hero-landing">
       <!-- Team photo background -->
       <div class="hero-bg-image">
-        <img src="assets/images/jasbir/newClinicBg.jpeg" alt="Dr. Meher's Orthodontic Center & Dental Clinic" loading="eager">
+        <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1600/knocdoc/jasbir/hero/clinic-bg" alt="Dr. Meher's Orthodontic Center & Dental Clinic" loading="eager">
       </div>
 
       <!-- Floating particles -->
@@ -144,7 +144,7 @@
             </a>
             <!-- Invisalign oval (smaller, separate) -->
             <div class="hero-invisalign-pill">
-              <img src="assets/images/jasbir/InvisAlignBrand.png" alt="Invisalign Provider" class="hero-sponsor-img">
+              <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_200/knocdoc/jasbir/hero/invisalign-brand" alt="Invisalign Provider" class="hero-sponsor-img">
             </div>
           </div>
 
@@ -218,16 +218,16 @@
           <div class="hero-image-frame">
             <div class="hero-image-container">
               <img
-                [src]="'assets/images/jasbir/profile.jpg'"
+                [src]="profileImageFallback"
                 alt="{{ profRes.name }}"
                 loading="eager"
                 #heroImg
-                (error)="heroImg.src = 'assets/images/jasbir/profile.jpg'"
+                (error)="heroImg.src = profileImageFallback"
               >
             </div>
             <!-- ISO Certified stamp at bottom-right corner of photo -->
             <div class="hero-iso-stamp">
-              <img src="assets/images/jasbir/isoWBG.png" alt="ISO 9001:2015 Certified" class="iso-stamp-img">
+              <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_120/knocdoc/jasbir/clinic/iso-badge" alt="ISO 9001:2015 Certified" class="iso-stamp-img">
             </div>
           </div>
           <div class="hero-image-footer">
@@ -334,7 +334,7 @@
         <div class="about-image-col" [attr.data-aos]="animationsEnabled ? 'fade-right' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null">
           <div class="about-image">
             <img
-              src="assets/images/carousel/SKP00020.JPG"
+              src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_800/knocdoc/jasbir/carousel/skp00020"
               alt="{{ profRes.name }}"
               loading="lazy"
               style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;"
@@ -418,7 +418,7 @@
       <div class="about-team-row">
         <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
           <div class="about-team-img">
-            <img src="assets/images/jasbir/asst2.jpeg" alt="Dr. Pratikshya Tripathy" loading="lazy">
+            <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_400,h_400,c_fill/knocdoc/jasbir/team/pratikshya-tripathy" alt="Dr. Pratikshya Tripathy" loading="lazy">
           </div>
           <div class="about-team-info">
             <h3>Dr. Pratikshya Tripathy</h3>
@@ -433,7 +433,7 @@
 
         <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
           <div class="about-team-img">
-            <img src="assets/images/jasbir/Asst2close.png" alt="Dr. Sidhant Nayak" loading="lazy" style="scale: 1; object-position: center top;">
+            <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_400,h_400,c_fill/knocdoc/jasbir/team/sidhant-nayak" alt="Dr. Sidhant Nayak" loading="lazy" style="scale: 1; object-position: center top;">
           </div>
           <div class="about-team-info">
             <h3>Dr. Sidhant Nayak <span class="visiting-tag">(Visiting Doctor)</span></h3>
@@ -454,7 +454,7 @@
 
         <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
           <div class="about-team-img">
-            <img src="assets/images/jasbir/RajdeepBeura.jpeg" alt="Dr. Rajdeep Beura" loading="lazy">
+            <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_400,h_400,c_fill/knocdoc/jasbir/team/rajdeep-beura" alt="Dr. Rajdeep Beura" loading="lazy">
           </div>
           <div class="about-team-info">
             <h3>Dr. Rajdeep Beura <span class="visiting-tag">(Visiting Doctor)</span></h3>
@@ -472,7 +472,7 @@
 
         <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '450' : null">
           <div class="about-team-img">
-            <img src="assets/images/jasbir/Pooja Agrawal.jpeg" alt="Dr. Pooja Agrawal" loading="lazy" style="scale: 1; object-position: center 20%;">
+            <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_400,h_400,c_fill/knocdoc/jasbir/team/pooja-agrawal" alt="Dr. Pooja Agrawal" loading="lazy" style="scale: 1; object-position: center 20%;">
           </div>
           <div class="about-team-info">
             <h3>Dr. Pooja Agrawal, MDS (OMFS) <span class="visiting-tag">(Visiting Doctor)</span></h3>
@@ -849,12 +849,12 @@
           <div class="glimpse-carousel-viewport">
             <div class="glimpse-carousel-track" [style.transform]="'translateX(-' + (activeSlide * 100) + '%)'">
               <div class="glimpse-slide" *ngFor="let img of [
-                { src: 'assets/images/jasbir/doctor-photo.jpg', alt: 'Dr. Meher Orthodontic Center & Dental Clinic Team', label: 'Dr. Meher\'s Orthodontic Center & Dental Clinic', position: 'center center' },
-                { src: 'assets/images/jasbir/newClinicBg.jpeg', alt: 'Clinic Interior', label: 'Modern Clinic Interior', position: 'center center' },
-                { src: 'assets/images/carousel/SKP00008.JPG', alt: 'Prof. Dr. Jasbir Meher at the Clinic', label: 'Prof. Dr. Jasbir Meher', position: 'center 20%' },
-                { src: 'assets/images/carousel/SKP00020.JPG', alt: 'Dr. Meher with Equipment', label: 'State-of-the-Art Facility', position: 'center 25%' },
-                { src: 'assets/images/carousel/SKP00055.JPG', alt: 'Patient Treatment in Progress', label: 'Patient Care', position: 'center center' },
-                { src: 'assets/images/jasbir/dentistdesk.jpeg', alt: 'Clinic Waiting Area', label: 'Waiting Lounge', position: 'center center' }
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/clinic/team-photo', alt: 'Dr. Meher Orthodontic Center & Dental Clinic Team', label: 'Dr. Meher\'s Orthodontic Center & Dental Clinic', position: 'center center' },
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/hero/clinic-bg', alt: 'Clinic Interior', label: 'Modern Clinic Interior', position: 'center center' },
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/carousel/skp00008', alt: 'Prof. Dr. Jasbir Meher at the Clinic', label: 'Prof. Dr. Jasbir Meher', position: 'center 20%' },
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/carousel/skp00020', alt: 'Dr. Meher with Equipment', label: 'State-of-the-Art Facility', position: 'center 25%' },
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/carousel/skp00055', alt: 'Patient Treatment in Progress', label: 'Patient Care', position: 'center center' },
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/clinic/waiting-lounge', alt: 'Clinic Waiting Area', label: 'Waiting Lounge', position: 'center center' }
               ]; let i = index">
                 <img [src]="img.src" [alt]="img.alt" loading="lazy" [style.object-position]="img.position">
                 <div class="glimpse-slide-overlay">
@@ -1118,7 +1118,7 @@
 
         <div class="relative" [attr.data-aos]="animationsEnabled ? 'fade-left' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
           <div class="about-image">
-            <img src="assets/images/jasbir/SKP00027.JPG.jpeg" alt="{{ profRes.name }}" loading="lazy"
+            <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_800/knocdoc/jasbir/clinic/why-choose" alt="{{ profRes.name }}" loading="lazy"
               style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
           </div>
           <div class="absolute -bottom-4 -left-4 sm:left-4 bg-white rounded-2xl p-5 shadow-xl border border-gray-100"
@@ -1287,7 +1287,7 @@
         <!-- KnocDoc Promo — inline within CTA -->
         <div class="final-cta-divider"></div>
         <p class="final-cta-knocdoc-powered">Powered by</p>
-        <p class="final-cta-knocdoc-powered"><img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="final-cta-knocdoc-logo"><strong>KnocDoc</strong></p>
+        <p class="final-cta-knocdoc-powered"><img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_150/knocdoc/shared/knocdoc-logo-wb" alt="KnocDoc" class="final-cta-knocdoc-logo"><strong>KnocDoc</strong></p>
         <p class="final-cta-knocdoc-headline">
           <span class="knocdoc-typewriter-text">{{ knocdocTypewriterText }}</span><span class="knocdoc-typewriter-cursor"></span>
         </p>
@@ -1461,7 +1461,7 @@
       <mat-icon>close</mat-icon>
     </button>
     <div class="knocdoc-promo-body">
-      <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="knocdoc-promo-logo">
+      <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_150/knocdoc/shared/knocdoc-logo-wb" alt="KnocDoc" class="knocdoc-promo-logo">
       <h3 class="knocdoc-promo-title">Track Your Appointment</h3>
       <p class="knocdoc-promo-desc">
         Download <strong>KnocDoc</strong> and sign in with <strong>{{ bookingConfirmation?.mobile }}</strong> to track your booking, get reminders and manage your appointments.
