@@ -5073,12 +5073,29 @@ mat-sidenav-container { height: calc(100vh - 85px); }
 // --- Keyframes ---
 @keyframes offers-glimmer-sweep {
   0% { transform: translateX(-100%) skewX(-15deg); }
-  100% { transform: translateX(300%) skewX(-15deg); }
+  100% { transform: translateX(500%) skewX(-15deg); }
 }
 
 @keyframes hero-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
+}
+
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(15px, -20px) scale(1.05); }
+  66% { transform: translate(-10px, 10px) scale(0.95); }
+}
+
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-20px, -15px) scale(1.1); }
+}
+
+@keyframes orb-drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40% { transform: translate(10px, 15px) scale(1.08); }
+  80% { transform: translate(-15px, -5px) scale(0.96); }
 }
 
 // --- Confetti canvas inside hero card ---
@@ -5113,149 +5130,300 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   margin-bottom: 48px;
 }
 
-// --- HERO OFFER — The eye-catching standout card ---
+// --- HERO OFFER — Bold Canva-style banner ---
 .offer-hero {
   position: relative;
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 24px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow:
-    0 0 0 1px rgba($accent, 0.08),
-    0 8px 32px rgba($accent, 0.12),
-    0 2px 8px rgba(0, 0, 0, 0.04);
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow:
-      0 0 0 1px rgba($accent, 0.12),
-      0 20px 48px rgba($accent, 0.16),
-      0 4px 12px rgba(0, 0, 0, 0.05);
-  }
+  box-shadow: 0 8px 32px rgba(#0a1e5e, 0.25);
 }
 
 .offer-hero-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, $accent 0%, $accent-dark 50%, $navy-800 100%);
+  background: linear-gradient(135deg, #0a1e8a 0%, #1335c6 40%, #1a45d6 100%);
   z-index: 0;
 
-  // Subtle light pattern
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.08) 0%, transparent 40%),
-      radial-gradient(circle at 80% 60%, rgba(255, 255, 255, 0.05) 0%, transparent 35%);
+      radial-gradient(ellipse at 80% 40%, rgba(30, 64, 175, 0.6) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 80%, rgba(10, 20, 80, 0.4) 0%, transparent 50%);
+  }
+}
+
+// --- Decorative speed lines & outline shapes ---
+.offer-hero-deco {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.offer-deco-line {
+  position: absolute;
+  height: 3px;
+  border-radius: 2px;
+  background: #fbbf24;
+
+  &--1 {
+    width: 60px;
+    top: 28px;
+    left: 20px;
+    transform: rotate(-5deg);
   }
 
-  // Glimmer sweep
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
+  &--2 {
+    width: 40px;
+    top: 44px;
+    left: 16px;
+    transform: rotate(-5deg);
+    opacity: 0.6;
+  }
+
+  &--3 {
     width: 80px;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.12),
-      transparent
-    );
-    animation: offers-glimmer-sweep 4s ease-in-out infinite;
+    bottom: 30px;
+    right: 20px;
+    transform: rotate(-3deg);
+    opacity: 0.4;
+  }
+}
+
+.offer-deco-pill {
+  position: absolute;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50px;
+
+  &--top {
+    width: 200px;
+    height: 52px;
+    top: -10px;
+    right: -30px;
+    transform: rotate(-8deg);
+  }
+
+  &--bottom {
+    width: 260px;
+    height: 48px;
+    bottom: -8px;
+    left: -20px;
+    transform: rotate(-3deg);
   }
 }
 
 .offer-hero-content {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   display: flex;
-  align-items: stretch;
-  min-height: 200px;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+
+  @media (min-width: 600px) {
+    padding: 28px 32px;
+    gap: 24px;
+  }
 }
 
 .offer-hero-left {
   flex: 1;
-  padding: 36px 32px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 .offer-hero-badge {
   display: inline-flex;
   align-self: flex-start;
   align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
+  gap: 5px;
+  background: #fbbf24;
+  color: #1e1b0e;
   font-family: var(--font-heading), sans-serif;
-  font-size: 0.68rem;
-  font-weight: 700;
+  font-size: 0.58rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 5px 14px;
-  border-radius: 6px;
-  margin-bottom: 16px;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+
+  @media (min-width: 600px) {
+    font-size: 0.62rem;
+    padding: 6px 14px;
+    margin-bottom: 16px;
+  }
+}
+
+.offer-hero-visual {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.offer-hero-gif-wrap {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.15),
+    0 0 0 4px rgba(255, 255, 255, 0.12),
+    0 0 0 10px rgba(255, 255, 255, 0.05);
+  animation: hero-float 4s ease-in-out infinite;
+
+  @media (min-width: 481px) {
+    width: 110px;
+    height: 110px;
+  }
+
+  @media (min-width: 768px) {
+    width: 140px;
+    height: 140px;
+  }
+
+  @media (min-width: 1024px) {
+    width: 170px;
+    height: 170px;
+  }
+}
+
+.offer-hero-gif {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+
+  @media (min-width: 481px) {
+    width: 64px;
+    height: 64px;
+  }
+
+  @media (min-width: 768px) {
+    width: 84px;
+    height: 84px;
+  }
+
+  @media (min-width: 1024px) {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.offer-hero-mid {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+
+  @media (min-width: 600px) {
+    gap: 12px;
+    margin-bottom: 8px;
+  }
 }
 
 .offer-hero-title {
   font-family: var(--font-heading), sans-serif;
-  font-size: 1.55rem;
-  font-weight: 800;
+  font-size: 1.5rem;
+  font-weight: 900;
   color: white;
   letter-spacing: -0.02em;
-  line-height: 1.2;
-  margin-bottom: 10px;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  @media (min-width: 600px) {
+    font-size: 2.4rem;
+  }
+
+  @media (min-width: 900px) {
+    font-size: 3rem;
+  }
+}
+
+.offer-hero-tag-text {
+  display: inline-block;
+  background: #fbbf24;
+  color: #1e1b0e;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+
+  @media (min-width: 600px) {
+    font-size: 0.9rem;
+    padding: 6px 16px;
+  }
+}
+
+.offer-hero-subtitle {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 4px;
+
+  @media (min-width: 600px) {
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+  }
 }
 
 .offer-hero-desc {
   font-family: var(--font-body), sans-serif;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.75);
-  line-height: 1.6;
-  margin-bottom: 20px;
-  max-width: 500px;
-}
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.4;
+  margin-bottom: 12px;
 
-.offer-hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
+  @media (min-width: 600px) {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
 }
 
 .btn-hero-claim {
   display: inline-flex;
+  align-self: flex-start;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   font-family: var(--font-heading), sans-serif;
-  font-size: 0.88rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: $accent-dark;
+  color: #0a1e8a;
   background: white;
   border: none;
-  border-radius: 10px;
-  padding: 11px 24px;
+  border-radius: 8px;
+  padding: 8px 18px;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
-  }
-
-  &:focus-visible {
-    outline: 2px solid white;
-    outline-offset: 2px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   }
 
   &:active { transform: scale(0.97); }
+
+  @media (min-width: 600px) {
+    font-size: 0.9rem;
+    padding: 13px 28px;
+  }
 }
 
 .offer-hero-validity {
@@ -5394,7 +5562,122 @@ mat-sidenav-container { height: calc(100vh - 85px); }
   border-radius: 100px;
 }
 
-// --- Offer Cards — Matching page style (like service-card) ---
+// --- Secondary Offer Cards V2 — Bold colored cards ---
+.offer-card-v2 {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  gap: 16px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  &--amber {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.25);
+  }
+
+  &--teal {
+    background: linear-gradient(135deg, #0d9488, #0f766e);
+    box-shadow: 0 4px 20px rgba(13, 148, 136, 0.25);
+  }
+}
+
+.offer-card-v2__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.offer-card-v2__pct {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.offer-card-v2__title {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.offer-card-v2__desc {
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+
+.offer-card-v2__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  &:active { transform: scale(0.97); }
+}
+
+.offer-card-v2__icon {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+  img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+  }
+
+  @media (min-width: 600px) {
+    width: 80px;
+    height: 80px;
+
+    img {
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
+
+// --- Legacy offer cards (kept for expandable section) ---
 .offer-card {
   position: relative;
   background: #fff;
@@ -8272,10 +8555,22 @@ $dark-text-muted: #6b7790;
 
     .offer-hero {
       .offer-hero-bg {
-        background: linear-gradient(135deg, #1a2744 0%, #0f1d2f 100%);
+        background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 40%, #2563eb 100%);
       }
       .offer-hero-title { color: #fff; }
-      .offer-hero-desc { color: $dark-text-secondary; }
+      .offer-hero-subtitle { color: rgba(191, 219, 254, 0.9); }
+      .offer-hero-desc { color: rgba(255, 255, 255, 0.6); }
+      .offer-deco-line { background: #fbbf24; }
+      .offer-deco-pill { border-color: rgba(255, 255, 255, 0.15); }
+      .btn-hero-claim {
+        color: #1e3a8a;
+        background: white;
+      }
+    }
+
+    .offer-card-v2 {
+      &--amber { background: linear-gradient(135deg, #b45309, #92400e); }
+      &--teal { background: linear-gradient(135deg, #0f766e, #115e59); }
     }
 
     .offer-card {

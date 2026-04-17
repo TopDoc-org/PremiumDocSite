@@ -578,25 +578,31 @@
         <div class="offer-hero scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
           <canvas *ngIf="animationsEnabled" #confettiCanvas class="offer-hero-confetti-canvas"></canvas>
           <div class="offer-hero-bg"></div>
+          <div class="offer-hero-deco">
+            <div class="offer-deco-line offer-deco-line--1"></div>
+            <div class="offer-deco-line offer-deco-line--2"></div>
+            <div class="offer-deco-line offer-deco-line--3"></div>
+            <div class="offer-deco-pill offer-deco-pill--top"></div>
+            <div class="offer-deco-pill offer-deco-pill--bottom"></div>
+          </div>
           <div class="offer-hero-content">
             <div class="offer-hero-left">
               <div class="offer-hero-badge">
-                <mat-icon class="!text-sm">local_offer</mat-icon>
-                Limited Time
+                <mat-icon class="!text-sm">bolt</mat-icon> Limited Time Offer
               </div>
-              <h3 class="offer-hero-title">FREE X-Ray for New Patients</h3>
-              <p class="offer-hero-desc">Book your appointment online through this site and get a complimentary dental X-ray online booking. This exclusive offer is only available for online bookings.</p>
-              <div class="offer-hero-actions">
-                <button class="btn-hero-claim" (click)="openTemplateSheetMenu()">
-                  Book to Claim <mat-icon class="!text-base">arrow_forward</mat-icon>
-                </button>
+              <div class="offer-hero-mid">
+                <h3 class="offer-hero-title">FREE X&#8209;RAY</h3>
+                <span class="offer-hero-tag-text">Save &#8377;500</span>
               </div>
+              <p class="offer-hero-subtitle">for New Patients</p>
+              <p class="offer-hero-desc">Book your appointment online &amp; get a complimentary dental X-ray on your first visit.</p>
+              <button class="btn-hero-claim" (click)="openTemplateSheetMenu()">
+                Book Now <mat-icon class="!text-base">arrow_forward</mat-icon>
+              </button>
             </div>
-            <div class="offer-hero-right">
-              <div class="offer-hero-savings">
-                <span class="offer-hero-savings-label">Save up to</span>
-                <span class="offer-hero-savings-amount">&#8377;500</span>
-                <span class="offer-hero-savings-sub">on every online booking</span>
+            <div class="offer-hero-visual">
+              <div class="offer-hero-gif-wrap">
+                <img loading="lazy" src="https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/RCT.gif" alt="Dental X-Ray" class="offer-hero-gif"/>
               </div>
             </div>
           </div>
@@ -604,33 +610,31 @@
 
         <!-- Secondary cards row -->
         <div class="offers-featured-row">
-          <div class="offer-card offer-discount scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
-            <div class="offer-discount-pct">15% OFF</div>
-            <div class="offer-icon-wrap">
-              <mat-icon class="!text-2xl">medical_services</mat-icon>
-            </div>
-            <h3>Dental Implants</h3>
-            <p>Improve your confidence and overall smile with dental implants.</p>
-            <div class="offer-cta">
-              <span class="offer-tag">Implantology</span>
-              <button class="btn-offer" (click)="openTemplateSheetMenu('Dental Implants')">
+          <div class="offer-card-v2 offer-card-v2--amber scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
+            <div class="offer-card-v2__body">
+              <span class="offer-card-v2__pct">15% OFF</span>
+              <h3 class="offer-card-v2__title">Dental Implants</h3>
+              <p class="offer-card-v2__desc">Restore your smile with premium implants at special pricing.</p>
+              <button class="offer-card-v2__btn" (click)="openTemplateSheetMenu('Dental Implants')">
                 Book Now <mat-icon class="!text-base">arrow_forward</mat-icon>
               </button>
+            </div>
+            <div class="offer-card-v2__icon">
+              <img loading="lazy" src="https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dental-Implants.gif" alt="Dental Implants"/>
             </div>
           </div>
 
-          <div class="offer-card offer-discount scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '200' : null">
-            <div class="offer-discount-pct">15% OFF</div>
-            <div class="offer-icon-wrap">
-              <mat-icon class="!text-2xl">sentiment_very_satisfied</mat-icon>
-            </div>
-            <h3>Clear Aligners</h3>
-            <p>Start your smile transformation journey with special pricing on all orthodontic treatments.</p>
-            <div class="offer-cta">
-              <span class="offer-tag">Orthodontics</span>
-              <button class="btn-offer" (click)="openTemplateSheetMenu('Clear Aligners / Invisible Braces')">
+          <div class="offer-card-v2 offer-card-v2--teal scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '200' : null">
+            <div class="offer-card-v2__body">
+              <span class="offer-card-v2__pct">15% OFF</span>
+              <h3 class="offer-card-v2__title">Clear Aligners</h3>
+              <p class="offer-card-v2__desc">Start your smile transformation with special orthodontic pricing.</p>
+              <button class="offer-card-v2__btn" (click)="openTemplateSheetMenu('Clear Aligners / Invisible Braces')">
                 Book Now <mat-icon class="!text-base">arrow_forward</mat-icon>
               </button>
+            </div>
+            <div class="offer-card-v2__icon">
+              <img loading="lazy" src="https://clovecontent.s3.ap-south-1.amazonaws.com/All/2025/06/Invisible-Braces-1.gif" alt="Clear Aligners"/>
             </div>
           </div>
         </div>

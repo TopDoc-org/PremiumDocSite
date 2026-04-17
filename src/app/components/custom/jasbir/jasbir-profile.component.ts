@@ -806,11 +806,15 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         this.confettiInstance = confetti.create(canvas, { resize: true });
       }
       if (!this.confettiInstance) return;
-      const colors = ['#ffffff', '#FFE566', '#FF6B8A', '#7DFFB3', '#FFB347', '#FF4D6A'];
+      const colors = ['#93c5fd', '#bfdbfe', '#dbeafe', '#e0e7ff', '#c7d2fe', '#ffffff'];
       const fire = this.confettiInstance;
+      let tick = 0;
       const frame = () => {
-        fire({ particleCount: 3, angle: 60, spread: 55, startVelocity: 45, origin: { x: 0, y: 0.5 }, colors, scalar: 1.2, ticks: 150 });
-        fire({ particleCount: 3, angle: 120, spread: 55, startVelocity: 45, origin: { x: 1, y: 0.5 }, colors, scalar: 1.2, ticks: 150 });
+        tick++;
+        if (tick % 3 === 0) {
+          fire({ particleCount: 1, angle: 70, spread: 80, startVelocity: 25, origin: { x: 0.1, y: 0.3 }, colors, scalar: 0.8, ticks: 200, gravity: 0.4, drift: 0.5 });
+          fire({ particleCount: 1, angle: 110, spread: 80, startVelocity: 25, origin: { x: 0.9, y: 0.3 }, colors, scalar: 0.8, ticks: 200, gravity: 0.4, drift: -0.5 });
+        }
         this.confettiAnimId = requestAnimationFrame(frame);
       };
       this.confettiAnimId = requestAnimationFrame(frame);
