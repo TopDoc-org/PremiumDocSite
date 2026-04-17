@@ -10938,7 +10938,14 @@ $dark-text-muted: #6b7790;
   }
   .limit-modal-title { color: #f1f5f9; }
   .limit-modal-body { color: #94a3b8; strong { color: #f1f5f9; } }
-  .limit-modal-note { background: #0f172a; border-color: #334155; color: #64748b; }
+  .limit-modal-note { background: #0f172a; border-color: #334155; color: #94a3b8; svg { color: #cbd5e1; } }
+  .limit-modal-icon-ring {
+    background: linear-gradient(135deg, #78350f, #92400e);
+    border-color: #f59e0b;
+    color: #fbbf24;
+    box-shadow: 0 6px 24px rgba(245,158,11,0.3);
+  }
+  .limit-modal-card::before { background: #475569; }
 }
 
 // ============================================================

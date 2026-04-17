@@ -684,9 +684,9 @@ export class BookingFlowService {
 
     this.bookingService.checkUserSessionBookings(params.doctorId, params.sessionId, req.mobile).subscribe({
       next: (checkRes: any) => {
-        const bookedCount = typeof checkRes?.hits === 'number'
-          ? checkRes.hits
-          : (checkRes?.result || []).filter((r: any) => r?.mobile === req.mobile).length;
+        const bookedCount = (checkRes?.result || []).filter((r: any) =>
+          r?.mobile === req.mobile && r?.sessionId === params.sessionId
+        ).length;
         if (bookedCount >= 2) {
           onLimitReached();
           return;
