@@ -374,6 +374,41 @@ select.ib-input {
   color: $slate-500;
 }
 
+.ib-session-header--ended {
+  opacity: 0.85;
+}
+
+.ib-queue-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+
+  &--active {
+    background: #dcfce7;
+    color: #15803d;
+  }
+
+  &--ended {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  &--not-started {
+    background: #f1f5f9;
+    color: #64748b;
+  }
+}
+
+.ib-slot-grid--ended {
+  opacity: 0.75;
+  pointer-events: none;
+}
+
 // Slot grid
 .ib-slot-grid {
   display: flex;

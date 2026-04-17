@@ -2058,11 +2058,18 @@
               <span *ngIf="sched.sessions.length > 0">
                 <span *ngFor="let session of sched.sessions; let i = index">
                   <span *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1 && (!selectedClinicWidget || (session?.clinic?.clinicName || session?.clinic?.name || session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget || (session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget)">
-                    <div class="session-header">
+                    <div class="session-header" [class.session-header--ended]="session.queueStatus === 'ended'">
                       <div class="session-info">
                         <span class="session-label">Session {{ i + 1 }}</span>
                         <span class="session-clinic">{{ session?.clinic?.clinicName || session?.clinic?.name }}</span>
                         <span class="session-time">{{ session.startTime }} - {{ session.endTime }}</span>
+                        <span class="queue-status"
+                          [class.queue-status--active]="session.queueStatus === 'started'"
+                          [class.queue-status--ended]="session.queueStatus === 'ended'"
+                          [class.queue-status--not-started]="session.queueStatus === 'notStarted'"
+                          *ngIf="session.queueStatus">
+                          {{ session.queueStatus === 'ended' ? 'Queue Ended' : session.queueStatus === 'started' ? 'Queue Active' : 'Not Started' }}
+                        </span>
                       </div>
                     </div>
                     <div class="session-actions">
@@ -2072,13 +2079,13 @@
                       </a>
                     </div>
 
-                    <div class="slot-grid" *ngIf="session.slots.length > 1">
+                    <div class="slot-grid" [class.slot-grid--ended]="session.queueStatus === 'ended'" *ngIf="session.slots.length > 1">
                       <span *ngFor="let slot of session.slots" class="slot-cell">
                         <button *ngIf="slot._source?.status !== 'sessionCancelled' && slot._source?.status !== 'cancelled'"
                           class="slot-chip"
                           [class.slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
                           [class.slot-chip--booked]="slot._source?.status !== 'notBooked'"
-                          [disabled]="slot._source?.status !== 'notBooked' || !isSheetFormFilled"
+                          [disabled]="slot._source?.status !== 'notBooked' || !isSheetFormFilled || session.queueStatus === 'ended'"
                           (click)="setSelectedSlot(slot, session)">
                           {{ slot._source?.slotTime }}
                         </button>

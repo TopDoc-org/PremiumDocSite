@@ -7761,6 +7761,42 @@ $bk-font: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   color: $bk-dark-400;
 }
 
+.session-header--ended {
+  opacity: 0.85;
+}
+
+.queue-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-family: $bk-font;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+
+  &--active {
+    background: #dcfce7;
+    color: #15803d;
+  }
+
+  &--ended {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  &--not-started {
+    background: #f1f5f9;
+    color: #64748b;
+  }
+}
+
+.slot-grid--ended {
+  opacity: 0.75;
+  pointer-events: none;
+}
+
 .session-actions {
   display: flex;
   align-items: center;

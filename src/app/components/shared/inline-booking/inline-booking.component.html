@@ -99,18 +99,25 @@
                 <ng-container *ngIf="filtered.length > 0">
                   <ng-container *ngFor="let session of filtered; let i = index">
                     <ng-container *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1">
-                      <div class="ib-session-header">
+                      <div class="ib-session-header" [class.ib-session-header--ended]="session.queueStatus === 'ended'">
                         <span class="ib-session-badge" [style.border-color]="accentColor" [style.color]="accentColor">Session {{ i + 1 }}</span>
                         <span class="ib-session-clinic">{{ session?.clinic?.clinicName || session?.clinic?.name }}</span>
                         <span class="ib-session-time">{{ session.startTime }} &ndash; {{ session.endTime }}</span>
+                        <span class="ib-queue-status"
+                          [class.ib-queue-status--active]="session.queueStatus === 'started'"
+                          [class.ib-queue-status--ended]="session.queueStatus === 'ended'"
+                          [class.ib-queue-status--not-started]="session.queueStatus === 'notStarted'"
+                          *ngIf="session.queueStatus">
+                          {{ session.queueStatus === 'ended' ? 'Queue Ended' : session.queueStatus === 'started' ? 'Queue Active' : 'Not Started' }}
+                        </span>
                       </div>
-                      <div class="ib-slot-grid" *ngIf="session.slots.length > 1">
+                      <div class="ib-slot-grid" [class.ib-slot-grid--ended]="session.queueStatus === 'ended'" *ngIf="session.slots.length > 1">
                         <ng-container *ngFor="let slot of session.slots">
                           <button *ngIf="slot._source?.status !== 'sessionCancelled' && slot._source?.status !== 'cancelled'"
                             class="ib-slot-chip"
                             [class.ib-slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
                             [class.ib-slot-chip--booked]="slot._source?.status !== 'notBooked'"
-                            [disabled]="slot._source?.status !== 'notBooked' || !isFormFilled"
+                            [disabled]="slot._source?.status !== 'notBooked' || !isFormFilled || session.queueStatus === 'ended'"
                             (click)="onSlotSelect(slot, session)">
                             {{ slot._source?.slotTime }}
                           </button>

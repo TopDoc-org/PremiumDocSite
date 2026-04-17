@@ -48,6 +48,7 @@ export interface ScheduleSession {
   clinic: any;
   geoPoint: string;
   fees: number;
+  queueStatus: string;
 }
 
 export interface BookingConfirmation {
@@ -583,7 +584,8 @@ export class BookingFlowService {
           endTime: session.documents[0]?._source?.sessionEndTime || '',
           fees: session.documents[0]?._source?.clinicDetails?.fees || 1,
           clinic: session.documents[0]?._source?.clinicDetails || {},
-          geoPoint: this.getGoogleMapsLink(session.documents[0]?._source?.clinicDetails?.geoPoint || '')
+          geoPoint: this.getGoogleMapsLink(session.documents[0]?._source?.clinicDetails?.geoPoint || ''),
+          queueStatus: session.documents.find((d: any) => d._source?.queueStatus)?._source?.queueStatus || ''
         };
         session.documents.forEach((slot: any) => {
           if (slot._source.slotType === 'priority' && slot._source.status === 'notBooked') {
@@ -594,6 +596,7 @@ export class BookingFlowService {
         });
         day.sessions.push(s);
       });
+      day.sessions.sort((a, b) => a.startTime.localeCompare(b.startTime));
       days.push(day);
     });
     return days;
