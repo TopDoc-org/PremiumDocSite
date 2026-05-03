@@ -73,6 +73,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   loggedInToken = '';
   loggedInUserId = '';
   existingUserDetails: { name: string; mobile: string; gender: string } | null = null;
+  isUnregisteredUpgrade = false; // true when existing user has userType: "unRegistered"
 
   // PIN auth state
   pinValue = '';
@@ -983,6 +984,9 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.pinValue = '';
     this.confirmPinValue = '';
     this.pinResetCounter++;
+    this.confirmPinResetCounter++;
+    this.registerPinStep = 'create';
+    this.isUnregisteredUpgrade = false;
     this.existingUserDetails = null;
 
     const mobile = this.unregForm.get('mobile')?.value?.trim() || '';
@@ -990,6 +994,8 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       next: (res: any) => {
         if (res?.hits > 0) {
           const user = res?.results?.[0] || res?.result?.[0] || res;
+          const userType = user?.userType || '';
+
           const userName = user?.name
             || ((user?.firstName || '') + ' ' + (user?.lastName || '')).trim()
             || '';
@@ -1004,7 +1010,14 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
           if (this.existingUserDetails.gender) {
             this.unregForm.patchValue({ gender: this.existingUserDetails.gender.toLowerCase() });
           }
-          this.authStep = 'login';
+
+          if (userType === 'unRegistered') {
+            // User exists but never set a PIN — treat as new registration
+            this.isUnregisteredUpgrade = true;
+            this.authStep = 'register';
+          } else {
+            this.authStep = 'login';
+          }
         } else {
           this.authStep = 'register';
         }
@@ -1024,6 +1037,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.pinResetCounter++;
     this.confirmPinResetCounter++;
     this.registerPinStep = 'create';
+    this.isUnregisteredUpgrade = false;
     this.existingUserDetails = null;
     this.showForgotPassword = false;
     this.forgotPasswordEmail = '';
@@ -1039,6 +1053,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.pinResetCounter++;
     this.confirmPinResetCounter++;
     this.registerPinStep = 'create';
+    this.isUnregisteredUpgrade = false;
     this.showForgotPassword = false;
     this.forgotPasswordEmail = '';
     this.forgotPasswordSent = false;
@@ -1195,58 +1210,107 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       const nameParts = name.split(' ');
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ') || nameParts[0];
-
-      const signupPayload: any = {
-        firstName,
-        lastName,
-        name,
-        mobileNumber: mobile,
-        password,
-        confirmPassword,
-        role: 'user',
-        userType: 'registered',
-        gender: this.unregForm.get('gender')?.value || '',
-        address: this.unregForm.get('address')?.value || '',
-        dob: null,
-        rights: null,
-        isEmailVerified: false,
-        emailVerificationOtp: null,
-        acceptTerms: true,
-        referredBy: '',
-        isQueueUpdateReminder: this.isQueueUpdateReminder
-      };
       const signupEmail = this.unregForm.get('email')?.value?.trim();
-      if (signupEmail) { signupPayload.email = signupEmail; }
 
       this.authLoading = true;
       this.authError = '';
-      this.bookingService.signupUser(signupPayload).subscribe({
-        next: () => {
-          this.bookingService.loginUser(mobile, password).subscribe({
-            next: (loginRes: any) => {
-              this.authLoading = false;
-              this.loggedInToken = loginRes.token;
-              this.loggedInUserId = loginRes.userDetails?.userId || '';
-              this.authStep = 'none';
-              this.executeBooking(this.pendingSessionId);
-            },
-            error: () => {
-              this.authLoading = false;
-              this.authError = 'Account created! Please login to confirm your booking.';
+
+      if (this.isUnregisteredUpgrade) {
+        // User already exists with userType: "unRegistered" — set their PIN and upgrade
+        const setPinPayload: any = {
+          mobile,
+          pin: password,
+          name,
+          first_name: firstName,
+          last_name: lastName,
+          gender: this.unregForm.get('gender')?.value || '',
+          address: this.unregForm.get('address')?.value || '',
+          dob: null,
+          acceptTerms: true,
+        };
+        if (signupEmail) { setPinPayload.email = signupEmail; }
+
+        this.bookingService.setUserPin(setPinPayload).subscribe({
+          next: () => {
+            this.bookingService.loginUser(mobile, password).subscribe({
+              next: (loginRes: any) => {
+                this.authLoading = false;
+                this.loggedInToken = loginRes.token;
+                this.loggedInUserId = loginRes.userDetails?.userId || '';
+                this.isUnregisteredUpgrade = false;
+                this.authStep = 'none';
+                this.executeBooking(this.pendingSessionId);
+              },
+              error: () => {
+                this.authLoading = false;
+                this.authError = 'PIN set! Please login to confirm your booking.';
+                this.isUnregisteredUpgrade = false;
+                this.switchAuthMode('login');
+              }
+            });
+          },
+          error: (err: any) => {
+            this.authLoading = false;
+            if (err.status === 409) {
+              // Already fully registered — switch to login
+              this.isUnregisteredUpgrade = false;
+              this.authError = 'This number is already registered. Please login.';
               this.switchAuthMode('login');
+            } else {
+              this.authError = err.error?.message || 'Failed to set PIN. Please try again.';
             }
-          });
-        },
-        error: (err: any) => {
-          this.authLoading = false;
-          if (err.status === 409) {
-            this.authError = 'This mobile number is already registered. Please login instead.';
-            this.switchAuthMode('login');
-          } else {
-            this.authError = err.error?.message || 'Registration failed. Please try again.';
           }
-        }
-      });
+        });
+      } else {
+        const signupPayload: any = {
+          firstName,
+          lastName,
+          name,
+          mobileNumber: mobile,
+          password,
+          confirmPassword,
+          role: 'user',
+          userType: 'registered',
+          gender: this.unregForm.get('gender')?.value || '',
+          address: this.unregForm.get('address')?.value || '',
+          dob: null,
+          rights: null,
+          isEmailVerified: false,
+          emailVerificationOtp: null,
+          acceptTerms: true,
+          referredBy: '',
+          isQueueUpdateReminder: this.isQueueUpdateReminder
+        };
+        if (signupEmail) { signupPayload.email = signupEmail; }
+
+        this.bookingService.signupUser(signupPayload).subscribe({
+          next: () => {
+            this.bookingService.loginUser(mobile, password).subscribe({
+              next: (loginRes: any) => {
+                this.authLoading = false;
+                this.loggedInToken = loginRes.token;
+                this.loggedInUserId = loginRes.userDetails?.userId || '';
+                this.authStep = 'none';
+                this.executeBooking(this.pendingSessionId);
+              },
+              error: () => {
+                this.authLoading = false;
+                this.authError = 'Account created! Please login to confirm your booking.';
+                this.switchAuthMode('login');
+              }
+            });
+          },
+          error: (err: any) => {
+            this.authLoading = false;
+            if (err.status === 409) {
+              this.authError = 'This mobile number is already registered. Please login instead.';
+              this.switchAuthMode('login');
+            } else {
+              this.authError = err.error?.message || 'Registration failed. Please try again.';
+            }
+          }
+        });
+      }
     }
   }
 

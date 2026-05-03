@@ -59,6 +59,10 @@ export class BookingService {
     return this.http.post(`${this.baseUrl}/user/numCheck`, { mobile });
   }
 
+  setUserPin(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/user/setPin`, payload);
+  }
+
   sendForgotPassword(email: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/forgetPassword/send`, { email, role: 'user' });
   }
