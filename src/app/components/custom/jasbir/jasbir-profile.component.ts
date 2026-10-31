@@ -910,9 +910,20 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   setSelectedSlot(slot: any, session: any): void {
+    const firstPick = !this.selectedSlotId;
     this.selectedSlotId = slot._source?.slotId || '';
     this.slotSelectedDetail = slot._source || {};
     this.sessionIdSelected = session.sessionId;
+    // Details render only once a slot is picked; bring them into view the first time
+    if (firstPick) {
+      setTimeout(() => document.getElementById('sheet-details')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
+  }
+
+  clearSelectedSlot(): void {
+    this.selectedSlotId = '';
+    this.slotSelectedDetail = {};
+    this.sessionIdSelected = '';
   }
 
   onSpotFreeBook(sessionId: string): void {

@@ -590,10 +590,12 @@ export class BookingFlowService {
         session.documents.forEach((slot: any) => {
           if (slot._source.slotType === 'priority' && slot._source.status === 'notBooked') {
             s.prioritySlots.push(slot);
-          } else {
+          } else if (slot._source.slotTime) {
             s.slots.push(slot);
           }
         });
+        // The API returns booked slots out of order
+        s.slots.sort((a, b) => a._source.slotTime.localeCompare(b._source.slotTime));
         day.sessions.push(s);
       });
       day.sessions.sort((a, b) => a.startTime.localeCompare(b.startTime));

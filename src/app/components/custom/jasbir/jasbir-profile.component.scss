@@ -8207,7 +8207,6 @@ $bk-font: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
   }
 
-  &--booked,
   &:disabled {
     opacity: 0.4 !important;
     cursor: not-allowed !important;
@@ -8216,35 +8215,87 @@ $bk-font: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     border-color: $bk-dark-200 !important;
     transform: none !important;
     box-shadow: none !important;
-    text-decoration: line-through;
+  }
+
+  &--booked:disabled {
+    opacity: 1 !important;
+    padding: 5px 6px !important;
+    background: #fef2f2 !important;
+    color: #b91c1c !important;
+    border-color: #fecaca !important;
+  }
+}
+
+.slot-chip-time,
+.slot-chip-status {
+  display: block;
+}
+
+.slot-chip-status {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+// ─── Slot Legend ───
+.slot-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-bottom: 10px;
+}
+
+.slot-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: $bk-font;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: $bk-dark-700;
+
+  &::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid $bk-dark-200;
+    background: white;
+  }
+
+  &--selected::before {
+    background: $bk-primary-500;
+    border-color: $bk-primary-500;
+  }
+
+  &--booked::before {
+    background: #fef2f2;
+    border-color: #fca5a5;
   }
 }
 
 // ─── Scroll Area ───
 .slot-scroll-area {
   padding-right: 4px;
-
-  &.slots-disabled {
-    .slot-grid {
-      opacity: 0.7;
-      pointer-events: none;
-    }
-  }
 }
 
-.slots-disabled-hint {
+.sheet-details {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid $bk-dark-200;
+  scroll-margin-top: 8px;
+}
+
+.sheet-details-title {
   display: flex;
   align-items: center;
   gap: 6px;
   font-family: $bk-font;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: $bk-primary-600;
-  background: rgba($bk-primary-100, 0.5);
-  border: 1px solid $bk-primary-100;
-  border-radius: $bk-radius-sm;
-  padding: 8px 12px;
-  margin-bottom: 8px;
+  margin: 0 0 12px;
 }
 
 // ─── Book Action Area ───
@@ -8943,28 +8994,6 @@ $dark-text-muted: #6b7790;
       color: $dark-text-muted;
     }
 
-    .ib-lock-banner {
-      background: linear-gradient(135deg, rgba($teal-600, 0.12), rgba(37, 99, 235, 0.08));
-      border-color: rgba($teal-500, 0.3);
-
-      .ib-lock-icon { color: $teal-400; }
-      strong { color: $teal-400; }
-      p { color: $dark-text-muted; }
-    }
-
-    .ib-slots--locked {
-      .ib-session-header,
-      .ib-slot-grid {
-        opacity: 0.65 !important;
-      }
-
-      .ib-slot-chip {
-        background: $dark-bg !important;
-        color: $dark-text-muted !important;
-        border-color: $dark-border !important;
-      }
-    }
-
     .ib-session-header {
       background: $dark-bg;
     }
@@ -9000,9 +9029,28 @@ $dark-text-muted: #6b7790;
       }
 
       &--booked {
-        background: $dark-bg !important;
-        color: $dark-text-muted !important;
-        border-color: transparent !important;
+        background: rgba(239, 68, 68, 0.12) !important;
+        color: #fca5a5 !important;
+        border-color: rgba(239, 68, 68, 0.35) !important;
+      }
+    }
+
+    .ib-slot-legend-item {
+      color: $dark-text-muted;
+
+      &::before {
+        background: $dark-card-hover;
+        border-color: $dark-border;
+      }
+
+      &--selected::before {
+        background: rgba($teal-500, 0.2);
+        border-color: $teal-500;
+      }
+
+      &--booked::before {
+        background: rgba(239, 68, 68, 0.12);
+        border-color: rgba(239, 68, 68, 0.35);
       }
     }
 

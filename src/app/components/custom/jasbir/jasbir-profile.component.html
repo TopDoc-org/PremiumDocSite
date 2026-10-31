@@ -740,6 +740,7 @@
       [accentColor]="'#2563eb'"
       [isQueueUpdateReminder]="isQueueUpdateReminder"
       (slotSelected)="setSelectedSlot($event.slot, $event.session)"
+      (slotCleared)="clearSelectedSlot()"
       (bookClicked)="onSpotFreeBook($event)">
     </app-inline-booking>
 
@@ -1947,6 +1948,92 @@
       <form [formGroup]="unregForm">
         <p class="sm:text-base text-lg font-medium title-font mb-2">Book An Appointment For  {{ profRes?.name || 'Jasbir Meher' }}</p>
 
+        <div class="mb-2" *ngIf="clinicNamesWidget.length > 0">
+          <label class="center-block">Clinic:</label>
+          <ng-container *ngIf="clinicNamesWidget.length === 1; else multiClinicWidget">
+            <input [value]="clinicNamesWidget[0]" readonly
+              class="form-control block w-full px-4 py-2 font-normal bg-gray-100 text-gray-500 border border-solid border-gray-200 rounded m-0 cursor-default">
+          </ng-container>
+          <ng-template #multiClinicWidget>
+            <select [(ngModel)]="selectedClinicWidget" [ngModelOptions]="{standalone: true}" (ngModelChange)="clearSelectedSlot()"
+              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+              <option *ngFor="let c of clinicNamesWidget" [value]="c">{{ c }}</option>
+            </select>
+          </ng-template>
+        </div>
+
+        <div class="slot-scroll-area">
+          <div class="slot-legend" *ngIf="scheduleDetails.length > 0">
+            <span class="slot-legend-item slot-legend-item--available">Available</span>
+            <span class="slot-legend-item slot-legend-item--selected">Selected</span>
+            <span class="slot-legend-item slot-legend-item--booked">Booked</span>
+          </div>
+          <!-- Date tabs with sessions -->
+          <mat-tab-group class="mb-4 tab-body" *ngIf="scheduleDetails.length > 0">
+            <mat-tab *ngFor="let sched of scheduleDetails">
+              <ng-template mat-tab-label>
+                <span class="tab-text uppercase">{{ sched.day }}</span>
+                <span class="tab-number">{{ sched.date }}</span>
+              </ng-template>
+
+              <span *ngIf="sched.sessions.length > 0">
+                <span *ngFor="let session of sched.sessions; let i = index">
+                  <span *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1 && (!selectedClinicWidget || (session?.clinic?.clinicName || session?.clinic?.name || session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget || (session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget)">
+                    <div class="session-header" [class.session-header--ended]="session.queueStatus === 'ended'">
+                      <div class="session-info">
+                        <span class="session-label">Session {{ i + 1 }}</span>
+                        <span class="session-clinic">{{ session?.clinic?.clinicName || session?.clinic?.name }}</span>
+                        <span class="session-time">{{ session.startTime }} - {{ session.endTime }}</span>
+                        <span class="queue-status"
+                          [class.queue-status--active]="session.queueStatus === 'started'"
+                          [class.queue-status--ended]="session.queueStatus === 'ended'"
+                          [class.queue-status--not-started]="session.queueStatus === 'notStarted'"
+                          *ngIf="session.queueStatus">
+                          {{ session.queueStatus === 'ended' ? 'Queue Ended' : session.queueStatus === 'started' ? 'Queue Active' : 'Not Started' }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="session-actions">
+                      <a class="directions-link" target="_blank" [href]="session.geoPoint">
+                        <mat-icon class="!text-sm !w-4 !h-4">near_me</mat-icon>
+                        Directions
+                      </a>
+                    </div>
+
+                    <div class="slot-grid" [class.slot-grid--ended]="session.queueStatus === 'ended'" *ngIf="session.slots.length > 1">
+                      <span *ngFor="let slot of session.slots" class="slot-cell">
+                        <button *ngIf="slot._source?.status !== 'sessionCancelled' && slot._source?.status !== 'cancelled'"
+                          class="slot-chip"
+                          [class.slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
+                          [class.slot-chip--booked]="slot._source?.status !== 'notBooked'"
+                          [disabled]="slot._source?.status !== 'notBooked' || session.queueStatus === 'ended'"
+                          (click)="setSelectedSlot(slot, session)">
+                          <span class="slot-chip-time">{{ slot._source?.slotTime }}</span>
+                          <span class="slot-chip-status" *ngIf="slot._source?.status !== 'notBooked'">Booked</span>
+                        </button>
+                      </span>
+                    </div>
+                  </span>
+                </span>
+              </span>
+
+              <div class="w-full text-center text-lg" *ngIf="sched.sessions.length === 0">
+                The upcoming schedule has not been set by the doctor as of yet
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+
+          <div class="w-full text-center text-lg" *ngIf="scheduleDetails.length === 0">
+            The upcoming schedule has not been set by the doctor as of yet
+          </div>
+        </div>
+
+        <div id="sheet-details" class="sheet-details" *ngIf="selectedSlotId">
+          <p class="sheet-details-title">
+            <mat-icon class="!text-base !w-4 !h-4">event_available</mat-icon>
+            {{ slotSelectedDetail?.slotTime }} selected. Enter your details
+          </p>
+
         <div class="mb-2">
           <label class="center-block">Full Name *:
             <input formControlName="name" type="text"
@@ -2028,90 +2115,12 @@
           </div>
         </div>
 
-        <div class="mb-2" *ngIf="clinicNamesWidget.length > 0">
-          <label class="center-block">Clinic:</label>
-          <ng-container *ngIf="clinicNamesWidget.length === 1; else multiClinicWidget">
-            <input [value]="clinicNamesWidget[0]" readonly
-              class="form-control block w-full px-4 py-2 font-normal bg-gray-100 text-gray-500 border border-solid border-gray-200 rounded m-0 cursor-default">
-          </ng-container>
-          <ng-template #multiClinicWidget>
-            <select [(ngModel)]="selectedClinicWidget" [ngModelOptions]="{standalone: true}"
-              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-              <option *ngFor="let c of clinicNamesWidget" [value]="c">{{ c }}</option>
-            </select>
-          </ng-template>
-        </div>
-
         <div class="mb-2">
           <label class="center-block">Address <span class="text-xs text-gray-400 font-normal">(optional)</span>:
             <input formControlName="address" type="text" placeholder="Your home / locality address"
               class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
           </label>
         </div>
-
-        <div class="slot-scroll-area" [class.slots-disabled]="!isSheetFormFilled">
-          <!-- Lock overlay banner -->
-          <div class="slots-disabled-hint" *ngIf="!isSheetFormFilled && scheduleDetails.length > 0">
-            <mat-icon class="!text-sm">lock</mat-icon>
-            Fill in your details above to unlock slot selection
-          </div>
-          <!-- Date tabs with sessions -->
-          <mat-tab-group class="mb-4 tab-body" *ngIf="scheduleDetails.length > 0">
-            <mat-tab *ngFor="let sched of scheduleDetails">
-              <ng-template mat-tab-label>
-                <span class="tab-text uppercase">{{ sched.day }}</span>
-                <span class="tab-number">{{ sched.date }}</span>
-              </ng-template>
-
-              <span *ngIf="sched.sessions.length > 0">
-                <span *ngFor="let session of sched.sessions; let i = index">
-                  <span *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1 && (!selectedClinicWidget || (session?.clinic?.clinicName || session?.clinic?.name || session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget || (session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget)">
-                    <div class="session-header" [class.session-header--ended]="session.queueStatus === 'ended'">
-                      <div class="session-info">
-                        <span class="session-label">Session {{ i + 1 }}</span>
-                        <span class="session-clinic">{{ session?.clinic?.clinicName || session?.clinic?.name }}</span>
-                        <span class="session-time">{{ session.startTime }} - {{ session.endTime }}</span>
-                        <span class="queue-status"
-                          [class.queue-status--active]="session.queueStatus === 'started'"
-                          [class.queue-status--ended]="session.queueStatus === 'ended'"
-                          [class.queue-status--not-started]="session.queueStatus === 'notStarted'"
-                          *ngIf="session.queueStatus">
-                          {{ session.queueStatus === 'ended' ? 'Queue Ended' : session.queueStatus === 'started' ? 'Queue Active' : 'Not Started' }}
-                        </span>
-                      </div>
-                    </div>
-                    <div class="session-actions">
-                      <a class="directions-link" target="_blank" [href]="session.geoPoint">
-                        <mat-icon class="!text-sm !w-4 !h-4">near_me</mat-icon>
-                        Directions
-                      </a>
-                    </div>
-
-                    <div class="slot-grid" [class.slot-grid--ended]="session.queueStatus === 'ended'" *ngIf="session.slots.length > 1">
-                      <span *ngFor="let slot of session.slots" class="slot-cell">
-                        <button *ngIf="slot._source?.status !== 'sessionCancelled' && slot._source?.status !== 'cancelled'"
-                          class="slot-chip"
-                          [class.slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
-                          [class.slot-chip--booked]="slot._source?.status !== 'notBooked'"
-                          [disabled]="slot._source?.status !== 'notBooked' || !isSheetFormFilled || session.queueStatus === 'ended'"
-                          (click)="setSelectedSlot(slot, session)">
-                          {{ slot._source?.slotTime }}
-                        </button>
-                      </span>
-                    </div>
-                  </span>
-                </span>
-              </span>
-
-              <div class="w-full text-center text-lg" *ngIf="sched.sessions.length === 0">
-                The upcoming schedule has not been set by the doctor as of yet
-              </div>
-            </mat-tab>
-          </mat-tab-group>
-
-          <div class="w-full text-center text-lg" *ngIf="scheduleDetails.length === 0">
-            The upcoming schedule has not been set by the doctor as of yet
-          </div>
         </div>
       </form>
     </div>
@@ -2123,7 +2132,7 @@
         [class.book-pay-btn--disabled]="!selectedSlotId || !isSheetFormFilled"
         (click)="onSpotFreeBook(sessionIdSelected)">
         <mat-icon class="!text-lg !mr-1">event_available</mat-icon>
-        {{ selectedSlotId && isSheetFormFilled ? 'Book & Pay in Cash' : 'Fill details & select a slot' }}
+        {{ !selectedSlotId ? 'Select a slot' : isSheetFormFilled ? 'Book & Pay in Cash' : 'Enter your details to book' }}
       </button>
     </div>
   </section>
