@@ -6,19 +6,22 @@
       DEMO
     </div>
     <div class="demo-toolbar-actions">
-      <div class="demo-toggle" (click)="toggleAnimations()">
+      <button type="button" class="demo-toggle" (click)="toggleAnimations()"
+        [attr.aria-pressed]="animationsEnabled" aria-label="Toggle animations">
         <span class="demo-toggle-label">Animations</span>
-        <div class="demo-switch" [class.demo-switch--on]="animationsEnabled">
-          <div class="demo-switch-knob"></div>
-        </div>
-      </div>
-      <button class="demo-btn demo-btn--edit" (click)="editPanelOpen = !editPanelOpen">
-        <mat-icon class="!text-base !w-4 !h-4">{{ editPanelOpen ? 'close' : 'edit' }}</mat-icon>
-        {{ editPanelOpen ? 'Close' : 'Personalize' }}
+        <span class="demo-switch" [class.demo-switch--on]="animationsEnabled">
+          <span class="demo-switch-knob"></span>
+        </span>
       </button>
-      <button class="demo-btn demo-btn--features" (click)="featuresOpen = !featuresOpen">
-        <mat-icon class="!text-base !w-4 !h-4">{{ featuresOpen ? 'close' : 'auto_awesome' }}</mat-icon>
-        Features
+      <button class="demo-btn demo-btn--edit" (click)="editPanelOpen = !editPanelOpen"
+        [attr.aria-label]="editPanelOpen ? 'Close personalize panel' : 'Open personalize panel'">
+        <mat-icon class="!text-base !w-4 !h-4" aria-hidden="true">{{ editPanelOpen ? 'close' : 'edit' }}</mat-icon>
+        <span class="demo-btn-text">{{ editPanelOpen ? 'Close' : 'Personalize' }}</span>
+      </button>
+      <button class="demo-btn demo-btn--features" (click)="featuresOpen = !featuresOpen"
+        [attr.aria-label]="featuresOpen ? 'Close features panel' : 'Open features panel'">
+        <mat-icon class="!text-base !w-4 !h-4" aria-hidden="true">{{ featuresOpen ? 'close' : 'auto_awesome' }}</mat-icon>
+        <span class="demo-btn-text">Features</span>
       </button>
     </div>
   </div>
@@ -31,68 +34,158 @@
     <button class="demo-edit-close" (click)="editPanelOpen = false"><mat-icon>close</mat-icon></button>
   </div>
   <div class="demo-edit-body">
-    <div class="demo-field"><label>Doctor Name</label><input type="text" [(ngModel)]="config.doctorName"></div>
-    <div class="demo-field"><label>Degree</label><input type="text" [(ngModel)]="config.degree"></div>
-    <div class="demo-field"><label>Specialization</label><input type="text" [(ngModel)]="config.specialization"></div>
-    <div class="demo-field"><label>Clinic Name</label><input type="text" [(ngModel)]="config.clinicName"></div>
-    <div class="demo-field"><label>Clinic Tagline</label><input type="text" [(ngModel)]="config.clinicTagline"></div>
-    <div class="demo-field-row">
-      <div class="demo-field"><label>City</label><input type="text" [(ngModel)]="config.city"></div>
-      <div class="demo-field"><label>State</label><input type="text" [(ngModel)]="config.state"></div>
-    </div>
-    <div class="demo-field-row">
-      <div class="demo-field"><label>Experience (yrs)</label><input type="text" [(ngModel)]="config.experience"></div>
-      <div class="demo-field"><label>Rating</label><input type="text" [(ngModel)]="config.rating"></div>
-    </div>
-    <div class="demo-field"><label>Phone Number</label><input type="tel" [(ngModel)]="config.phone"></div>
-    <div class="demo-field"><label>Hero Quote</label><input type="text" [(ngModel)]="config.tagline"></div>
-    <div class="demo-field">
-      <label>Color Theme</label>
-      <div class="demo-color-presets">
-        <button *ngFor="let preset of colorPresets"
-          class="demo-color-dot"
-          [style.background]="preset.color"
-          [class.demo-color-dot--active]="config.primaryColor === preset.color"
-          (click)="config.primaryColor = preset.color"
-          [title]="preset.name">
-        </button>
-        <label class="demo-color-custom" [title]="'Custom color'">
-          <input type="color" [(ngModel)]="config.primaryColor" style="opacity:0;width:0;height:0;position:absolute;">
-          <mat-icon class="!text-sm !w-4 !h-4" style="color:#64748b">palette</mat-icon>
-        </label>
+    <section class="demo-edit-section">
+      <h4>Profile Photo</h4>
+      <div class="demo-photo-card">
+        <div class="demo-photo-preview">
+          <img [src]="displayPhoto" alt="Profile preview"
+            [style.object-position]="photoFocus(config.photoCrop)"
+            [style.transform-origin]="photoFocus(config.photoCrop)"
+            [style.transform]="photoScale(config.photoCrop)"
+            [style.object-fit]="photoFit(config.photoCrop)"
+            (error)="onImgError($event, imgFallbackPortrait)">
+        </div>
+        <div class="demo-photo-actions">
+          <label class="demo-upload-btn">
+            <mat-icon class="!text-sm !w-4 !h-4">upload</mat-icon> Upload photo
+            <input type="file" accept="image/*" (change)="onProfileImageUpload($event)" style="display:none">
+          </label>
+          <button type="button" class="demo-upload-btn" (click)="openCrop()">
+            <mat-icon class="!text-sm !w-4 !h-4">crop</mat-icon> Adjust crop
+          </button>
+          <button type="button" class="demo-upload-btn" *ngIf="config.profileImage" (click)="removePhoto()">
+            <mat-icon class="!text-sm !w-4 !h-4">delete_outline</mat-icon> Remove
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="demo-field">
-      <label>Typography</label>
-      <div class="demo-font-presets">
-        <button *ngFor="let fp of visibleFontPairs"
-          class="demo-font-btn"
-          [class.demo-font-btn--active]="config.fontPair === fp.name"
-          (click)="selectFont(fp)">
-          <span class="demo-font-preview" [style.fontFamily]="fp.heading">Aa</span>
-          <span class="demo-font-name">{{ fp.name }}</span>
-        </button>
-        <button class="demo-font-more" (click)="showAllFonts = !showAllFonts" *ngIf="fontPairs.length > initialFontCount">
-          <mat-icon class="!text-sm !w-4 !h-4">{{ showAllFonts ? 'expand_less' : 'expand_more' }}</mat-icon>
-          {{ showAllFonts ? 'Show less' : (fontPairs.length - initialFontCount) + ' more fonts' }}
-        </button>
+      <div class="demo-photo-url">
+        <input type="url" [(ngModel)]="photoUrlDraft" (keydown.enter)="applyPhotoUrl()" aria-label="Photo URL" placeholder="Or paste a photo link...">
+        <button type="button" class="demo-upload-btn" (click)="applyPhotoUrl()" [disabled]="!photoUrlDraft.trim()">Use</button>
       </div>
-    </div>
-    <div class="demo-field">
-      <label>Profile Photo</label>
-      <input type="text" [(ngModel)]="config.profileImage" placeholder="Paste doctor photo URL...">
-      <div style="margin-top:6px;display:flex;align-items:center;gap:8px;">
-        <label class="demo-upload-btn">
-          <mat-icon class="!text-sm !w-4 !h-4">upload</mat-icon> Upload
-          <input type="file" accept="image/*" (change)="onProfileImageUpload($event)" style="display:none">
-        </label>
-        <span *ngIf="config.profileImage" style="font-size:0.7rem;color:#10b981;font-weight:600;">Photo set</span>
+      <p class="demo-photo-status" role="status" *ngIf="isPhotoBusy">{{ photoStatus === 'uploading' ? 'Saving photo for your link…' : 'Loading photo…' }}</p>
+      <p class="demo-photo-status demo-photo-status--ok" role="status" *ngIf="photoStatus === 'saved'">Photo saved. It will appear in your link.</p>
+      <p class="demo-photo-status demo-photo-status--error" role="alert" *ngIf="photoStatus === 'failed'">
+        Photo shows here, but couldn't be saved, so your link won't include it.
+        <button type="button" (click)="retryPhotoUpload()">Try again</button>
+      </p>
+      <p class="demo-photo-status demo-photo-status--error" role="alert" *ngIf="photoError">{{ photoError }}</p>
+    </section>
+
+    <section class="demo-edit-section">
+      <h4>Doctor</h4>
+      <div class="demo-field">
+        <label>Practice Type</label>
+        <div class="demo-practice-switch">
+          <button type="button" *ngFor="let type of practiceTypes"
+            [class.active]="config.practice === type"
+            [attr.aria-pressed]="config.practice === type"
+            (click)="config.practice = type">{{ practices[type].label }}</button>
+        </div>
       </div>
-    </div>
-    <button class="demo-share-btn" (click)="copyShareLink()">
+      <div class="demo-field"><label>Doctor Name</label><input type="text" [(ngModel)]="config.doctorName"></div>
+      <div class="demo-field"><label>Degree</label><input type="text" [(ngModel)]="config.degree"></div>
+      <div class="demo-field"><label>Specialization</label><input type="text" [(ngModel)]="config.specialization"></div>
+      <div class="demo-field-row">
+        <div class="demo-field"><label>Experience (yrs)</label><input type="text" [(ngModel)]="config.experience"></div>
+        <div class="demo-field"><label>Rating</label><input type="text" [(ngModel)]="config.rating"></div>
+      </div>
+      <div class="demo-field"><label>Hero Quote</label><input type="text" [(ngModel)]="config.tagline"></div>
+    </section>
+
+    <section class="demo-edit-section">
+      <h4>Clinic</h4>
+      <div class="demo-field"><label>Clinic Name</label><input type="text" [(ngModel)]="config.clinicName"></div>
+      <div class="demo-field"><label>Clinic Tagline</label><input type="text" [(ngModel)]="config.clinicTagline"></div>
+      <div class="demo-field-row">
+        <div class="demo-field"><label>City</label><input type="text" [(ngModel)]="config.city"></div>
+        <div class="demo-field"><label>State</label><input type="text" [(ngModel)]="config.state"></div>
+      </div>
+      <div class="demo-field"><label>Phone Number</label><input type="tel" [(ngModel)]="config.phone"></div>
+    </section>
+
+    <section class="demo-edit-section">
+      <h4>Brand</h4>
+      <div class="demo-field">
+        <label>Color Theme</label>
+        <div class="demo-color-presets">
+          <button *ngFor="let preset of colorPresets"
+            class="demo-color-dot"
+            [style.background]="preset.color"
+            [class.demo-color-dot--active]="config.primaryColor === preset.color"
+            (click)="config.primaryColor = preset.color"
+            [title]="preset.name"
+            [attr.aria-label]="preset.name">
+          </button>
+          <label class="demo-color-custom" [title]="'Custom color'">
+            <input type="color" [(ngModel)]="config.primaryColor" style="opacity:0;width:0;height:0;position:absolute;">
+            <mat-icon class="!text-sm !w-4 !h-4" style="color:#64748b">palette</mat-icon>
+          </label>
+        </div>
+      </div>
+      <div class="demo-field">
+        <label>Typography</label>
+        <div class="demo-font-presets">
+          <button *ngFor="let fp of visibleFontPairs"
+            class="demo-font-btn"
+            [class.demo-font-btn--active]="config.fontPair === fp.name"
+            (click)="selectFont(fp)">
+            <span class="demo-font-preview" [style.fontFamily]="fp.heading">Aa</span>
+            <span class="demo-font-name">{{ fp.name }}</span>
+          </button>
+          <button class="demo-font-more" (click)="showAllFonts = !showAllFonts" *ngIf="fontPairs.length > initialFontCount">
+            <mat-icon class="!text-sm !w-4 !h-4">{{ showAllFonts ? 'expand_less' : 'expand_more' }}</mat-icon>
+            {{ showAllFonts ? 'Show less' : (fontPairs.length - initialFontCount) + ' more fonts' }}
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="demo-edit-footer">
+    <button class="demo-share-btn" (click)="copyShareLink()" [disabled]="isPhotoBusy">
       <mat-icon class="!text-base !w-4 !h-4">link</mat-icon>
-      {{ shareTooltip || 'Copy Personalized Link' }}
+      {{ isPhotoBusy ? 'Saving photo…' : (shareTooltip || 'Copy Personalized Link') }}
     </button>
+  </div>
+</div>
+
+<!-- PHOTO CROPPER -->
+<div class="demo-crop-overlay" *ngIf="cropOpen" (click)="closeCrop()"></div>
+<div class="demo-crop-modal" *ngIf="cropOpen" role="dialog" aria-modal="true" aria-label="Adjust profile photo">
+  <div class="demo-edit-header">
+    <h3>Adjust Photo</h3>
+    <button class="demo-edit-close" (click)="closeCrop()" aria-label="Cancel crop"><mat-icon>close</mat-icon></button>
+  </div>
+  <div class="demo-crop-body">
+    <div class="demo-crop-stage"
+      (pointerdown)="onCropPointerDown($event)"
+      (pointermove)="onCropPointerMove($event)"
+      (pointerup)="onCropPointerUp($event)"
+      (pointercancel)="onCropPointerUp($event)"
+      (wheel)="onCropWheel($event)">
+      <div class="demo-crop-window">
+        <img [src]="displayPhoto" alt="" draggable="false"
+          [ngStyle]="cropImageStyle"
+          (load)="onCropImageLoad($event)"
+          (error)="onImgError($event, imgFallbackPortrait)">
+        <div class="demo-crop-grid" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="demo-crop-tools">
+      <p class="demo-crop-hint">Drag to move. Pinch or scroll to zoom.</p>
+      <button type="button" class="demo-crop-fit" (click)="toggleCropFit()">
+        <mat-icon aria-hidden="true">zoom_out_map</mat-icon>
+        {{ cropDraft.fit ? 'Fill frame' : 'Show whole photo' }}
+      </button>
+    </div>
+    <label class="demo-crop-zoom">
+      <mat-icon class="!text-base !w-4 !h-4" aria-hidden="true">zoom_out</mat-icon>
+      <input type="range" min="1" max="3" step="0.01" aria-label="Zoom" [(ngModel)]="cropDraft.zoom">
+      <mat-icon class="!text-base !w-4 !h-4" aria-hidden="true">zoom_in</mat-icon>
+    </label>
+  </div>
+  <div class="demo-crop-actions">
+    <button type="button" class="demo-upload-btn" (click)="resetCrop()">Reset</button>
+    <button type="button" class="demo-crop-save" [style.background]="config.primaryColor" (click)="saveCrop()">Save</button>
   </div>
 </div>
 
@@ -136,7 +229,9 @@
   <!-- HERO -->
   <section class="hero-landing">
     <div class="hero-bg-image">
-      <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=1200&q=80" alt="Dental Clinic Team" loading="eager">
+      <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=1200&q=80" alt="Dental Clinic Team"
+        width="1200" height="675" loading="eager"
+        (error)="onImgError($event, imgFallbackWide)">
     </div>
 
     <div class="hero-star star-1"><mat-icon>auto_awesome</mat-icon></div>
@@ -189,10 +284,10 @@
         </div>
 
         <div class="hero-social-links">
-          <span class="social-icon-btn"><i class="fab fa-instagram"></i></span>
-          <span class="social-icon-btn"><i class="fab fa-facebook-f"></i></span>
-          <span class="social-icon-btn"><i class="fab fa-youtube"></i></span>
-          <span class="social-icon-btn share-btn"><i class="fas fa-share-nodes"></i></span>
+          <button type="button" class="social-icon-btn" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></button>
+          <button type="button" class="social-icon-btn" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></button>
+          <button type="button" class="social-icon-btn" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></button>
+          <button type="button" class="social-icon-btn share-btn" aria-label="Share"><i class="fas fa-share-nodes" aria-hidden="true"></i></button>
         </div>
       </div>
 
@@ -200,7 +295,13 @@
         <div class="hero-accent-shape shape-1"></div>
         <div class="hero-accent-shape shape-2"></div>
         <div class="hero-image-container">
-          <img [src]="config.profileImage || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80'" alt="Dr. {{ config.doctorName }}" loading="eager">
+          <img [src]="displayPhoto" alt="Dr. {{ config.doctorName }}"
+            width="600" height="800" loading="eager"
+            [style.object-position]="photoFocus(config.photoCrop)"
+            [style.transform-origin]="photoFocus(config.photoCrop)"
+            [style.transform]="photoScale(config.photoCrop)"
+            [style.object-fit]="photoFit(config.photoCrop)"
+            (error)="onImgError($event, imgFallbackPortrait)">
         </div>
       </div>
     </div>
@@ -241,7 +342,12 @@
     <section class="about-section">
       <div class="about-grid">
         <div class="about-image">
-          <img [src]="config.profileImage || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80'" alt="Dr. {{ config.doctorName }}" loading="lazy"
+          <img [src]="displayPhoto" alt="Dr. {{ config.doctorName }}" loading="lazy"
+            [style.object-position]="photoFocus(config.photoCrop)"
+            [style.transform-origin]="photoFocus(config.photoCrop)"
+            [style.transform]="photoScale(config.photoCrop)"
+            [style.object-fit]="photoFit(config.photoCrop)"
+            (error)="onImgError($event, imgFallbackPortrait)"
             style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
         </div>
         <div class="about-content">
@@ -256,15 +362,15 @@
           <p>
             Dr. {{ config.doctorName }} ({{ config.degree }}) is a renowned {{ config.specialization }}
             based in {{ config.city }}, {{ config.state }}. Founded {{ config.clinicName }}
-            to bring world-class dental care to the region.
-            With advanced training in orthodontics, laser dentistry, and cosmetic procedures,
+            to bring world-class {{ practice.careType }} to the region.
+            With {{ practice.aboutTraining }},
             Dr. {{ config.doctorName }} combines cutting-edge technology with a gentle, patient-first approach
-            to create beautiful, healthy smiles for patients of all ages.
+            to {{ practice.aboutOutcome }} for patients of all ages.
           </p>
           <ul class="about-checks">
             <li><mat-icon class="check-tick">check_circle</mat-icon><span>{{ config.degree }} qualified {{ config.specialization }}</span></li>
-            <li><mat-icon class="check-tick">check_circle</mat-icon><span>Specializing in Braces, Clear Aligners & Invisalign</span></li>
-            <li><mat-icon class="check-tick">check_circle</mat-icon><span>Advanced Laser Dentistry & Pain-Free Treatments</span></li>
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>{{ practice.checks[0] }}</span></li>
+            <li><mat-icon class="check-tick">check_circle</mat-icon><span>{{ practice.checks[1] }}</span></li>
             <li><mat-icon class="check-tick">check_circle</mat-icon><span>Serving {{ config.city }} with {{ config.experience }}+ years of experience</span></li>
           </ul>
           <div class="about-stats">
@@ -278,7 +384,7 @@
             </div>
             <div class="stat-item">
               <div class="stat-number">10K+</div>
-              <div class="stat-label">Smiles Created</div>
+              <div class="stat-label">{{ practice.statLabel }}</div>
             </div>
           </div>
         </div>
@@ -293,15 +399,12 @@
       </div>
       <h2 class="section-heading">Treatments at <span [style.color]="config.primaryColor">{{ config.clinicName }}</span></h2>
       <div class="services-card-grid">
-          <div *ngFor="let service of services; let i = index"
+          <div *ngFor="let service of practice.services; let i = index"
             class="service-image-card scroll-animate"
             [attr.data-aos]="animationsEnabled ? 'fade-up' : null"
             [attr.data-aos-delay]="animationsEnabled ? (i % 3) * 100 : null">
-            <div class="service-card-img">
-              <img loading="lazy" [src]="service.image" [alt]="service.name">
-              <div class="service-card-img-overlay">
-                <mat-icon>{{ service.matIcon }}</mat-icon>
-              </div>
+            <div class="service-card-visual" aria-hidden="true">
+              <mat-icon>{{ service.matIcon }}</mat-icon>
             </div>
             <div class="service-card-body">
               <h3>{{ service.name }}</h3>
@@ -313,7 +416,7 @@
     </section>
 
     <!-- GALLERY -->
-    <section class="detail-section">
+    <section class="detail-section" *ngIf="practice.showGallery">
       <div class="detail-inner" style="max-width: 1180px; margin: 0 auto;">
         <div class="section-brand-label">
           <mat-icon class="section-brand-icon" style="font-size:24px;width:24px;height:24px" [style.color]="config.primaryColor">local_hospital</mat-icon>
@@ -323,14 +426,17 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
           <div style="border-radius: 16px; overflow: hidden; aspect-ratio: 4/3;">
             <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&q=80&fit=crop" alt="Clinic Interior" loading="lazy"
+              (error)="onImgError($event, imgFallbackWide)"
               style="width: 100%; height: 100%; object-fit: cover;">
           </div>
           <div style="border-radius: 16px; overflow: hidden; aspect-ratio: 4/3;">
             <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&q=80&fit=crop" alt="Dental Treatment" loading="lazy"
+              (error)="onImgError($event, imgFallbackWide)"
               style="width: 100%; height: 100%; object-fit: cover;">
           </div>
           <div style="border-radius: 16px; overflow: hidden; aspect-ratio: 4/3;">
             <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80&fit=crop" alt="Doctor Portrait" loading="lazy"
+              (error)="onImgError($event, imgFallbackPortrait)"
               style="width: 100%; height: 100%; object-fit: cover;">
           </div>
         </div>
@@ -346,7 +452,7 @@
         </div>
         <h2 class="section-heading">What Our <span [style.color]="config.primaryColor">Patients Say</span></h2>
         <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-          <div *ngFor="let t of testimonials" class="testimonial-card"
+          <div *ngFor="let t of practice.testimonials" class="testimonial-card"
             [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
             <div class="testimonial-quote-icon small"><mat-icon class="!text-xl">format_quote</mat-icon></div>
             <p class="testimonial-text">"{{ t.text }}"</p>
@@ -373,7 +479,7 @@
         </div>
         <h3 class="section-heading" style="margin-bottom: 0;">Education</h3>
         <div class="edu-cards-grid" style="margin-top: 24px;">
-          <div *ngFor="let qual of placeholderEducation" class="edu-card"
+          <div *ngFor="let qual of practice.education" class="edu-card"
             [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
             <div class="edu-card-icon"><mat-icon class="!text-2xl">school</mat-icon></div>
             <div class="edu-card-content">
@@ -395,7 +501,7 @@
         </div>
         <h3 class="section-heading" style="margin-bottom: 0;">Professional Experience</h3>
         <div class="experience-timeline" style="margin-top: 24px;">
-          <div *ngFor="let exp of placeholderExperience; let last = last" class="exp-timeline-item"
+          <div *ngFor="let exp of practice.experience; let last = last" class="exp-timeline-item"
             [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
             <div class="exp-timeline-marker">
               <div class="exp-dot"></div>
@@ -423,8 +529,9 @@
         <h2 class="section-heading">Book an <span [style.color]="config.primaryColor">Appointment</span></h2>
 
         <div class="booking-showcase">
-          <!-- Left: Form preview -->
-          <div class="booking-showcase-form">
+          <!-- Left: Form preview (non-interactive sample) -->
+          <div class="booking-showcase-form" aria-hidden="true">
+            <span class="showcase-sample-badge">Sample preview</span>
             <div class="showcase-form-header">
               <mat-icon [style.color]="config.primaryColor">calendar_today</mat-icon>
               <div>
@@ -448,7 +555,7 @@
                 </div>
                 <div class="showcase-field">
                   <label>Procedure</label>
-                  <div class="showcase-input">Dental Braces</div>
+                  <div class="showcase-input">{{ practice.sampleProcedure }}</div>
                 </div>
               </div>
             </div>
@@ -465,11 +572,16 @@
               </button>
             </div>
 
+            <div class="slot-legend">
+              <span class="slot-legend-item slot-legend-item--available">Available</span>
+              <span class="slot-legend-item slot-legend-item--selected">Selected</span>
+              <span class="slot-legend-item slot-legend-item--booked">Booked</span>
+            </div>
             <div *ngFor="let session of mockDays[showcaseDayIndex].sessions">
               <div class="session-header">
                 <div class="session-info">
                   <span class="session-label" [style.color]="config.primaryColor" [style.background]="config.primaryColor + '1a'">{{ session.label }}</span>
-                  <span class="session-clinic">{{ session.clinic }}</span>
+                  <span class="session-clinic">{{ config.clinicName }}</span>
                   <span class="session-time">{{ session.timeRange }}</span>
                 </div>
               </div>
@@ -480,7 +592,8 @@
                     [class.slot-chip--booked]="slot.status === 'booked'"
                     [disabled]="slot.status === 'booked'"
                     (click)="showcaseSelectedSlot = slot.time">
-                    {{ slot.time }}
+                    <span class="slot-chip-time">{{ slot.time }}</span>
+                    <span class="slot-chip-status" *ngIf="slot.status === 'booked'">Booked</span>
                   </button>
                 </span>
               </div>
@@ -533,7 +646,7 @@
         </div>
         <div class="map-embed">
           <iframe
-            src="https://maps.google.com/maps?q=Bhubaneswar,+Odisha,+India&t=&z=14&ie=UTF8&iwloc=&output=embed"
+            [src]="mapUrl" [title]="'Map of ' + config.city"
             width="100%" height="100%" style="border:0; border-radius: 20px;" allowfullscreen loading="lazy">
           </iframe>
         </div>
@@ -552,17 +665,17 @@
         </div>
         <div class="final-cta-badge">
           <mat-icon class="!text-sm">favorite</mat-icon>
-          <span>Your Smile Matters</span>
+          <span>{{ practice.ctaBadge }}</span>
         </div>
         <h2>
           Ready For Your<br>
           <span class="typewriter-wrap">
-            <span class="typewriter-text cta-typewriter">Perfect Smile?</span>
+            <span class="typewriter-text cta-typewriter">{{ practice.ctaTitle }}</span>
             <span class="typewriter-cursor"></span>
           </span>
         </h2>
         <p>
-          Take the first step towards a healthier, brighter smile. Book a consultation at
+          {{ practice.ctaBody }} Book a consultation at
           {{ config.clinicName }}, {{ config.city }}. {{ config.degree }} qualified care.
         </p>
         <div class="final-cta-buttons">
@@ -578,10 +691,10 @@
         <div class="final-cta-social">
           <p class="final-cta-social-label">CONNECT WITH US</p>
           <div class="final-cta-social-links">
-            <span class="final-cta-social-icon"><i class="fab fa-instagram"></i></span>
-            <span class="final-cta-social-icon"><i class="fab fa-facebook-f"></i></span>
-            <span class="final-cta-social-icon"><i class="fab fa-youtube"></i></span>
-            <span class="final-cta-social-icon"><i class="fas fa-share-nodes"></i></span>
+            <button type="button" class="final-cta-social-icon" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></button>
+            <button type="button" class="final-cta-social-icon" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></button>
+            <button type="button" class="final-cta-social-icon" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></button>
+            <button type="button" class="final-cta-social-icon" aria-label="Share"><i class="fas fa-share-nodes" aria-hidden="true"></i></button>
           </div>
         </div>
       </div>
@@ -590,7 +703,7 @@
     <!-- POWERED BY -->
     <div class="powered-by-knocdoc">
       <div class="powered-by-card">
-        <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="powered-by-logo">
+        <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_150/knocdoc/shared/knocdoc-logo-wb" alt="KnocDoc" class="powered-by-logo">
         <div class="powered-by-text">
           <p class="powered-by-headline">Want a site like this for your practice?</p>
           <p class="powered-by-sub">Built by <strong>KnocDoc</strong> — premium websites for doctors</p>
@@ -604,7 +717,7 @@
           </a>
         </div>
       </div>
-      <p class="powered-by-footer">Powered by <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc"> <strong>KnocDoc</strong></p>
+      <p class="powered-by-footer">Powered by <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_150/knocdoc/shared/knocdoc-logo-wb" alt="KnocDoc"> <strong>KnocDoc</strong></p>
     </div>
 
   </div><!-- /profile-main-content -->
@@ -617,9 +730,56 @@
     <div class="booking-handle-bar"></div>
   </div>
 
-  <!-- STEP 1: FORM -->
-  <div class="booking-scroll-area" *ngIf="bookingStep === 'form'">
+  <!-- STEP 1: SLOTS -->
+  <div class="booking-scroll-area" *ngIf="bookingStep === 'slots'">
     <p class="title-font" style="margin-bottom:12px;">Book An Appointment For  {{ config.doctorName }}</p>
+
+    <!-- Date tabs -->
+    <div class="mock-date-tabs">
+      <button *ngFor="let day of mockDays; let i = index"
+        class="mock-date-tab" [class.mock-date-tab--active]="selectedDayIndex === i"
+        (click)="selectDay(i)">
+        <span class="tab-text">{{ day.day }}</span>
+        <span class="tab-number">{{ day.date }}</span>
+      </button>
+    </div>
+
+    <!-- Sessions for selected day -->
+    <div class="slot-legend">
+      <span class="slot-legend-item slot-legend-item--available">Available</span>
+      <span class="slot-legend-item slot-legend-item--selected">Selected</span>
+      <span class="slot-legend-item slot-legend-item--booked">Booked</span>
+    </div>
+    <div *ngFor="let session of mockDays[selectedDayIndex].sessions">
+      <div class="session-header">
+        <div class="session-info">
+          <span class="session-label">{{ session.label }}</span>
+          <span class="session-clinic">{{ config.clinicName }}</span>
+          <span class="session-time">{{ session.timeRange }}</span>
+        </div>
+      </div>
+      <div class="slot-grid">
+        <span *ngFor="let slot of session.slots" class="slot-cell">
+          <button class="slot-chip"
+            [class.slot-chip--selected]="slot.time === selectedSlotTime && slot.status === 'available'"
+            [class.slot-chip--booked]="slot.status === 'booked'"
+            [disabled]="slot.status === 'booked'"
+            (click)="selectSlot(slot)">
+            <span class="slot-chip-time">{{ slot.time }}</span>
+            <span class="slot-chip-status" *ngIf="slot.status === 'booked'">Booked</span>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: FORM -->
+  <div class="booking-scroll-area" *ngIf="bookingStep === 'form'">
+    <div class="demo-slot-summary">
+      <span><mat-icon>event_available</mat-icon> {{ mockDays[selectedDayIndex].day }}, {{ mockDays[selectedDayIndex].date }} at {{ selectedSlotTime }}</span>
+      <button type="button" (click)="bookingStep = 'slots'">Change</button>
+    </div>
+    <p class="title-font" style="margin-bottom:12px;">Enter Your Details</p>
 
     <div style="margin-bottom:12px;">
       <label class="center-block">Full Name *:
@@ -665,62 +825,16 @@
         <select [(ngModel)]="mockPatient.reason"
           class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
           <option value="">Select procedure (optional)</option>
-          <option *ngFor="let svc of services" [value]="svc.name">{{ svc.name }}</option>
+          <option *ngFor="let svc of practice.services" [value]="svc.name">{{ svc.name }}</option>
           <option value="Other">Other</option>
         </select>
       </label>
     </div>
 
-    <div style="margin-bottom:12px;" *ngIf="clinicNames.length > 0">
+    <div style="margin-bottom:12px;">
       <label class="center-block">Clinic:</label>
-      <ng-container *ngIf="clinicNames.length === 1; else multiClinicDemo">
-        <input [value]="clinicNames[0]" readonly
-          class="form-control block w-full px-4 py-2 font-normal bg-gray-100 text-gray-500 border border-solid border-gray-200 rounded m-0 cursor-default">
-      </ng-container>
-      <ng-template #multiClinicDemo>
-        <select [(ngModel)]="selectedClinic"
-          class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-          <option value="">Select Clinic</option>
-          <option *ngFor="let c of clinicNames" [value]="c">{{ c }}</option>
-        </select>
-      </ng-template>
-    </div>
-  </div>
-
-  <!-- STEP 2: SLOTS -->
-  <div class="booking-scroll-area" *ngIf="bookingStep === 'slots'">
-    <p class="title-font" style="margin-bottom:12px;">Select Date & Time</p>
-
-    <!-- Date tabs -->
-    <div class="mock-date-tabs">
-      <button *ngFor="let day of mockDays; let i = index"
-        class="mock-date-tab" [class.mock-date-tab--active]="selectedDayIndex === i"
-        (click)="selectedDayIndex = i">
-        <span class="tab-text">{{ day.day }}</span>
-        <span class="tab-number">{{ day.date }}</span>
-      </button>
-    </div>
-
-    <!-- Sessions for selected day -->
-    <div *ngFor="let session of mockDays[selectedDayIndex].sessions">
-      <div class="session-header">
-        <div class="session-info">
-          <span class="session-label">{{ session.label }}</span>
-          <span class="session-clinic">{{ session.clinic }}</span>
-          <span class="session-time">{{ session.timeRange }}</span>
-        </div>
-      </div>
-      <div class="slot-grid">
-        <span *ngFor="let slot of session.slots" class="slot-cell">
-          <button class="slot-chip"
-            [class.slot-chip--selected]="slot.time === selectedSlotTime && slot.status === 'available'"
-            [class.slot-chip--booked]="slot.status === 'booked'"
-            [disabled]="slot.status === 'booked'"
-            (click)="selectSlot(slot)">
-            {{ slot.time }}
-          </button>
-        </span>
-      </div>
+      <input [value]="config.clinicName" readonly
+        class="form-control block w-full px-4 py-2 font-normal bg-gray-100 text-gray-500 border border-solid border-gray-200 rounded m-0 cursor-default">
     </div>
   </div>
 
@@ -775,19 +889,19 @@
 
   <!-- ACTION BUTTONS -->
   <div class="book-action-area">
-    <button *ngIf="bookingStep === 'form'" class="book-pay-btn"
-      [class.book-pay-btn--disabled]="!mockPatient.name || !mockPatient.mobile || !mockPatient.email"
-      [disabled]="!mockPatient.name || !mockPatient.mobile || !mockPatient.email"
-      (click)="proceedToSlots()">
-      <mat-icon class="!text-lg !mr-1">arrow_forward</mat-icon>
-      Continue — Select Slot
-    </button>
     <button *ngIf="bookingStep === 'slots'" class="book-pay-btn"
       [class.book-pay-btn--disabled]="!selectedSlotTime"
       [disabled]="!selectedSlotTime"
+      (click)="proceedToDetails()">
+      <mat-icon class="!text-lg !mr-1">arrow_forward</mat-icon>
+      {{ selectedSlotTime ? 'Continue — Enter Details' : 'Select a slot to continue' }}
+    </button>
+    <button *ngIf="bookingStep === 'form'" class="book-pay-btn"
+      [class.book-pay-btn--disabled]="!mockPatient.name || !mockPatient.mobile || !mockPatient.email"
+      [disabled]="!mockPatient.name || !mockPatient.mobile || !mockPatient.email"
       (click)="confirmBooking()">
       <mat-icon class="!text-lg !mr-1">event_available</mat-icon>
-      {{ selectedSlotTime ? 'Book & Pay in Cash' : 'Select a slot to continue' }}
+      Book &amp; Pay in Cash
     </button>
     <button *ngIf="bookingStep === 'confirmed'" class="book-pay-btn" (click)="closeBooking()">
       <mat-icon class="!text-lg !mr-1">check_circle</mat-icon>

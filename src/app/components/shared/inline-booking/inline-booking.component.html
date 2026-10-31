@@ -9,7 +9,84 @@
     </h2>
 
     <div class="ib-grid">
-      <!-- Left: Form Card -->
+      <!-- Left: Slots Panel -->
+      <div class="ib-slots-panel">
+        <div class="ib-field ib-clinic-field" *ngIf="clinicNames.length > 0">
+          <label>Clinic</label>
+          <ng-container *ngIf="clinicNames.length === 1; else multiClinic">
+            <input class="ib-input ib-input--readonly" [value]="clinicNames[0]" readonly>
+          </ng-container>
+          <ng-template #multiClinic>
+            <select class="ib-input" [(ngModel)]="selectedClinic" [ngModelOptions]="{standalone: true}" (ngModelChange)="onClinicChange()">
+              <option *ngFor="let c of clinicNames" [value]="c">{{ c }}</option>
+            </select>
+          </ng-template>
+        </div>
+        <div class="ib-slots-scroll">
+
+          <div class="ib-slot-legend" *ngIf="scheduleDetails.length > 0">
+            <span class="ib-slot-legend-item ib-slot-legend-item--available">Available</span>
+            <span class="ib-slot-legend-item ib-slot-legend-item--selected">Selected</span>
+            <span class="ib-slot-legend-item ib-slot-legend-item--booked">Booked</span>
+          </div>
+          <mat-tab-group class="ib-tab-group" *ngIf="scheduleDetails.length > 0">
+            <mat-tab *ngFor="let sched of scheduleDetails">
+              <ng-template mat-tab-label>
+                <span class="ib-tab-day">{{ sched.day }}</span>
+                <span class="ib-tab-date">{{ sched.date }}</span>
+              </ng-template>
+
+              <ng-container *ngIf="getFilteredSessions(sched.sessions) as filtered">
+                <ng-container *ngIf="filtered.length > 0">
+                  <ng-container *ngFor="let session of filtered; let i = index">
+                    <ng-container *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1">
+                      <div class="ib-session-header" [class.ib-session-header--ended]="session.queueStatus === 'ended'">
+                        <span class="ib-session-badge" [style.border-color]="accentColor" [style.color]="accentColor">Session {{ i + 1 }}</span>
+                        <span class="ib-session-clinic">{{ session?.clinic?.clinicName || session?.clinic?.name }}</span>
+                        <span class="ib-session-time">{{ session.startTime }} &ndash; {{ session.endTime }}</span>
+                        <span class="ib-queue-status"
+                          [class.ib-queue-status--active]="session.queueStatus === 'started'"
+                          [class.ib-queue-status--ended]="session.queueStatus === 'ended'"
+                          [class.ib-queue-status--not-started]="session.queueStatus === 'notStarted'"
+                          *ngIf="session.queueStatus">
+                          {{ session.queueStatus === 'ended' ? 'Queue Ended' : session.queueStatus === 'started' ? 'Queue Active' : 'Not Started' }}
+                        </span>
+                      </div>
+                      <div class="ib-slot-grid" [class.ib-slot-grid--ended]="session.queueStatus === 'ended'" *ngIf="session.slots.length > 1">
+                        <ng-container *ngFor="let slot of session.slots">
+                          <button *ngIf="slot._source?.status !== 'sessionCancelled' && slot._source?.status !== 'cancelled'"
+                            class="ib-slot-chip"
+                            [class.ib-slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
+                            [class.ib-slot-chip--booked]="slot._source?.status !== 'notBooked'"
+                            [disabled]="slot._source?.status !== 'notBooked' || session.queueStatus === 'ended'"
+                            (click)="onSlotSelect(slot, session)">
+                            <span>{{ slot._source?.slotTime }}</span>
+                            <span class="ib-slot-chip-status" *ngIf="slot._source?.status !== 'notBooked'">Booked</span>
+                          </button>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+
+                <div class="ib-empty-msg" *ngIf="filtered.length === 0">
+                  No sessions available for the selected clinic
+                </div>
+              </ng-container>
+
+              <div class="ib-empty-msg" *ngIf="sched.sessions.length === 0">
+                The upcoming schedule has not been set by the doctor as of yet
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+
+          <div class="ib-empty-msg" *ngIf="scheduleDetails.length === 0">
+            The upcoming schedule has not been set by the doctor as of yet
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form Card -->
       <div class="ib-form-card">
         <div class="ib-form-header">
           <div class="ib-form-icon" [style.background]="accentColor + '14'" >
@@ -58,83 +135,11 @@
               </select>
             </div>
           </div>
-          <div class="ib-field" *ngIf="clinicNames.length > 0">
-            <label>Clinic</label>
-            <ng-container *ngIf="clinicNames.length === 1; else multiClinic">
-              <input class="ib-input ib-input--readonly" [value]="clinicNames[0]" readonly>
-            </ng-container>
-            <ng-template #multiClinic>
-              <select class="ib-input" [(ngModel)]="selectedClinic" [ngModelOptions]="{standalone: true}">
-                <option *ngFor="let c of clinicNames" [value]="c">{{ c }}</option>
-              </select>
-            </ng-template>
-          </div>
           <div class="ib-field">
             <label>Address <span style="font-weight:400;color:#94a3b8;font-size:0.78rem;">(optional)</span></label>
             <input formControlName="address" type="text" placeholder="Your home / locality address" class="ib-input">
           </div>
         </form>
-      </div>
-
-      <!-- Right: Slots Panel -->
-      <div class="ib-slots-panel">
-        <div class="ib-slots-scroll" [class.ib-slots--locked]="!isFormFilled">
-          <!-- Locked overlay hint -->
-          <div class="ib-lock-banner" *ngIf="!isFormFilled && scheduleDetails.length > 0">
-            <mat-icon class="ib-lock-icon">lock</mat-icon>
-            <div>
-              <strong>Fill in your details first</strong>
-              <p>Complete all fields to unlock slot selection</p>
-            </div>
-          </div>
-
-          <mat-tab-group class="ib-tab-group" *ngIf="scheduleDetails.length > 0">
-            <mat-tab *ngFor="let sched of scheduleDetails">
-              <ng-template mat-tab-label>
-                <span class="ib-tab-day">{{ sched.day }}</span>
-                <span class="ib-tab-date">{{ sched.date }}</span>
-              </ng-template>
-
-              <ng-container *ngIf="getFilteredSessions(sched.sessions) as filtered">
-                <ng-container *ngIf="filtered.length > 0">
-                  <ng-container *ngFor="let session of filtered; let i = index">
-                    <ng-container *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1">
-                      <div class="ib-session-header">
-                        <span class="ib-session-badge" [style.border-color]="accentColor" [style.color]="accentColor">Session {{ i + 1 }}</span>
-                        <span class="ib-session-clinic">{{ session?.clinic?.clinicName || session?.clinic?.name }}</span>
-                        <span class="ib-session-time">{{ session.startTime }} &ndash; {{ session.endTime }}</span>
-                      </div>
-                      <div class="ib-slot-grid" *ngIf="session.slots.length > 1">
-                        <ng-container *ngFor="let slot of session.slots">
-                          <button *ngIf="slot._source?.status !== 'sessionCancelled' && slot._source?.status !== 'cancelled'"
-                            class="ib-slot-chip"
-                            [class.ib-slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
-                            [class.ib-slot-chip--booked]="slot._source?.status !== 'notBooked'"
-                            [disabled]="slot._source?.status !== 'notBooked' || !isFormFilled"
-                            (click)="onSlotSelect(slot, session)">
-                            {{ slot._source?.slotTime }}
-                          </button>
-                        </ng-container>
-                      </div>
-                    </ng-container>
-                  </ng-container>
-                </ng-container>
-
-                <div class="ib-empty-msg" *ngIf="filtered.length === 0">
-                  No sessions available for the selected clinic
-                </div>
-              </ng-container>
-
-              <div class="ib-empty-msg" *ngIf="sched.sessions.length === 0">
-                The upcoming schedule has not been set by the doctor as of yet
-              </div>
-            </mat-tab>
-          </mat-tab-group>
-
-          <div class="ib-empty-msg" *ngIf="scheduleDetails.length === 0">
-            The upcoming schedule has not been set by the doctor as of yet
-          </div>
-        </div>
 
         <div class="ib-book-btn-wrapper">
           <button class="ib-book-btn"
@@ -143,7 +148,7 @@
             [style.background-color]="accentColor"
             (click)="onBook()">
             <mat-icon>event_available</mat-icon>
-            {{ selectedSlotId && isFormFilled ? 'Book & Pay in Cash' : 'Select a slot to book' }}
+            {{ !selectedSlotId ? 'Select a slot to book' : isFormFilled ? 'Book & Pay in Cash' : 'Enter your details to book' }}
           </button>
         </div>
       </div>

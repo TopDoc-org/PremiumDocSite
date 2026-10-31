@@ -102,7 +102,7 @@
     <section class="hero-landing">
       <!-- Team photo background -->
       <div class="hero-bg-image">
-        <img src="assets/images/jasbir/newClinicBg.jpeg" alt="Dr. Meher's Orthodontic Center & Dental Clinic" loading="eager">
+        <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1600/knocdoc/jasbir/hero/clinic-bg" alt="Dr. Meher's Orthodontic Center & Dental Clinic" loading="eager">
       </div>
 
       <!-- Floating particles -->
@@ -144,7 +144,7 @@
             </a>
             <!-- Invisalign oval (smaller, separate) -->
             <div class="hero-invisalign-pill">
-              <img src="assets/images/jasbir/InvisAlignBrand.png" alt="Invisalign Provider" class="hero-sponsor-img">
+              <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_200/knocdoc/jasbir/hero/invisalign-brand" alt="Invisalign Provider" class="hero-sponsor-img">
             </div>
           </div>
 
@@ -218,16 +218,16 @@
           <div class="hero-image-frame">
             <div class="hero-image-container">
               <img
-                [src]="'assets/images/jasbir/profile.jpg'"
+                [src]="profileImageFallback"
                 alt="{{ profRes.name }}"
                 loading="eager"
                 #heroImg
-                (error)="heroImg.src = 'assets/images/jasbir/profile.jpg'"
+                (error)="heroImg.src = profileImageFallback"
               >
             </div>
             <!-- ISO Certified stamp at bottom-right corner of photo -->
             <div class="hero-iso-stamp">
-              <img src="assets/images/jasbir/isoWBG.png" alt="ISO 9001:2015 Certified" class="iso-stamp-img">
+              <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_120/knocdoc/jasbir/clinic/iso-badge" alt="ISO 9001:2015 Certified" class="iso-stamp-img">
             </div>
           </div>
           <div class="hero-image-footer">
@@ -334,7 +334,7 @@
         <div class="about-image-col" [attr.data-aos]="animationsEnabled ? 'fade-right' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null">
           <div class="about-image">
             <img
-              src="assets/images/carousel/SKP00020.JPG"
+              src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_800/knocdoc/jasbir/carousel/skp00020"
               alt="{{ profRes.name }}"
               loading="lazy"
               style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;"
@@ -418,7 +418,7 @@
       <div class="about-team-row">
         <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
           <div class="about-team-img">
-            <img src="assets/images/jasbir/asst2.jpeg" alt="Dr. Pratikshya Tripathy" loading="lazy">
+            <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_400,h_500,c_fill,g_face/knocdoc/jasbir/team/pratikshya-tripathy" alt="Dr. Pratikshya Tripathy" loading="lazy">
           </div>
           <div class="about-team-info">
             <h3>Dr. Pratikshya Tripathy</h3>
@@ -433,7 +433,7 @@
 
         <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '150' : null">
           <div class="about-team-img">
-            <img src="assets/images/jasbir/Asst2close.png" alt="Dr. Sidhant Nayak" loading="lazy" style="scale: 1; object-position: center top;">
+            <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_400,h_500,c_fill,g_face/knocdoc/jasbir/team/sidhant-nayak" alt="Dr. Sidhant Nayak" loading="lazy">
           </div>
           <div class="about-team-info">
             <h3>Dr. Sidhant Nayak <span class="visiting-tag">(Visiting Doctor)</span></h3>
@@ -454,7 +454,7 @@
 
         <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '300' : null">
           <div class="about-team-img">
-            <img src="assets/images/jasbir/RajdeepBeura.jpeg" alt="Dr. Rajdeep Beura" loading="lazy">
+            <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_400,h_500,c_fill,g_face/knocdoc/jasbir/team/rajdeep-beura" alt="Dr. Rajdeep Beura" loading="lazy">
           </div>
           <div class="about-team-info">
             <h3>Dr. Rajdeep Beura <span class="visiting-tag">(Visiting Doctor)</span></h3>
@@ -472,7 +472,7 @@
 
         <div class="about-team-card scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '450' : null">
           <div class="about-team-img">
-            <img src="assets/images/jasbir/Pooja Agrawal.jpeg" alt="Dr. Pooja Agrawal" loading="lazy" style="scale: 1; object-position: center 20%;">
+            <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_400,h_500,c_fill,g_face/knocdoc/jasbir/team/pooja-agrawal" alt="Dr. Pooja Agrawal" loading="lazy">
           </div>
           <div class="about-team-info">
             <h3>Dr. Pooja Agrawal, MDS (OMFS) <span class="visiting-tag">(Visiting Doctor)</span></h3>
@@ -578,25 +578,31 @@
         <div class="offer-hero scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null">
           <canvas *ngIf="animationsEnabled" #confettiCanvas class="offer-hero-confetti-canvas"></canvas>
           <div class="offer-hero-bg"></div>
+          <div class="offer-hero-deco">
+            <div class="offer-deco-line offer-deco-line--1"></div>
+            <div class="offer-deco-line offer-deco-line--2"></div>
+            <div class="offer-deco-line offer-deco-line--3"></div>
+            <div class="offer-deco-pill offer-deco-pill--top"></div>
+            <div class="offer-deco-pill offer-deco-pill--bottom"></div>
+          </div>
           <div class="offer-hero-content">
             <div class="offer-hero-left">
               <div class="offer-hero-badge">
-                <mat-icon class="!text-sm">local_offer</mat-icon>
-                Limited Time
+                <mat-icon class="!text-sm">bolt</mat-icon> Limited Time Offer
               </div>
-              <h3 class="offer-hero-title">FREE X-Ray for New Patients</h3>
-              <p class="offer-hero-desc">Book your appointment online through this site and get a complimentary dental X-ray online booking. This exclusive offer is only available for online bookings.</p>
-              <div class="offer-hero-actions">
-                <button class="btn-hero-claim" (click)="openTemplateSheetMenu()">
-                  Book to Claim <mat-icon class="!text-base">arrow_forward</mat-icon>
-                </button>
+              <div class="offer-hero-mid">
+                <h3 class="offer-hero-title">FREE X&#8209;RAY</h3>
+                <span class="offer-hero-tag-text">Save &#8377;500</span>
               </div>
+              <p class="offer-hero-subtitle">for New Patients</p>
+              <p class="offer-hero-desc">Book your appointment online &amp; get a complimentary dental X-ray on your first visit.</p>
+              <button class="btn-hero-claim" (click)="openTemplateSheetMenu()">
+                Book Now <mat-icon class="!text-base">arrow_forward</mat-icon>
+              </button>
             </div>
-            <div class="offer-hero-right">
-              <div class="offer-hero-savings">
-                <span class="offer-hero-savings-label">Save up to</span>
-                <span class="offer-hero-savings-amount">&#8377;500</span>
-                <span class="offer-hero-savings-sub">on every online booking</span>
+            <div class="offer-hero-visual">
+              <div class="offer-hero-gif-wrap">
+                <img loading="lazy" src="https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dental-Fillings-1-1.gif" alt="Dental X-Ray" class="offer-hero-gif"/>
               </div>
             </div>
           </div>
@@ -604,33 +610,31 @@
 
         <!-- Secondary cards row -->
         <div class="offers-featured-row">
-          <div class="offer-card offer-discount scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
-            <div class="offer-discount-pct">15% OFF</div>
-            <div class="offer-icon-wrap">
-              <mat-icon class="!text-2xl">medical_services</mat-icon>
-            </div>
-            <h3>Dental Implants</h3>
-            <p>Improve your confidence and overall smile with dental implants.</p>
-            <div class="offer-cta">
-              <span class="offer-tag">Implantology</span>
-              <button class="btn-offer" (click)="openTemplateSheetMenu('Dental Implants')">
+          <div class="offer-card-v2 offer-card-v2--amber scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
+            <div class="offer-card-v2__body">
+              <span class="offer-card-v2__pct">15% OFF</span>
+              <h3 class="offer-card-v2__title">Dental Implants</h3>
+              <p class="offer-card-v2__desc">Restore your smile with premium implants at special pricing.</p>
+              <button class="offer-card-v2__btn" (click)="openTemplateSheetMenu('Dental Implants')">
                 Book Now <mat-icon class="!text-base">arrow_forward</mat-icon>
               </button>
+            </div>
+            <div class="offer-card-v2__icon">
+              <img loading="lazy" src="https://clovecontent.s3.ap-south-1.amazonaws.com/All/2019/02/Dental-Implants.gif" alt="Dental Implants"/>
             </div>
           </div>
 
-          <div class="offer-card offer-discount scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '200' : null">
-            <div class="offer-discount-pct">15% OFF</div>
-            <div class="offer-icon-wrap">
-              <mat-icon class="!text-2xl">sentiment_very_satisfied</mat-icon>
-            </div>
-            <h3>Clear Aligners</h3>
-            <p>Start your smile transformation journey with special pricing on all orthodontic treatments.</p>
-            <div class="offer-cta">
-              <span class="offer-tag">Orthodontics</span>
-              <button class="btn-offer" (click)="openTemplateSheetMenu('Clear Aligners / Invisible Braces')">
+          <div class="offer-card-v2 offer-card-v2--teal scroll-animate" [attr.data-aos]="animationsEnabled ? 'fade-up' : null" [attr.data-aos-delay]="animationsEnabled ? '200' : null">
+            <div class="offer-card-v2__body">
+              <span class="offer-card-v2__pct">15% OFF</span>
+              <h3 class="offer-card-v2__title">Clear Aligners</h3>
+              <p class="offer-card-v2__desc">Start your smile transformation with special orthodontic pricing.</p>
+              <button class="offer-card-v2__btn" (click)="openTemplateSheetMenu('Clear Aligners / Invisible Braces')">
                 Book Now <mat-icon class="!text-base">arrow_forward</mat-icon>
               </button>
+            </div>
+            <div class="offer-card-v2__icon">
+              <img loading="lazy" src="https://clovecontent.s3.ap-south-1.amazonaws.com/All/2025/06/Invisible-Braces-1.gif" alt="Clear Aligners"/>
             </div>
           </div>
         </div>
@@ -736,6 +740,7 @@
       [accentColor]="'#2563eb'"
       [isQueueUpdateReminder]="isQueueUpdateReminder"
       (slotSelected)="setSelectedSlot($event.slot, $event.session)"
+      (slotCleared)="clearSelectedSlot()"
       (bookClicked)="onSpotFreeBook($event)">
     </app-inline-booking>
 
@@ -849,12 +854,12 @@
           <div class="glimpse-carousel-viewport">
             <div class="glimpse-carousel-track" [style.transform]="'translateX(-' + (activeSlide * 100) + '%)'">
               <div class="glimpse-slide" *ngFor="let img of [
-                { src: 'assets/images/jasbir/doctor-photo.jpg', alt: 'Dr. Meher Orthodontic Center & Dental Clinic Team', label: 'Dr. Meher\'s Orthodontic Center & Dental Clinic', position: 'center center' },
-                { src: 'assets/images/jasbir/newClinicBg.jpeg', alt: 'Clinic Interior', label: 'Modern Clinic Interior', position: 'center center' },
-                { src: 'assets/images/carousel/SKP00008.JPG', alt: 'Prof. Dr. Jasbir Meher at the Clinic', label: 'Prof. Dr. Jasbir Meher', position: 'center 20%' },
-                { src: 'assets/images/carousel/SKP00020.JPG', alt: 'Dr. Meher with Equipment', label: 'State-of-the-Art Facility', position: 'center 25%' },
-                { src: 'assets/images/carousel/SKP00055.JPG', alt: 'Patient Treatment in Progress', label: 'Patient Care', position: 'center center' },
-                { src: 'assets/images/jasbir/dentistdesk.jpeg', alt: 'Clinic Waiting Area', label: 'Waiting Lounge', position: 'center center' }
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/clinic/team-photo', alt: 'Dr. Meher Orthodontic Center & Dental Clinic Team', label: 'Dr. Meher\'s Orthodontic Center & Dental Clinic', position: 'center center' },
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/hero/clinic-bg', alt: 'Clinic Interior', label: 'Modern Clinic Interior', position: 'center center' },
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/carousel/skp00008', alt: 'Prof. Dr. Jasbir Meher at the Clinic', label: 'Prof. Dr. Jasbir Meher', position: 'center 20%' },
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/carousel/skp00020', alt: 'Dr. Meher with Equipment', label: 'State-of-the-Art Facility', position: 'center 25%' },
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/carousel/skp00055', alt: 'Patient Treatment in Progress', label: 'Patient Care', position: 'center center' },
+                { src: 'https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_1200/knocdoc/jasbir/clinic/waiting-lounge', alt: 'Clinic Waiting Area', label: 'Waiting Lounge', position: 'center center' }
               ]; let i = index">
                 <img [src]="img.src" [alt]="img.alt" loading="lazy" [style.object-position]="img.position">
                 <div class="glimpse-slide-overlay">
@@ -1118,7 +1123,7 @@
 
         <div class="relative" [attr.data-aos]="animationsEnabled ? 'fade-left' : null" [attr.data-aos-duration]="animationsEnabled ? '700' : null" [attr.data-aos-delay]="animationsEnabled ? '100' : null">
           <div class="about-image">
-            <img src="assets/images/jasbir/SKP00027.JPG.jpeg" alt="{{ profRes.name }}" loading="lazy"
+            <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_800/knocdoc/jasbir/clinic/why-choose" alt="{{ profRes.name }}" loading="lazy"
               style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
           </div>
           <div class="absolute -bottom-4 -left-4 sm:left-4 bg-white rounded-2xl p-5 shadow-xl border border-gray-100"
@@ -1287,7 +1292,7 @@
         <!-- KnocDoc Promo — inline within CTA -->
         <div class="final-cta-divider"></div>
         <p class="final-cta-knocdoc-powered">Powered by</p>
-        <p class="final-cta-knocdoc-powered"><img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="final-cta-knocdoc-logo"><strong>KnocDoc</strong></p>
+        <p class="final-cta-knocdoc-powered"><img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_150/knocdoc/shared/knocdoc-logo-wb" alt="KnocDoc" class="final-cta-knocdoc-logo"><strong>KnocDoc</strong></p>
         <p class="final-cta-knocdoc-headline">
           <span class="knocdoc-typewriter-text">{{ knocdocTypewriterText }}</span><span class="knocdoc-typewriter-cursor"></span>
         </p>
@@ -1461,7 +1466,7 @@
       <mat-icon>close</mat-icon>
     </button>
     <div class="knocdoc-promo-body">
-      <img src="assets/icons/knocdocLogoWB.png" alt="KnocDoc" class="knocdoc-promo-logo">
+      <img src="https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_150/knocdoc/shared/knocdoc-logo-wb" alt="KnocDoc" class="knocdoc-promo-logo">
       <h3 class="knocdoc-promo-title">Track Your Appointment</h3>
       <p class="knocdoc-promo-desc">
         Download <strong>KnocDoc</strong> and sign in with <strong>{{ bookingConfirmation?.mobile }}</strong> to track your booking, get reminders and manage your appointments.
@@ -1477,7 +1482,11 @@
         </div>
         <div class="knocdoc-promo-step">
           <span class="knocdoc-promo-step-num">3</span>
-          <span>View &amp; track your appointment</span>
+          <span>Enter your PIN to log in</span>
+        </div>
+        <div class="knocdoc-promo-step">
+          <span class="knocdoc-promo-step-num">4</span>
+          <span>Go to <strong>Bookings</strong> and check your appointment</span>
         </div>
       </div>
       <div class="knocdoc-promo-actions">
@@ -1600,38 +1609,179 @@
         <p class="auth-gate-existing-hint">Enter your PIN to proceed with this account</p>
       </div>
 
-      <!-- FORGOT PIN FORM -->
-      <div class="auth-gate-forgot-panel" *ngIf="showForgotPassword && authStep === 'login'">
-        <p class="auth-gate-forgot-heading">Reset your PIN</p>
-        <p class="auth-gate-forgot-sub">Enter your registered email and we'll send a reset link.</p>
+      <!-- PIN RESET FLOW (WhatsApp OTP) -->
+      <div class="auth-gate-reset-panel" *ngIf="showResetFlow && authStep === 'login'">
 
-        <ng-container *ngIf="!forgotPasswordSent">
-          <input type="email" class="auth-gate-input" [(ngModel)]="forgotPasswordEmail"
-            [ngModelOptions]="{standalone: true}"
-            placeholder="Your registered email address">
-          <div class="auth-gate-api-error" *ngIf="forgotPasswordError">
-            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
-            {{ forgotPasswordError }}
+        <!-- Progress bar -->
+        <div class="reset-progress-bar">
+          <div class="reset-progress-fill" [style.width.%]="resetProgress"></div>
+        </div>
+
+        <!-- ─── STEP 1: Phone Number ─── -->
+        <ng-container *ngIf="resetStep === 'phone'">
+          <div class="reset-step-icon reset-step-icon--wa">
+            <mat-icon>chat</mat-icon>
           </div>
-          <button class="auth-gate-submit" (click)="sendForgotPassword()" [disabled]="forgotPasswordLoading">
-            <span class="auth-gate-spinner" *ngIf="forgotPasswordLoading"></span>
-            <mat-icon *ngIf="!forgotPasswordLoading">send</mat-icon>
-            {{ forgotPasswordLoading ? 'Sending...' : 'Send Reset Link' }}
+          <p class="reset-step-heading">Reset your PIN</p>
+          <p class="reset-step-sub">Enter your registered mobile number. We'll send a verification code via WhatsApp.</p>
+
+          <div class="auth-gate-field">
+            <label class="auth-gate-label">Mobile number</label>
+            <div class="reset-phone-wrap">
+              <span class="reset-phone-prefix">+91</span>
+              <input type="tel" class="auth-gate-input reset-phone-input"
+                [(ngModel)]="resetPhone" [ngModelOptions]="{standalone: true}"
+                placeholder="10-digit mobile number" maxlength="10" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="auth-gate-api-error" *ngIf="resetError">
+            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
+            {{ resetError }}
+          </div>
+
+          <button class="auth-gate-submit reset-btn--wa" (click)="sendResetOtp()" [disabled]="resetLoading">
+            <span class="auth-gate-spinner" *ngIf="resetLoading"></span>
+            <mat-icon *ngIf="!resetLoading">chat</mat-icon>
+            {{ resetLoading ? 'Sending...' : 'Send WhatsApp Code' }}
+          </button>
+
+          <button class="reset-back-btn" (click)="closeResetFlow()">
+            <mat-icon>arrow_back</mat-icon> Back to login
           </button>
         </ng-container>
 
-        <div class="auth-gate-forgot-success" *ngIf="forgotPasswordSent">
-          <mat-icon class="text-green-500">check_circle</mat-icon>
-          <p>Reset link sent! Check your email inbox.</p>
-        </div>
+        <!-- ─── STEP 2: OTP Verification ─── -->
+        <ng-container *ngIf="resetStep === 'otp'">
+          <div class="reset-step-icon reset-step-icon--shield">
+            <mat-icon>verified_user</mat-icon>
+          </div>
+          <p class="reset-step-heading">Verify your number</p>
+          <p class="reset-step-sub">
+            Enter the 6-digit code sent to
+            <strong class="reset-otp-phone-badge">+91 {{ maskedResetPhone }}</strong>
+          </p>
 
-        <button class="auth-gate-back-to-login" (click)="showForgotPassword = false">
-          <mat-icon>arrow_back</mat-icon> Back to login
-        </button>
+          <div class="reset-otp-wrap" [class.reset-otp-wrap--error]="!!resetError">
+            <app-pin-input
+              [length]="6"
+              [mask]="false"
+              [hasError]="!!resetError"
+              [reset]="resetOtpResetCounter"
+              (pinComplete)="onResetOtpComplete($event)"
+              (pinChange)="onResetOtpChange($event)">
+            </app-pin-input>
+          </div>
+
+          <div class="reset-resend-row">
+            <span *ngIf="resetResendTimer > 0">
+              Resend code in <strong>{{ resetResendTimer }}s</strong>
+            </span>
+            <button type="button" *ngIf="resetResendTimer === 0" [disabled]="resetLoading" (click)="resendResetOtp()">
+              <mat-icon class="!text-sm">refresh</mat-icon> Resend Code
+            </button>
+          </div>
+
+          <div class="auth-gate-api-error" *ngIf="resetError">
+            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
+            {{ resetError }}
+          </div>
+
+          <button class="auth-gate-submit" (click)="verifyResetOtp()" [disabled]="resetLoading">
+            <span class="auth-gate-spinner" *ngIf="resetLoading"></span>
+            <mat-icon *ngIf="!resetLoading">check_circle</mat-icon>
+            {{ resetLoading ? 'Verifying...' : 'Verify Code' }}
+          </button>
+
+          <button class="reset-back-btn" (click)="goResetBackToPhone()">
+            <mat-icon>arrow_back</mat-icon> Change number
+          </button>
+        </ng-container>
+
+        <!-- ─── STEP 3a: Create New PIN ─── -->
+        <ng-container *ngIf="resetStep === 'pin' && resetPinSubStep === 'create'">
+          <div class="reset-step-icon reset-step-icon--lock">
+            <mat-icon>lock</mat-icon>
+          </div>
+          <p class="reset-step-heading">Create new PIN</p>
+          <p class="reset-step-sub">Enter a 4-digit PIN you'll use to sign in.</p>
+
+          <div class="auth-gate-field reset-pin-center">
+            <app-pin-input
+              [length]="4"
+              [mask]="true"
+              [autoFocus]="true"
+              [reset]="resetPinResetCounter"
+              (pinComplete)="onResetNewPinComplete($event)"
+              (pinChange)="onResetNewPinChange($event)">
+            </app-pin-input>
+            <p class="reset-pin-hint">You'll confirm this PIN next</p>
+          </div>
+
+          <div class="auth-gate-api-error" *ngIf="resetError">
+            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
+            {{ resetError }}
+          </div>
+        </ng-container>
+
+        <!-- ─── STEP 3b: Confirm New PIN ─── -->
+        <ng-container *ngIf="resetStep === 'pin' && resetPinSubStep === 'confirm'">
+          <div class="reset-step-icon reset-step-icon--shield">
+            <mat-icon>shield</mat-icon>
+          </div>
+          <p class="reset-step-heading">Confirm your PIN</p>
+          <p class="reset-step-sub">Re-enter your 4-digit PIN to confirm.</p>
+
+          <div class="auth-gate-field reset-pin-center">
+            <app-pin-input
+              [length]="4"
+              [mask]="true"
+              [autoFocus]="true"
+              [hasError]="!!resetError"
+              [reset]="resetConfirmPinResetCounter"
+              (pinComplete)="onResetConfirmPinComplete($event)"
+              (pinChange)="onResetConfirmPinChange($event)">
+            </app-pin-input>
+          </div>
+
+          <div class="auth-gate-api-error" *ngIf="resetError">
+            <mat-icon class="!text-base !w-4 !h-4">error_outline</mat-icon>
+            {{ resetError }}
+          </div>
+
+          <div *ngIf="resetLoading" class="reset-pin-loading">
+            <span class="auth-gate-spinner"></span>
+            <span>Setting your PIN...</span>
+          </div>
+
+          <button class="reset-back-btn" (click)="goResetBackToCreatePin()">
+            <mat-icon>arrow_back</mat-icon> Back to create PIN
+          </button>
+        </ng-container>
+
+        <!-- ─── STEP 4: Success ─── -->
+        <ng-container *ngIf="resetStep === 'success'">
+          <div class="reset-success-panel">
+            <div class="reset-success-check">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+            <p class="reset-step-heading">PIN Updated!</p>
+            <ng-container *ngIf="!resetAutoLoginInProgress">
+              <p class="reset-step-sub">Your new PIN has been set successfully.</p>
+            </ng-container>
+            <ng-container *ngIf="resetAutoLoginInProgress">
+              <div class="reset-auto-login">
+                <span class="auth-gate-spinner"></span>
+                <span>Logging you in & booking your slot...</span>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+
       </div>
 
       <!-- PIN INPUT FORM -->
-      <div class="auth-gate-form" *ngIf="!showForgotPassword">
+      <div class="auth-gate-form" *ngIf="!showResetFlow">
 
         <!-- LOGIN flow: single PIN -->
         <ng-container *ngIf="authStep === 'login'">
@@ -1652,8 +1802,7 @@
           </div>
 
           <div class="auth-gate-forgot-link">
-            <button type="button" class="auth-gate-switch-btn"
-              (click)="showForgotPassword = true; forgotPasswordError = ''; forgotPasswordSent = false; forgotPasswordEmail = ''">
+            <button type="button" class="auth-gate-switch-btn" (click)="openResetFlow()">
               Forgot PIN?
             </button>
           </div>
@@ -1713,7 +1862,7 @@
       </div>
 
       <!-- Switch mode note -->
-      <div class="auth-gate-switch" *ngIf="!showForgotPassword">
+      <div class="auth-gate-switch" *ngIf="!showResetFlow">
         {{ authStep === 'login' ? "Not you?" : 'Already have an account?' }}
         <button class="auth-gate-switch-btn" (click)="authStep === 'login' ? openNewNumberForm() : switchAuthMode('login')">
           {{ authStep === 'login' ? 'Try with a different number' : 'Login instead' }}
@@ -1799,6 +1948,92 @@
       <form [formGroup]="unregForm">
         <p class="sm:text-base text-lg font-medium title-font mb-2">Book An Appointment For  {{ profRes?.name || 'Jasbir Meher' }}</p>
 
+        <div class="mb-2" *ngIf="clinicNamesWidget.length > 0">
+          <label class="center-block">Clinic:</label>
+          <ng-container *ngIf="clinicNamesWidget.length === 1; else multiClinicWidget">
+            <input [value]="clinicNamesWidget[0]" readonly
+              class="form-control block w-full px-4 py-2 font-normal bg-gray-100 text-gray-500 border border-solid border-gray-200 rounded m-0 cursor-default">
+          </ng-container>
+          <ng-template #multiClinicWidget>
+            <select [(ngModel)]="selectedClinicWidget" [ngModelOptions]="{standalone: true}" (ngModelChange)="clearSelectedSlot()"
+              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+              <option *ngFor="let c of clinicNamesWidget" [value]="c">{{ c }}</option>
+            </select>
+          </ng-template>
+        </div>
+
+        <div class="slot-scroll-area">
+          <div class="slot-legend" *ngIf="scheduleDetails.length > 0">
+            <span class="slot-legend-item slot-legend-item--available">Available</span>
+            <span class="slot-legend-item slot-legend-item--selected">Selected</span>
+            <span class="slot-legend-item slot-legend-item--booked">Booked</span>
+          </div>
+          <!-- Date tabs with sessions -->
+          <mat-tab-group class="mb-4 tab-body" *ngIf="scheduleDetails.length > 0">
+            <mat-tab *ngFor="let sched of scheduleDetails">
+              <ng-template mat-tab-label>
+                <span class="tab-text uppercase">{{ sched.day }}</span>
+                <span class="tab-number">{{ sched.date }}</span>
+              </ng-template>
+
+              <span *ngIf="sched.sessions.length > 0">
+                <span *ngFor="let session of sched.sessions; let i = index">
+                  <span *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1 && (!selectedClinicWidget || (session?.clinic?.clinicName || session?.clinic?.name || session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget || (session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget)">
+                    <div class="session-header" [class.session-header--ended]="session.queueStatus === 'ended'">
+                      <div class="session-info">
+                        <span class="session-label">Session {{ i + 1 }}</span>
+                        <span class="session-clinic">{{ session?.clinic?.clinicName || session?.clinic?.name }}</span>
+                        <span class="session-time">{{ session.startTime }} - {{ session.endTime }}</span>
+                        <span class="queue-status"
+                          [class.queue-status--active]="session.queueStatus === 'started'"
+                          [class.queue-status--ended]="session.queueStatus === 'ended'"
+                          [class.queue-status--not-started]="session.queueStatus === 'notStarted'"
+                          *ngIf="session.queueStatus">
+                          {{ session.queueStatus === 'ended' ? 'Queue Ended' : session.queueStatus === 'started' ? 'Queue Active' : 'Not Started' }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="session-actions">
+                      <a class="directions-link" target="_blank" [href]="session.geoPoint">
+                        <mat-icon class="!text-sm !w-4 !h-4">near_me</mat-icon>
+                        Directions
+                      </a>
+                    </div>
+
+                    <div class="slot-grid" [class.slot-grid--ended]="session.queueStatus === 'ended'" *ngIf="session.slots.length > 1">
+                      <span *ngFor="let slot of session.slots" class="slot-cell">
+                        <button *ngIf="slot._source?.status !== 'sessionCancelled' && slot._source?.status !== 'cancelled'"
+                          class="slot-chip"
+                          [class.slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
+                          [class.slot-chip--booked]="slot._source?.status !== 'notBooked'"
+                          [disabled]="slot._source?.status !== 'notBooked' || session.queueStatus === 'ended'"
+                          (click)="setSelectedSlot(slot, session)">
+                          <span class="slot-chip-time">{{ slot._source?.slotTime }}</span>
+                          <span class="slot-chip-status" *ngIf="slot._source?.status !== 'notBooked'">Booked</span>
+                        </button>
+                      </span>
+                    </div>
+                  </span>
+                </span>
+              </span>
+
+              <div class="w-full text-center text-lg" *ngIf="sched.sessions.length === 0">
+                The upcoming schedule has not been set by the doctor as of yet
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+
+          <div class="w-full text-center text-lg" *ngIf="scheduleDetails.length === 0">
+            The upcoming schedule has not been set by the doctor as of yet
+          </div>
+        </div>
+
+        <div id="sheet-details" class="sheet-details" *ngIf="selectedSlotId">
+          <p class="sheet-details-title">
+            <mat-icon class="!text-base !w-4 !h-4">event_available</mat-icon>
+            {{ slotSelectedDetail?.slotTime }} selected. Enter your details
+          </p>
+
         <div class="mb-2">
           <label class="center-block">Full Name *:
             <input formControlName="name" type="text"
@@ -1880,83 +2115,12 @@
           </div>
         </div>
 
-        <div class="mb-2" *ngIf="clinicNamesWidget.length > 0">
-          <label class="center-block">Clinic:</label>
-          <ng-container *ngIf="clinicNamesWidget.length === 1; else multiClinicWidget">
-            <input [value]="clinicNamesWidget[0]" readonly
-              class="form-control block w-full px-4 py-2 font-normal bg-gray-100 text-gray-500 border border-solid border-gray-200 rounded m-0 cursor-default">
-          </ng-container>
-          <ng-template #multiClinicWidget>
-            <select [(ngModel)]="selectedClinicWidget" [ngModelOptions]="{standalone: true}"
-              class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-              <option *ngFor="let c of clinicNamesWidget" [value]="c">{{ c }}</option>
-            </select>
-          </ng-template>
-        </div>
-
         <div class="mb-2">
           <label class="center-block">Address <span class="text-xs text-gray-400 font-normal">(optional)</span>:
             <input formControlName="address" type="text" placeholder="Your home / locality address"
               class="form-control block w-full px-4 py-2 font-normal bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
           </label>
         </div>
-
-        <div class="slot-scroll-area" [class.slots-disabled]="!isSheetFormFilled">
-          <!-- Lock overlay banner -->
-          <div class="slots-disabled-hint" *ngIf="!isSheetFormFilled && scheduleDetails.length > 0">
-            <mat-icon class="!text-sm">lock</mat-icon>
-            Fill in your details above to unlock slot selection
-          </div>
-          <!-- Date tabs with sessions -->
-          <mat-tab-group class="mb-4 tab-body" *ngIf="scheduleDetails.length > 0">
-            <mat-tab *ngFor="let sched of scheduleDetails">
-              <ng-template mat-tab-label>
-                <span class="tab-text uppercase">{{ sched.day }}</span>
-                <span class="tab-number">{{ sched.date }}</span>
-              </ng-template>
-
-              <span *ngIf="sched.sessions.length > 0">
-                <span *ngFor="let session of sched.sessions; let i = index">
-                  <span *ngIf="session.slots[0]?._source?.status !== 'sessionCancelled' && session.slots.length > 1 && (!selectedClinicWidget || (session?.clinic?.clinicName || session?.clinic?.name || session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget || (session?.clinic?.clinicId || session?.clinic?.id) === selectedClinicWidget)">
-                    <div class="session-header">
-                      <div class="session-info">
-                        <span class="session-label">Session {{ i + 1 }}</span>
-                        <span class="session-clinic">{{ session?.clinic?.clinicName || session?.clinic?.name }}</span>
-                        <span class="session-time">{{ session.startTime }} - {{ session.endTime }}</span>
-                      </div>
-                    </div>
-                    <div class="session-actions">
-                      <a class="directions-link" target="_blank" [href]="session.geoPoint">
-                        <mat-icon class="!text-sm !w-4 !h-4">near_me</mat-icon>
-                        Directions
-                      </a>
-                    </div>
-
-                    <div class="slot-grid" *ngIf="session.slots.length > 1">
-                      <span *ngFor="let slot of session.slots" class="slot-cell">
-                        <button *ngIf="slot._source?.status !== 'sessionCancelled' && slot._source?.status !== 'cancelled'"
-                          class="slot-chip"
-                          [class.slot-chip--selected]="slot._source?.slotId === selectedSlotId && slot._source?.status === 'notBooked'"
-                          [class.slot-chip--booked]="slot._source?.status !== 'notBooked'"
-                          [disabled]="slot._source?.status !== 'notBooked' || !isSheetFormFilled"
-                          (click)="setSelectedSlot(slot, session)">
-                          {{ slot._source?.slotTime }}
-                        </button>
-                      </span>
-                    </div>
-                  </span>
-                </span>
-              </span>
-
-              <div class="w-full text-center text-lg" *ngIf="sched.sessions.length === 0">
-                The upcoming schedule has not been set by the doctor as of yet
-              </div>
-            </mat-tab>
-          </mat-tab-group>
-
-          <div class="w-full text-center text-lg" *ngIf="scheduleDetails.length === 0">
-            The upcoming schedule has not been set by the doctor as of yet
-          </div>
         </div>
       </form>
     </div>
@@ -1968,7 +2132,7 @@
         [class.book-pay-btn--disabled]="!selectedSlotId || !isSheetFormFilled"
         (click)="onSpotFreeBook(sessionIdSelected)">
         <mat-icon class="!text-lg !mr-1">event_available</mat-icon>
-        {{ selectedSlotId && isSheetFormFilled ? 'Book & Pay in Cash' : 'Fill details & select a slot' }}
+        {{ !selectedSlotId ? 'Select a slot' : isSheetFormFilled ? 'Book & Pay in Cash' : 'Enter your details to book' }}
       </button>
     </div>
   </section>

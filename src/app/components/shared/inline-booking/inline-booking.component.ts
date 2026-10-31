@@ -27,6 +27,7 @@ export class InlineBookingComponent implements OnChanges {
 
   // Events
   @Output() slotSelected = new EventEmitter<{ slot: any; session: any }>();
+  @Output() slotCleared = new EventEmitter<void>();
   @Output() bookClicked = new EventEmitter<string>();
 
   sessionIdSelected = '';
@@ -109,6 +110,13 @@ export class InlineBookingComponent implements OnChanges {
     this.selectedSlotId = slot._source?.slotId || '';
     this.sessionIdSelected = session.sessionId;
     this.slotSelected.emit({ slot, session });
+  }
+
+  // Sessions are clinic specific, so a slot cannot survive a clinic change
+  onClinicChange(): void {
+    this.selectedSlotId = '';
+    this.sessionIdSelected = '';
+    this.slotCleared.emit();
   }
 
   onBook(): void {
