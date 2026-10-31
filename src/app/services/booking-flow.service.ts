@@ -9,6 +9,8 @@ export interface AuthState {
   loggedInToken: string;
   loggedInUserId: string;
   existingUserDetails: { name: string; mobile: string; gender: string } | null;
+  // Number exists with userType "unRegistered": no PIN yet, so register sets one
+  isUnregisteredUpgrade: boolean;
   pinValue: string;
   confirmPinValue: string;
   pinResetCounter: number;
@@ -85,6 +87,7 @@ export class BookingFlowService {
       loggedInToken: '',
       loggedInUserId: '',
       existingUserDetails: null,
+      isUnregisteredUpgrade: false,
       pinValue: '',
       confirmPinValue: '',
       pinResetCounter: 0,
@@ -121,6 +124,9 @@ export class BookingFlowService {
     this.auth.pinValue = '';
     this.auth.confirmPinValue = '';
     this.auth.pinResetCounter++;
+    this.auth.confirmPinResetCounter++;
+    this.auth.registerPinStep = 'create';
+    this.auth.isUnregisteredUpgrade = false;
     this.auth.existingUserDetails = null;
 
     this.bookingService.checkMobileRegistered(mobile).subscribe({
@@ -141,7 +147,12 @@ export class BookingFlowService {
               gender: this.auth.existingUserDetails.gender?.toLowerCase() || ''
             });
           }
-          this.auth.step = 'login';
+          if (user?.userType === 'unRegistered') {
+            this.auth.isUnregisteredUpgrade = true;
+            this.auth.step = 'register';
+          } else {
+            this.auth.step = 'login';
+          }
         } else {
           this.auth.step = 'register';
         }
@@ -161,6 +172,7 @@ export class BookingFlowService {
     this.auth.pinResetCounter++;
     this.auth.confirmPinResetCounter++;
     this.auth.registerPinStep = 'create';
+    this.auth.isUnregisteredUpgrade = false;
     this.auth.existingUserDetails = null;
     this.closeResetFlow();
   }
@@ -173,6 +185,7 @@ export class BookingFlowService {
     this.auth.pinResetCounter++;
     this.auth.confirmPinResetCounter++;
     this.auth.registerPinStep = 'create';
+    this.auth.isUnregisteredUpgrade = false;
     this.closeResetFlow();
   }
 
@@ -480,6 +493,53 @@ export class BookingFlowService {
       const nameParts = name.split(' ');
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ') || nameParts[0];
+
+      if (this.auth.isUnregisteredUpgrade) {
+        const setPinPayload: any = {
+          mobile,
+          pin: password,
+          name,
+          first_name: firstName,
+          last_name: lastName,
+          gender: formData.gender || '',
+          address: formData.address || '',
+          dob: null,
+          acceptTerms: true
+        };
+        if (formData.email) { setPinPayload.email = formData.email; }
+
+        this.auth.loading = true;
+        this.auth.error = '';
+        this.bookingService.setUserPin(setPinPayload).subscribe({
+          next: () => {
+            this.bookingService.loginUser(mobile, password).subscribe({
+              next: (loginRes: any) => {
+                this.auth.loading = false;
+                this.auth.loggedInToken = loginRes.token;
+                this.auth.loggedInUserId = loginRes.userDetails?.userId || '';
+                this.auth.isUnregisteredUpgrade = false;
+                this.auth.step = 'none';
+                onSuccess();
+              },
+              error: () => {
+                this.auth.loading = false;
+                this.switchAuthMode('login');
+                this.auth.error = 'PIN set! Please login to confirm your booking.';
+              }
+            });
+          },
+          error: (err: any) => {
+            this.auth.loading = false;
+            if (err.status === 409) {
+              this.switchAuthMode('login');
+              this.auth.error = 'This number is already registered. Please login.';
+            } else {
+              this.auth.error = err.error?.message || 'Failed to set PIN. Please try again.';
+            }
+          }
+        });
+        return;
+      }
 
       const signupPayload: any = {
         firstName,
