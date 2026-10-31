@@ -1,0 +1,240 @@
+============================================================
+  HOW TO ONBOARD A NEW DOCTOR — Step by Step
+============================================================
+
+This guide walks you through creating a new doctor's micro-site
+from scratch — designing the page, adding images, and deploying.
+
+
+STEP 1: CREATE THE COMPONENT
+------------------------------------------------------------
+
+Create a new folder for the doctor under:
+
+  src/app/components/custom/<doctor-slug>/
+
+For example, for Dr. Sachin:
+
+  src/app/components/custom/sachin/
+    sachin-profile.component.ts
+    sachin-profile.component.html
+    sachin-profile.component.scss
+
+You can copy Jasbir's component as a starting point and modify
+it, or build a completely new design from scratch.
+
+
+STEP 2: CREATE A LAZY MODULE
+------------------------------------------------------------
+
+Create a module file in the same folder:
+
+  src/app/components/custom/sachin/sachin.module.ts
+
+Contents:
+
+  import { NgModule } from '@angular/core';
+  import { CommonModule } from '@angular/common';
+  import { SachinProfileComponent } from './sachin-profile.component';
+  // Add other imports as needed (MatIconModule, ReactiveFormsModule, etc.)
+
+  @NgModule({
+    declarations: [SachinProfileComponent],
+    imports: [CommonModule]
+  })
+  export class SachinModule {
+    static entry = SachinProfileComponent;
+  }
+
+
+STEP 3: REGISTER THE COMPONENT
+------------------------------------------------------------
+
+A) Add component type in:
+   src/app/config/domain-registry.ts
+
+   Update the ComponentType:
+     export type ComponentType = '... | 'custom-sachin' | ...';
+
+B) Add lazy import in:
+   src/app/components/tenant-router/lazy-component-registry.ts
+
+   Add entry:
+     'custom-sachin': {
+       moduleImport: () => import('../custom/sachin/sachin.module').then(m => m.SachinModule)
+     },
+
+C) Add dev route in:
+   src/app/app-routing.module.ts
+
+   Add before the wildcard route:
+     {
+       path: 'sachin',
+       component: TenantRouterComponent,
+       canActivate: [TenantGuard],
+       resolve: { config: TenantConfigResolver },
+       data: { doctorId: '<doctor-uuid>', component: 'custom-sachin' }
+     },
+
+
+STEP 4: DESIGN WITH LOCAL IMAGES
+------------------------------------------------------------
+
+While designing, put images in a local folder:
+
+  src/assets/images/sachin/
+    profile.jpg
+    clinic-bg.jpeg
+    clinic-logo.png
+    team-photo.jpg
+    team-priya.jpg
+    gallery-1.jpg
+    gallery-2.jpg
+    ... (any name, any structure you want)
+
+Reference them in your HTML and TS files as usual:
+
+  <img src="assets/images/sachin/profile.jpg">
+  <img src="assets/images/sachin/clinic-bg.jpeg">
+
+NOTE: You need to temporarily add "src/assets" back to the
+assets array in angular.json while designing locally:
+
+  "assets": [
+    "src/favicon.ico",
+    "src/assets"
+  ],
+
+Run the dev server and design until you're happy:
+
+  ng serve --port 4300
+
+  View at: http://localhost:4300/sachin
+
+
+STEP 5: MIGRATE IMAGES TO CLOUDINARY
+------------------------------------------------------------
+
+When your design is ready, run the migration script.
+
+FIRST — do a dry run to preview what will happen:
+
+  node scripts/migrate-to-cloudinary.js sachin --dry-run
+
+This shows you:
+  - Which images it found in your code
+  - What Cloudinary public IDs they'll get
+  - Which files will be updated
+
+THEN — run for real:
+
+  Windows (PowerShell):
+
+    $env:CLOUDINARY_CLOUD_NAME="dp9hkzy3s"
+    $env:CLOUDINARY_API_KEY="451698796929696"
+    $env:CLOUDINARY_API_SECRET="vzDf_FN_Ob_BDodNU8xDro7C6VM"
+    node scripts/migrate-to-cloudinary.js sachin
+
+  Windows (Git Bash / Terminal):
+
+    CLOUDINARY_CLOUD_NAME=dp9hkzy3s \
+    CLOUDINARY_API_KEY=451698796929696 \
+    CLOUDINARY_API_SECRET=vzDf_FN_Ob_BDodNU8xDro7C6VM \
+    node scripts/migrate-to-cloudinary.js sachin
+
+The script will:
+  1. Scan all source files for local image references
+  2. Upload each image to Cloudinary
+  3. Replace every local path with a Cloudinary URL
+  4. Delete the local image files
+
+If you want to KEEP local files after migration, add --no-delete:
+
+  node scripts/migrate-to-cloudinary.js sachin --no-delete
+
+HOW THE PATHS MAP:
+
+  Local path                           Cloudinary public ID
+  -------------------------------------------------------
+  assets/images/sachin/profile.jpg  -> knocdoc/sachin/profile
+  assets/images/sachin/clinic-bg.jpeg -> knocdoc/sachin/clinic-bg
+  assets/images/sachin/team/priya.jpg -> knocdoc/sachin/team/priya
+  assets/icons/some-icon.png        -> knocdoc/shared/some-icon
+
+All Cloudinary URLs automatically include f_auto,q_auto for
+WebP/AVIF conversion and quality optimization.
+
+
+STEP 6: REVERT ANGULAR.JSON
+------------------------------------------------------------
+
+After migration, change angular.json back to only serve mock-configs:
+
+  "assets": [
+    "src/favicon.ico",
+    "src/assets/mock-configs"
+  ],
+
+This prevents accidentally bundling images into the deployment.
+
+
+STEP 7: MAP THE PRODUCTION DOMAIN
+------------------------------------------------------------
+
+When the doctor's custom domain is ready, add it to:
+
+  src/app/config/domain-registry.ts
+
+  'drsachin.com': { doctorId: '<uuid>', component: 'custom-sachin' },
+  'www.drsachin.com': { doctorId: '<uuid>', component: 'custom-sachin' },
+
+OR — if the backend domain resolver is wired up, add the
+mapping in the backend and skip this step entirely.
+
+
+STEP 8: DEPLOY
+------------------------------------------------------------
+
+Commit, push, and Vercel deploys automatically.
+
+  git add .
+  git commit -m "Add Dr. Sachin micro-site"
+  git push
+
+
+============================================================
+  QUICK REFERENCE
+============================================================
+
+  Start dev server:    ng serve --port 4300
+  View locally:        http://localhost:4300/<doctor-slug>
+  Dry run migration:   node scripts/migrate-to-cloudinary.js <slug> --dry-run
+  Run migration:       node scripts/migrate-to-cloudinary.js <slug>
+  Keep local files:    node scripts/migrate-to-cloudinary.js <slug> --no-delete
+
+  Cloudinary dashboard:  https://console.cloudinary.com
+  Cloud name:            dp9hkzy3s
+  Verify image URL:      https://res.cloudinary.com/dp9hkzy3s/image/upload/f_auto,q_auto,w_300/knocdoc/<slug>/profile
+
+
+============================================================
+  TROUBLESHOOTING
+============================================================
+
+  "File size too large" error:
+    Cloudinary free tier has a 10 MB per-file limit.
+    Compress the image before running the script.
+
+  Images not loading after migration:
+    Check the Cloudinary dashboard to confirm the upload.
+    Open the URL directly in a browser to test.
+    Make sure the public ID matches what's in the code.
+
+  Script says "No local asset references found":
+    Make sure your images are under src/assets/images/ or
+    src/assets/icons/ and referenced with paths starting
+    with "assets/images/" or "assets/icons/" in your code.
+
+  Want to re-upload an image:
+    The script uses overwrite=true, so just put the new
+    image at the same local path and run the script again.

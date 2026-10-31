@@ -40,6 +40,11 @@ testem.log
 # Reference screenshots
 src/assets/Reference/
 
+# Images/video served from Cloudinary CDN
+src/assets/images/
+src/assets/videoes/
+src/assets/icons/
+
 # System files
 .DS_Store
 Thumbs.db

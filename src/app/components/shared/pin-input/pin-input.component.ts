@@ -123,6 +123,12 @@ import {
       &.filled { background: rgba(254, 242, 242, 0.9); }
     }
 
+    input.pin-masked {
+      -webkit-text-security: disc;
+      -moz-text-security: disc;
+      text-security: disc;
+    }
+
     @media (max-width: 380px) {
       input {
         width: 48px;
@@ -139,6 +145,7 @@ export class PinInputComponent implements AfterViewInit, OnChanges {
   @Input() hasError = false;
   @Input() disabled = false;
   @Input() autoFocus = true;
+  @Input() mask = false;
   @Input() reset = 0;
 
   @Output() pinComplete = new EventEmitter<string>();
@@ -273,8 +280,10 @@ export class PinInputComponent implements AfterViewInit, OnChanges {
     if (!box) return;
     if (this.digits[index]) {
       box.classList.add('filled');
+      if (this.mask) box.classList.add('pin-masked');
     } else {
       box.classList.remove('filled');
+      box.classList.remove('pin-masked');
     }
   }
 
@@ -286,8 +295,10 @@ export class PinInputComponent implements AfterViewInit, OnChanges {
         boxes[i].nativeElement.value = this.digits[i];
         if (this.digits[i]) {
           boxes[i].nativeElement.classList.add('filled');
+          if (this.mask) boxes[i].nativeElement.classList.add('pin-masked');
         } else {
           boxes[i].nativeElement.classList.remove('filled');
+          boxes[i].nativeElement.classList.remove('pin-masked');
         }
       }
     }
@@ -309,8 +320,10 @@ export class PinInputComponent implements AfterViewInit, OnChanges {
         boxes[i].nativeElement.value = d;
         if (d) {
           boxes[i].nativeElement.classList.add('filled');
+          if (this.mask) boxes[i].nativeElement.classList.add('pin-masked');
         } else {
           boxes[i].nativeElement.classList.remove('filled');
+          boxes[i].nativeElement.classList.remove('pin-masked');
         }
       }
     });

@@ -10,8 +10,10 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { BookingService } from '../../../services/booking.service';
+import { BookingFlowService } from '../../../services/booking-flow.service';
 import { DoctorConfigService } from '../../../services/doctor-config.service';
 import { TenantService } from '../../../services/tenant.service';
+import { cloudinaryUrl } from '../../../utils/cloudinary.util';
 
 @Component({
   selector: 'app-jasbir-profile',
@@ -43,7 +45,10 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   private jsonLdScriptTags: HTMLScriptElement[] = [];
 
   get clinicLogo(): string {
-    return 'assets/images/jasbir/ClinicLogo.jpeg';
+    return cloudinaryUrl('knocdoc/jasbir/clinic/clinic-logo', 'w_300');
+  }
+  get profileImageFallback(): string {
+    return cloudinaryUrl('knocdoc/jasbir/hero/profile', 'w_600');
   }
   activeTechSlide = 0;
   showSidhantFull = false;
@@ -65,32 +70,47 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   bookingConfirmation: any = null;
   selectedClinicWidget = '';
 
-  // Auth gate state
-  authStep: 'none' | 'checking' | 'login' | 'register' | 'new-number' = 'none';
-  authLoading = false;
-  authError = '';
-  pendingSessionId = '';
-  loggedInToken = '';
-  loggedInUserId = '';
-  existingUserDetails: { name: string; mobile: string; gender: string } | null = null;
-  isUnregisteredUpgrade = false; // true when existing user has userType: "unRegistered"
-
-  // PIN auth state
-  pinValue = '';
-  confirmPinValue = '';
-  pinResetCounter = 0;
-  confirmPinResetCounter = 0;
-  registerPinStep: 'create' | 'confirm' = 'create';
+  // Auth/booking flow delegated to BookingFlowService
+  get authStep() { return this.bookingFlow.auth.step; }
+  set authStep(v) { this.bookingFlow.auth.step = v; }
+  get authLoading() { return this.bookingFlow.auth.loading; }
+  get authError() { return this.bookingFlow.auth.error; }
+  get existingUserDetails() { return this.bookingFlow.auth.existingUserDetails; }
+  get pinValue() { return this.bookingFlow.auth.pinValue; }
+  get confirmPinValue() { return this.bookingFlow.auth.confirmPinValue; }
+  get pinResetCounter() { return this.bookingFlow.auth.pinResetCounter; }
+  get confirmPinResetCounter() { return this.bookingFlow.auth.confirmPinResetCounter; }
+  get registerPinStep() { return this.bookingFlow.auth.registerPinStep; }
+  // PIN Reset flow (WhatsApp OTP)
+  get showResetFlow() { return this.bookingFlow.auth.showResetFlow; }
+  get resetStep() { return this.bookingFlow.auth.resetStep; }
+  get resetPhone() { return this.bookingFlow.auth.resetPhone; }
+  set resetPhone(v: string) { this.bookingFlow.auth.resetPhone = v; }
+  get resetResendTimer() { return this.bookingFlow.auth.resetResendTimer; }
+  get resetLoading() { return this.bookingFlow.auth.resetLoading; }
+  get resetError() { return this.bookingFlow.auth.resetError; }
+  get resetPinSubStep() { return this.bookingFlow.auth.resetPinSubStep; }
+  get resetPinResetCounter() { return this.bookingFlow.auth.resetPinResetCounter; }
+  get resetConfirmPinResetCounter() { return this.bookingFlow.auth.resetConfirmPinResetCounter; }
+  get resetOtpResetCounter() { return this.bookingFlow.auth.resetOtpResetCounter; }
+  get resetAutoLoginInProgress() { return this.bookingFlow.auth.resetAutoLoginInProgress; }
+  get maskedResetPhone(): string {
+    const p = this.bookingFlow.auth.resetPhone || '';
+    if (p.length < 4) return p;
+    return p.slice(0, 2) + '\u2022\u2022\u2022\u2022\u2022\u2022' + p.slice(-2);
+  }
+  get resetProgress(): number {
+    switch (this.resetStep) {
+      case 'phone': return 33;
+      case 'otp': return 50;
+      case 'pin': return 75;
+      case 'success': return 100;
+      default: return 0;
+    }
+  }
 
   // New number form state
   newNumberForm!: FormGroup;
-
-  // Forgot password state
-  showForgotPassword = false;
-  forgotPasswordEmail = '';
-  forgotPasswordLoading = false;
-  forgotPasswordSent = false;
-  forgotPasswordError = '';
 
   // KnocDoc typewriter
   knocdocPhrases = [
@@ -164,6 +184,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     private fb: FormBuilder,
     private activated: ActivatedRoute,
     private bookingService: BookingService,
+    private bookingFlow: BookingFlowService,
     private doctorConfigService: DoctorConfigService,
     private tenantService: TenantService,
     private titleService: Title,
@@ -384,7 +405,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       experience: this.placeholderExperience,
       awardsAndPublications: this.placeholderAwards,
       associatedClinics: [],
-      profImageUrl: { src: 'assets/images/jasbir/profile.jpg' }
+      profImageUrl: { src: cloudinaryUrl('knocdoc/jasbir/hero/profile', 'w_600') }
     };
   }
 
@@ -399,7 +420,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       ? (this.profRes.profImageUrl.src.startsWith('http')
           ? this.profRes.profImageUrl.src
           : `${window.location.origin}/${this.profRes.profImageUrl.src}`)
-      : `${window.location.origin}/assets/images/jasbir/profile.jpg`;
+      : cloudinaryUrl('knocdoc/jasbir/hero/profile', 'w_600');
     const canonicalUrl = window.location.origin + window.location.pathname;
 
     const title = `${name} | Best ${specialization} & Orthodontist in ${city}, ${state}`;
@@ -426,7 +447,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.meta.updateTag({ name: 'ICBM', content: '20.6989, 83.4636' });
 
     // Set clinic logo as favicon
-    this.setFavicon(`${window.location.origin}/assets/images/jasbir/ClinicLogo.jpeg`);
+    this.setFavicon(cloudinaryUrl('knocdoc/jasbir/clinic/clinic-logo', 'w_64'));
 
     // Open Graph
     this.meta.updateTag({ property: 'og:title', content: title });
@@ -478,7 +499,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       ? (this.profRes.profImageUrl.src.startsWith('http')
           ? this.profRes.profImageUrl.src
           : `${window.location.origin}/${this.profRes.profImageUrl.src}`)
-      : `${window.location.origin}/assets/images/jasbir/profile.jpg`;
+      : cloudinaryUrl('knocdoc/jasbir/hero/profile', 'w_600');
     const canonicalUrl = window.location.origin + window.location.pathname;
 
     // Schema 1: Dentist (LocalBusiness)
@@ -785,11 +806,15 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
         this.confettiInstance = confetti.create(canvas, { resize: true });
       }
       if (!this.confettiInstance) return;
-      const colors = ['#ffffff', '#FFE566', '#FF6B8A', '#7DFFB3', '#FFB347', '#FF4D6A'];
+      const colors = ['#93c5fd', '#bfdbfe', '#dbeafe', '#e0e7ff', '#c7d2fe', '#ffffff'];
       const fire = this.confettiInstance;
+      let tick = 0;
       const frame = () => {
-        fire({ particleCount: 3, angle: 60, spread: 55, startVelocity: 45, origin: { x: 0, y: 0.5 }, colors, scalar: 1.2, ticks: 150 });
-        fire({ particleCount: 3, angle: 120, spread: 55, startVelocity: 45, origin: { x: 1, y: 0.5 }, colors, scalar: 1.2, ticks: 150 });
+        tick++;
+        if (tick % 3 === 0) {
+          fire({ particleCount: 1, angle: 70, spread: 80, startVelocity: 25, origin: { x: 0.1, y: 0.3 }, colors, scalar: 0.8, ticks: 200, gravity: 0.4, drift: 0.5 });
+          fire({ particleCount: 1, angle: 110, spread: 80, startVelocity: 25, origin: { x: 0.9, y: 0.3 }, colors, scalar: 0.8, ticks: 200, gravity: 0.4, drift: -0.5 });
+        }
         this.confettiAnimId = requestAnimationFrame(frame);
       };
       this.confettiAnimId = requestAnimationFrame(frame);
@@ -815,11 +840,7 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   getGoogleMapsLink(inputstring: string): string {
-    if (inputstring) {
-      const params = inputstring.split(',').map(Number);
-      return `https://www.google.com/maps/search/?api=1&query=${params[0]},${params[1]}`;
-    }
-    return '';
+    return this.bookingFlow.getGoogleMapsLink(inputstring);
   }
 
   get clinicNamesWidget(): string[] {
@@ -881,81 +902,28 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
     this.bottomSheet.dismiss();
   }
 
-  // Booking methods
+  // Booking methods — delegated to BookingFlowService
   getSchedule(): void {
-    const today = new Date();
-    const startDate = today.getFullYear() + '-' + (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');
-    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const endDate = nextWeek.getFullYear() + '-' + (nextWeek.getMonth() + 1).toString().padStart(2, '0') + '-' + nextWeek.getDate().toString().padStart(2, '0');
-
-    const req = {
-      pageSize: 10000,
-      pageNo: 0,
-      search: {
-        doctorId: this.doctorId || 1,
-        range: {
-          appointmentDate: { gte: startDate, lte: endDate }
-        }
-      },
-      sort: [],
-      filters: [{
-        bool: {
-          must_not: [{ terms: { status: ['sessionCancelled', 'cancelled'] } }]
-        }
-      }]
-    };
-
-    this.bookingService.getSchedule(req).subscribe(
-      (data: any) => {
-        this.processSessionData(data.filters[0]['results_by_date'].buckets);
-      },
-      () => {}
-    );
-  }
-
-  processSessionData(data: any): void {
-    data.forEach((dateObj: any) => {
-      const sessObj: any = {
-        date: dateObj.appointmentDate,
-        day: this.getWeekDay(dateObj.appointmentDate),
-        sessions: []
-      };
-      dateObj.sessions.forEach((session: any) => {
-        const sessionDet: any = {
-          sessionId: '',
-          slots: [],
-          prioritySlots: [],
-          hits: 0,
-          startTime: '',
-          endTime: '',
-          clinic: {},
-          geoPoint: '',
-          fees: 0
-        };
-        sessionDet.slots = session.documents.filter((slot: any) => {
-          if (slot._source.slotType === 'priority' && slot._source.status === 'notBooked') {
-            sessionDet.prioritySlots.push(slot);
-          } else {
-            return slot;
-          }
-        });
-        sessionDet.sessionId = session.sessionId;
-        sessionDet.hits = session.hits;
-        sessionDet.fees = session.documents[0]?._source?.clinicDetails?.fees || 1;
-        sessionDet.clinic = session.documents[0]?._source?.clinicDetails || {};
-        sessionDet.startTime = session.documents[0]?._source?.sessionStartTime;
-        sessionDet.endTime = session.documents[0]?._source?.sessionEndTime;
-        sessionDet.geoPoint = this.getGoogleMapsLink(session.documents[0]?._source?.clinicDetails?.geoPoint || '');
-        sessObj.sessions.push(sessionDet);
-      });
-      this.scheduleDetails.push(sessObj);
+    this.bookingFlow.fetchSchedule(this.doctorId, (days) => {
+      this.scheduleDetails.push(...days);
     });
   }
 
   setSelectedSlot(slot: any, session: any): void {
+    const firstPick = !this.selectedSlotId;
     this.selectedSlotId = slot._source?.slotId || '';
     this.slotSelectedDetail = slot._source || {};
     this.sessionIdSelected = session.sessionId;
+    // Details render only once a slot is picked; bring them into view the first time
+    if (firstPick) {
+      setTimeout(() => document.getElementById('sheet-details')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
+  }
+
+  clearSelectedSlot(): void {
+    this.selectedSlotId = '';
+    this.slotSelectedDetail = {};
+    this.sessionIdSelected = '';
   }
 
   onSpotFreeBook(sessionId: string): void {
@@ -978,96 +946,29 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   openAuthStep(sessionId: string): void {
-    this.pendingSessionId = sessionId;
-    this.authStep = 'checking';
-    this.authError = '';
-    this.pinValue = '';
-    this.confirmPinValue = '';
-    this.pinResetCounter++;
-    this.confirmPinResetCounter++;
-    this.registerPinStep = 'create';
-    this.isUnregisteredUpgrade = false;
-    this.existingUserDetails = null;
-
     const mobile = this.unregForm.get('mobile')?.value?.trim() || '';
-    this.bookingService.checkMobileRegistered(mobile).subscribe({
-      next: (res: any) => {
-        if (res?.hits > 0) {
-          const user = res?.results?.[0] || res?.result?.[0] || res;
-          const userType = user?.userType || '';
-
-          const userName = user?.name
-            || ((user?.firstName || '') + ' ' + (user?.lastName || '')).trim()
-            || '';
-          this.existingUserDetails = {
-            name: userName,
-            mobile: user?.mobileNumber || user?.mobile || mobile,
-            gender: user?.gender || ''
-          };
-          if (this.existingUserDetails.name) {
-            this.unregForm.patchValue({ name: this.existingUserDetails.name });
-          }
-          if (this.existingUserDetails.gender) {
-            this.unregForm.patchValue({ gender: this.existingUserDetails.gender.toLowerCase() });
-          }
-
-          if (userType === 'unRegistered') {
-            // User exists but never set a PIN — treat as new registration
-            this.isUnregisteredUpgrade = true;
-            this.authStep = 'register';
-          } else {
-            this.authStep = 'login';
-          }
-        } else {
-          this.authStep = 'register';
-        }
-      },
-      error: () => {
-        this.authStep = 'login';
-      }
+    this.bookingFlow.openAuthStep(sessionId, mobile, (details) => {
+      if (details.name) this.unregForm.patchValue({ name: details.name });
+      if (details.gender) this.unregForm.patchValue({ gender: details.gender });
     });
   }
 
-  cancelAuth(): void {
-    this.authStep = 'none';
-    this.pendingSessionId = '';
-    this.authError = '';
-    this.pinValue = '';
-    this.confirmPinValue = '';
-    this.pinResetCounter++;
-    this.confirmPinResetCounter++;
-    this.registerPinStep = 'create';
-    this.isUnregisteredUpgrade = false;
-    this.existingUserDetails = null;
-    this.showForgotPassword = false;
-    this.forgotPasswordEmail = '';
-    this.forgotPasswordSent = false;
-    this.forgotPasswordError = '';
-  }
+  cancelAuth(): void { this.bookingFlow.cancelAuth(); }
+  switchAuthMode(mode: 'login' | 'register'): void { this.bookingFlow.switchAuthMode(mode); }
+  onPinComplete(pin: string): void { this.bookingFlow.onPinComplete(pin); }
+  onPinChange(pin: string): void { this.bookingFlow.onPinChange(pin); }
+  onConfirmPinChange(pin: string): void { this.bookingFlow.onConfirmPinChange(pin); }
 
-  switchAuthMode(mode: 'login' | 'register'): void {
-    this.authStep = mode;
-    this.authError = '';
-    this.pinValue = '';
-    this.confirmPinValue = '';
-    this.pinResetCounter++;
-    this.confirmPinResetCounter++;
-    this.registerPinStep = 'create';
-    this.isUnregisteredUpgrade = false;
-    this.showForgotPassword = false;
-    this.forgotPasswordEmail = '';
-    this.forgotPasswordSent = false;
-    this.forgotPasswordError = '';
+  onConfirmPinComplete(pin: string): void {
+    this.bookingFlow.onConfirmPinComplete(pin);
+    if (this.authStep === 'register') {
+      this.submitAuth();
+    }
   }
 
   openNewNumberForm(): void {
+    this.bookingFlow.switchAuthMode('login'); // resets PIN state
     this.authStep = 'new-number';
-    this.authError = '';
-    this.pinValue = '';
-    this.confirmPinValue = '';
-    this.pinResetCounter++;
-    this.confirmPinResetCounter++;
-    this.registerPinStep = 'create';
     this.newNumberForm.reset({
       name: this.unregForm.get('name')?.value?.trim() || '',
       mobile: '',
@@ -1088,324 +989,90 @@ export class JasbirProfileComponent implements OnInit, AfterViewInit, OnDestroy 
       gender: this.newNumberForm.get('gender')?.value
     });
 
-    this.authStep = 'checking';
-    this.authError = '';
-    this.existingUserDetails = null;
-    this.bookingService.checkMobileRegistered(mobile).subscribe({
-      next: (res: any) => {
-        if (res?.hits > 0) {
-          const user = res?.results?.[0] || res?.result?.[0] || res;
-          const userName = user?.name
-            || ((user?.firstName || '') + ' ' + (user?.lastName || '')).trim()
-            || '';
-          this.existingUserDetails = {
-            name: userName,
-            mobile: user?.mobileNumber || user?.mobile || mobile,
-            gender: user?.gender || ''
-          };
-          if (this.existingUserDetails.name) {
-            this.unregForm.patchValue({ name: this.existingUserDetails.name });
-          }
-          if (this.existingUserDetails.gender) {
-            this.unregForm.patchValue({ gender: this.existingUserDetails.gender.toLowerCase() });
-          }
-          this.authStep = 'login';
-        } else {
-          this.authStep = 'register';
-        }
-      },
-      error: () => {
-        this.authStep = 'login';
-      }
+    this.bookingFlow.openAuthStep(this.bookingFlow.auth.pendingSessionId, mobile, (details) => {
+      if (details.name) this.unregForm.patchValue({ name: details.name });
+      if (details.gender) this.unregForm.patchValue({ gender: details.gender });
     });
   }
 
-  sendForgotPassword(): void {
-    if (!this.forgotPasswordEmail?.trim()) {
-      this.forgotPasswordError = 'Please enter your email address.';
-      return;
-    }
-    this.forgotPasswordLoading = true;
-    this.forgotPasswordError = '';
-    this.bookingService.sendForgotPassword(this.forgotPasswordEmail.trim()).subscribe({
-      next: () => {
-        this.forgotPasswordLoading = false;
-        this.forgotPasswordSent = true;
-      },
-      error: (err: any) => {
-        this.forgotPasswordLoading = false;
-        this.forgotPasswordError = err.error?.message || 'Email not found. Please check and try again.';
-      }
+  // ── PIN Reset Flow (WhatsApp OTP) ──
+  openResetFlow(): void {
+    const phone = this.unregForm.get('mobile')?.value?.trim() || '';
+    this.bookingFlow.openResetFlow(phone);
+  }
+  closeResetFlow(): void { this.bookingFlow.closeResetFlow(); }
+  sendResetOtp(): void { this.bookingFlow.sendResetOtp(); }
+  resendResetOtp(): void { this.bookingFlow.resendResetOtp(); }
+  verifyResetOtp(): void { this.bookingFlow.verifyResetOtp(); }
+  onResetOtpComplete(otp: string): void {
+    this.bookingFlow.auth.resetOtp = otp;
+  }
+  onResetOtpChange(otp: string): void {
+    this.bookingFlow.auth.resetOtp = otp;
+    this.bookingFlow.auth.resetError = '';
+  }
+  onResetNewPinComplete(pin: string): void { this.bookingFlow.onResetNewPinComplete(pin); }
+  onResetNewPinChange(pin: string): void { this.bookingFlow.onResetNewPinChange(pin); }
+  onResetConfirmPinComplete(pin: string): void {
+    this.bookingFlow.onResetConfirmPinComplete(pin, () => {
+      this.executeBooking(this.bookingFlow.auth.pendingSessionId);
     });
   }
-
-  onPinComplete(pin: string): void {
-    this.pinValue = pin;
-    if (this.authStep === 'register' && this.registerPinStep === 'create') {
-      this.registerPinStep = 'confirm';
-      this.confirmPinValue = '';
-      this.confirmPinResetCounter++;
-    }
-  }
-
-  onPinChange(pin: string): void {
-    this.pinValue = pin;
-    this.authError = '';
-  }
-
-  onConfirmPinComplete(pin: string): void {
-    this.confirmPinValue = pin;
-    if (this.authStep === 'register') {
-      this.submitAuth();
-    }
-  }
-
-  onConfirmPinChange(pin: string): void {
-    this.confirmPinValue = pin;
-    this.authError = '';
+  onResetConfirmPinChange(pin: string): void { this.bookingFlow.onResetConfirmPinChange(pin); }
+  goResetBackToCreatePin(): void { this.bookingFlow.goResetBackToCreatePin(); }
+  goResetBackToPhone(): void {
+    this.bookingFlow.destroyResetTimerPublic();
+    this.bookingFlow.auth.resetOtp = '';
+    this.bookingFlow.auth.resetOtpResetCounter++;
+    this.bookingFlow.auth.resetStep = 'phone';
+    this.bookingFlow.auth.resetError = '';
   }
 
   submitAuth(): void {
     const mobile = this.unregForm.get('mobile')?.value;
-
-    if (this.pinValue.length !== 4) {
-      this.authError = 'Please enter all 4 digits of your PIN.';
-      return;
-    }
-    const password = this.pinValue;
-
-    if (this.authStep === 'login') {
-      this.authLoading = true;
-      this.authError = '';
-      this.bookingService.loginUser(mobile, password).subscribe({
-        next: (res: any) => {
-          this.authLoading = false;
-          this.loggedInToken = res.token;
-          this.loggedInUserId = res.userDetails?.userId || '';
-          this.authStep = 'none';
-          this.executeBooking(this.pendingSessionId);
-        },
-        error: (err: any) => {
-          this.authLoading = false;
-          if (err.status === 401) {
-            this.authError = 'Incorrect PIN. Please try again.';
-          } else {
-            this.authError = err.error?.message || 'Login failed. Please try again.';
-          }
-        }
-      });
-    } else {
-      if (this.confirmPinValue !== this.pinValue) {
-        this.authError = 'PINs do not match. Please try again.';
-        this.pinValue = '';
-        this.confirmPinValue = '';
-        this.pinResetCounter++;
-        this.confirmPinResetCounter++;
-        this.registerPinStep = 'create';
-        return;
-      }
-      const confirmPassword = this.confirmPinValue;
-
-      const name = this.unregForm.get('name')?.value?.trim() || '';
-      const nameParts = name.split(' ');
-      const firstName = nameParts[0];
-      const lastName = nameParts.slice(1).join(' ') || nameParts[0];
-      const signupEmail = this.unregForm.get('email')?.value?.trim();
-
-      this.authLoading = true;
-      this.authError = '';
-
-      if (this.isUnregisteredUpgrade) {
-        // User already exists with userType: "unRegistered" — set their PIN and upgrade
-        const setPinPayload: any = {
-          mobile,
-          pin: password,
-          name,
-          first_name: firstName,
-          last_name: lastName,
-          gender: this.unregForm.get('gender')?.value || '',
-          address: this.unregForm.get('address')?.value || '',
-          dob: null,
-          acceptTerms: true,
-        };
-        if (signupEmail) { setPinPayload.email = signupEmail; }
-
-        this.bookingService.setUserPin(setPinPayload).subscribe({
-          next: () => {
-            this.bookingService.loginUser(mobile, password).subscribe({
-              next: (loginRes: any) => {
-                this.authLoading = false;
-                this.loggedInToken = loginRes.token;
-                this.loggedInUserId = loginRes.userDetails?.userId || '';
-                this.isUnregisteredUpgrade = false;
-                this.authStep = 'none';
-                this.executeBooking(this.pendingSessionId);
-              },
-              error: () => {
-                this.authLoading = false;
-                this.authError = 'PIN set! Please login to confirm your booking.';
-                this.isUnregisteredUpgrade = false;
-                this.switchAuthMode('login');
-              }
-            });
-          },
-          error: (err: any) => {
-            this.authLoading = false;
-            if (err.status === 409) {
-              // Already fully registered — switch to login
-              this.isUnregisteredUpgrade = false;
-              this.authError = 'This number is already registered. Please login.';
-              this.switchAuthMode('login');
-            } else {
-              this.authError = err.error?.message || 'Failed to set PIN. Please try again.';
-            }
-          }
-        });
-      } else {
-        const signupPayload: any = {
-          firstName,
-          lastName,
-          name,
-          mobileNumber: mobile,
-          password,
-          confirmPassword,
-          role: 'user',
-          userType: 'registered',
-          gender: this.unregForm.get('gender')?.value || '',
-          address: this.unregForm.get('address')?.value || '',
-          dob: null,
-          rights: null,
-          isEmailVerified: false,
-          emailVerificationOtp: null,
-          acceptTerms: true,
-          referredBy: '',
-          isQueueUpdateReminder: this.isQueueUpdateReminder
-        };
-        if (signupEmail) { signupPayload.email = signupEmail; }
-
-        this.bookingService.signupUser(signupPayload).subscribe({
-          next: () => {
-            this.bookingService.loginUser(mobile, password).subscribe({
-              next: (loginRes: any) => {
-                this.authLoading = false;
-                this.loggedInToken = loginRes.token;
-                this.loggedInUserId = loginRes.userDetails?.userId || '';
-                this.authStep = 'none';
-                this.executeBooking(this.pendingSessionId);
-              },
-              error: () => {
-                this.authLoading = false;
-                this.authError = 'Account created! Please login to confirm your booking.';
-                this.switchAuthMode('login');
-              }
-            });
-          },
-          error: (err: any) => {
-            this.authLoading = false;
-            if (err.status === 409) {
-              this.authError = 'This mobile number is already registered. Please login instead.';
-              this.switchAuthMode('login');
-            } else {
-              this.authError = err.error?.message || 'Registration failed. Please try again.';
-            }
-          }
-        });
-      }
-    }
+    this.bookingFlow.submitAuth(mobile, {
+      name: this.unregForm.get('name')?.value?.trim() || '',
+      email: this.unregForm.get('email')?.value?.trim() || '',
+      gender: this.unregForm.get('gender')?.value || '',
+      address: this.unregForm.get('address')?.value || '',
+      isQueueUpdateReminder: this.isQueueUpdateReminder
+    }, () => {
+      this.executeBooking(this.bookingFlow.auth.pendingSessionId);
+    });
   }
 
   private executeBooking(sessionId: string): void {
     if (!sessionId) return;
-    const today = new Date();
-    const appointmentDate = today.getFullYear() + '-' +
-      (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
-      today.getDate().toString().padStart(2, '0');
-    const slotDay = this.weekdays[today.getDay()];
-    const slot = this.slotSelectedDetail;
-    const clinic = slot?.clinicDetails || {};
-
-    const req: any = {
-      doctorId: this.doctorId,
-      doctorName: this.apiDoctorName || this.profRes?.name || '',
-      clinicDetails: {
-        clinicId: clinic.clinicId || clinic.id || '',
-        clinicName: clinic.clinicName || clinic.name || '',
-        geoPoint: clinic.geoPoint || ''
-      },
-      clinicId: clinic.clinicId || clinic.id || '',
-      sessionId,
-      slotId: slot?.slotId || '',
-      reasonForVisit: this.unregForm.value.reasonForVisit || '',
-      slotType: 'normal',
-      status: 'booked',
-      appointmentType: 'Inperson',
-      slotTime: slot?.slotTime || '',
-      slotDay,
-      userId: this.loggedInUserId,
-      userType: 'registered',
-      bookingTimeStamp: new Date().toISOString(),
-      appointmentDate,
-      sessionStartTime: slot?.sessionStartTime || '',
-      sessionEndTime: slot?.sessionEndTime || '',
-      userName: this.unregForm.value.name,
-      gender: this.unregForm.value.gender,
-      pin: Math.floor(Math.random() * 9000) + 1000 + '',
-      paymentStatus: 'default',
-      mobile: this.unregForm.value.mobile,
-      predictedSlotTime: slot?.slotTime || '',
-      isQueueUpdateReminder: this.isQueueUpdateReminder
-    };
-    const bookingEmail = this.unregForm.value.email?.trim();
-    if (bookingEmail) { req.email = bookingEmail; }
-    const doBooking = () => {
-      this.bookingService.bookRegisteredUser(req, this.loggedInToken).subscribe(
-        (res: any) => {
-          this.bookingConfirmation = {
-            patientName: req.userName,
-            mobile: req.mobile,
-            gender: req.gender,
-            doctorName: req.doctorName,
-            appointmentDate: req.appointmentDate,
-            slotDay: req.slotDay,
-            slotTime: this.slotSelectedDetail?.slotTime || '',
-            sessionTime: (this.slotSelectedDetail?.sessionStartTime || '') + ' - ' + (this.slotSelectedDetail?.sessionEndTime || ''),
-            clinicName: this.slotSelectedDetail?.clinicDetails?.clinicName || this.slotSelectedDetail?.clinicDetails?.name || '',
-            clinicLocation: this.slotSelectedDetail?.clinicDetails?.clinicLocation || '',
-            reasonForVisit: req.reasonForVisit,
-            pin: req.pin,
-            tokenNo: res?.tokenNo || res?.slotId || ''
-          };
-          this.selectedSlotId = '';
-          this.slotSelectedDetail = {};
-          this.closeTemplateSheetMenu();
-          setTimeout(() => {
-            this.bottomSheet.open(this.ConfirmationSheet, {
-              panelClass: 'confirmation-sheet',
-              disableClose: true
-            });
-          }, 400);
+    this.bookingFlow.executeBooking(
+      {
+        doctorId: this.doctorId,
+        doctorName: this.apiDoctorName || this.profRes?.name || '',
+        slotDetail: this.slotSelectedDetail,
+        sessionId,
+        formData: {
+          name: this.unregForm.value.name,
+          mobile: this.unregForm.value.mobile,
+          gender: this.unregForm.value.gender,
+          email: this.unregForm.value.email || '',
+          reasonForVisit: this.unregForm.value.reasonForVisit || ''
         },
-        () => {
-          this._snackBar.open('Error booking appointment. Please try again.', '', { duration: 3000 });
-        }
-      );
-    };
-
-    this.bookingService.checkUserSessionBookings(this.doctorId, sessionId, req.mobile).subscribe({
-      next: (checkRes: any) => {
-        // API returns { hits: <number>, result: [...] }
-        // Use top-level hits count (already filtered); fall back to counting result[] by mobile
-        const bookedCount = typeof checkRes?.hits === 'number'
-          ? checkRes.hits
-          : (checkRes?.result || []).filter((r: any) => r?.mobile === req.mobile).length;
-        if (bookedCount >= 2) {
-          this.showLimitModal = true;
-          return;
-        }
-        doBooking();
+        isQueueUpdateReminder: this.isQueueUpdateReminder
       },
-      error: () => doBooking()
-    });
+      (confirmation) => {
+        this.bookingConfirmation = confirmation;
+        this.selectedSlotId = '';
+        this.slotSelectedDetail = {};
+        this.closeTemplateSheetMenu();
+        setTimeout(() => {
+          this.bottomSheet.open(this.ConfirmationSheet, {
+            panelClass: 'confirmation-sheet',
+            disableClose: true
+          });
+        }, 400);
+      },
+      () => { this.showLimitModal = true; },
+      () => { this._snackBar.open('Error booking appointment. Please try again.', '', { duration: 3000 }); }
+    );
   }
 
   downloadConfirmation(): void {
