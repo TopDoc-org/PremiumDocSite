@@ -26,6 +26,8 @@ type PracticeType = 'dental' | 'general';
 
 interface PracticeService {
   name: string;
+  // Practices without photos fall back to an icon tile
+  image?: string;
   matIcon: string;
   description: string;
 }
@@ -170,16 +172,16 @@ export class DemoProfileComponent implements OnInit, AfterViewInit {
       sampleProcedure: 'Dental Implants',
       showGallery: true,
       services: [
-        { name: 'Root Canal Treatment (RCT)', matIcon: 'healing', description: 'Painless, modern root canal therapy to save your natural teeth and eliminate infection completely.' },
-        { name: 'Dental Crowns', matIcon: 'star_border', description: 'Custom-made crowns to restore damaged teeth for a natural, complete smile.' },
-        { name: 'Laser Dentistry', matIcon: 'flash_on', description: 'Cutting-edge laser treatments for gum disease and soft tissue with minimal discomfort.' },
-        { name: 'Clear Aligners / Invisible Braces', matIcon: 'visibility', description: 'Virtually invisible aligners that straighten your teeth without traditional braces.' },
-        { name: 'Dental Fillings', matIcon: 'build', description: 'Tooth-colored composite fillings that blend seamlessly with your natural teeth.' },
-        { name: 'Wisdom Teeth Removal', matIcon: 'content_cut', description: 'Safe, expert removal of impacted wisdom teeth with minimal recovery time.' },
-        { name: 'Dental Braces & Aligners', matIcon: 'straighten', description: 'Metal, ceramic, and self-ligating braces for precise teeth alignment.' },
-        { name: 'Dental Implants', matIcon: 'settings', description: 'Permanent titanium implants that look and function like natural teeth.' },
-        { name: 'Dentures', matIcon: 'sentiment_satisfied_alt', description: 'Custom removable or fixed dentures for a confident, comfortable smile.' },
-        { name: 'Teeth Whitening', matIcon: 'wb_sunny', description: 'Professional whitening treatments for a brighter, more confident smile.' }
+        { name: 'Root Canal Treatment (RCT)', image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=400&h=300&fit=crop', matIcon: 'healing', description: 'Painless, modern root canal therapy to save your natural teeth and eliminate infection completely.' },
+        { name: 'Dental Crowns', image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=400&h=300&fit=crop', matIcon: 'star_border', description: 'Custom-made crowns to restore damaged teeth for a natural, complete smile.' },
+        { name: 'Laser Dentistry', image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=300&fit=crop', matIcon: 'flash_on', description: 'Cutting-edge laser treatments for gum disease and soft tissue with minimal discomfort.' },
+        { name: 'Clear Aligners / Invisible Braces', image: 'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=400&h=300&fit=crop', matIcon: 'visibility', description: 'Virtually invisible aligners that straighten your teeth without traditional braces.' },
+        { name: 'Dental Fillings', image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=400&h=300&fit=crop', matIcon: 'build', description: 'Tooth-colored composite fillings that blend seamlessly with your natural teeth.' },
+        { name: 'Wisdom Teeth Removal', image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=400&h=300&fit=crop', matIcon: 'content_cut', description: 'Safe, expert removal of impacted wisdom teeth with minimal recovery time.' },
+        { name: 'Dental Braces & Aligners', image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=400&h=300&fit=crop', matIcon: 'straighten', description: 'Metal, ceramic, and self-ligating braces for precise teeth alignment.' },
+        { name: 'Dental Implants', image: 'https://images.unsplash.com/photo-1629909615184-74f495363b67?w=400&h=300&fit=crop', matIcon: 'settings', description: 'Permanent titanium implants that look and function like natural teeth.' },
+        { name: 'Dentures', image: 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=400&h=300&fit=crop', matIcon: 'sentiment_satisfied_alt', description: 'Custom removable or fixed dentures for a confident, comfortable smile.' },
+        { name: 'Teeth Whitening', image: 'https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?w=400&h=300&fit=crop', matIcon: 'wb_sunny', description: 'Professional whitening treatments for a brighter, more confident smile.' }
       ],
       testimonials: [
         { name: 'Priya Mohanty', initials: 'PM', text: 'Got my braces done here and the results are incredible. The doctor was so patient and explained everything clearly.', treatment: 'Braces & Alignment', color: 'linear-gradient(135deg, #ec4899, #be185d)' },
